@@ -1,26 +1,163 @@
 @import "tailwindcss";
 
+/* Color Palette */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Primary Colors */
+  --color-light-gray: #d8dfe8;
+  --color-dark-navy: #1a2332;
+  --color-light-blue: #5b8fbf;
+  --color-teal: #2a8b7e;
+  --color-orange: #ff9a56;
+  --color-red: #e74c3c;
+
+  /* Semantic Colors */
+  --background: #f5f7fb;
+  --foreground: #1a2332;
+  --card-bg: #ffffff;
+  --card-border: #e8ecf1;
+  
+  /* Accent Colors */
+  --accent-primary: #5b8fbf;
+  --accent-secondary: #2a8b7e;
+  --accent-warning: #ff9a56;
+  --accent-danger: #e74c3c;
+  
+  /* Text Colors */
+  --text-primary: #1a2332;
+  --text-secondary: #5a5f6f;
+  --text-light: #8b92a9;
+  --text-white: #ffffff;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-card-bg: var(--card-bg);
+  --color-card-border: var(--card-border);
+  --color-accent-primary: var(--accent-primary);
+  --color-accent-secondary: var(--accent-secondary);
+  --color-accent-warning: var(--accent-warning);
+  --color-accent-danger: var(--accent-danger);
+  --font-sans: var(--font-dm-sans);
+  --font-heading: var(--font-garet-bold);
+  --font-subheading: var(--font-lora);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
+/* Typography */
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-dm-sans);
+  line-height: 1.6;
+  font-weight: 400;
+}
+
+/* Headings - Garet Bold */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-garet-bold);
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+h1 {
+  font-size: 2.5rem;
+  line-height: 1.2;
+}
+
+h2 {
+  font-size: 2rem;
+  line-height: 1.3;
+}
+
+h3 {
+  font-size: 1.5rem;
+  line-height: 1.4;
+}
+
+h4 {
+  font-size: 1.25rem;
+  line-height: 1.4;
+}
+
+/* Sub-headings - Lora Italic */
+.subheading {
+  font-family: var(--font-lora);
+  font-style: italic;
+  font-weight: 400;
+  color: var(--text-secondary);
+}
+
+/* Cards */
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  box-shadow: 0 8px 24px rgba(91, 143, 191, 0.15);
+  border-color: var(--accent-primary);
+}
+
+/* Buttons */
+.btn {
+  font-family: var(--font-dm-sans);
+  font-weight: 500;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.btn-primary {
+  background-color: var(--accent-primary);
+  color: var(--text-white);
+}
+
+.btn-primary:hover {
+  background-color: #4a7fa8;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(91, 143, 191, 0.4);
+}
+
+.btn-secondary {
+  background-color: var(--accent-secondary);
+  color: var(--text-white);
+}
+
+.btn-secondary:hover {
+  background-color: #237069;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(42, 139, 126, 0.4);
+}
+
+.btn-outline {
+  background-color: transparent;
+  border: 2px solid var(--accent-primary);
+  color: var(--accent-primary);
+}
+
+.btn-outline:hover {
+  background-color: var(--accent-primary);
+  color: var(--text-white);
+}
+
+/* Links */
+a {
+  color: var(--accent-primary);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: var(--accent-secondary);
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
 }

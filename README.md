@@ -1,36 +1,160 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 📊 Dashboard Big Data PKL 65
 
-## Getting Started
+Platform terintegrasi untuk manajemen dan analisis big data dengan 8 modul yang scalable dan modular.
 
-First, run the development server:
+![Status](https://img.shields.io/badge/status-active-brightgreen)
+![Version](https://img.shields.io/badge/version-1.0-blue)
+![License](https://img.shields.io/badge/license-MIT-green)
+
+---
+
+## 🚀 Quick Start
+
+### Prerequisites
+- Node.js v18+ (LTS recommended)
+- npm, yarn, atau pnpm
+
+### Installation
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+# Clone repository
+git clone https://github.com/ssabila/pkl-65-dashboard.git
+cd pkl-65-dashboard
+
+# Install dependencies
+pnpm install
+# atau
+npm install
+
+# Setup environment
+cp .env.example .env.local
+
+# Start development server
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Buka [http://localhost:3000](http://localhost:3000) di browser Anda.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+##  Struktur Folder Dashboard Big Data PKL 65
 
-## Learn More
+### **app/** - Next.js App Directory
+Menggunakan Next.js 14+ App Router untuk routing berbasis file.
 
-To learn more about Next.js, take a look at the following resources:
+```
+app/
+├── layout.js                    # Root layout - metadata, fonts, providers
+├── page.js                      # Landing page (/route root)
+├── globals.css                  # Global styles & design tokens
+└── modules/                     # Routing untuk setiap modul
+    ├── module-1/
+    │   ├── layout.js           # Layout spesifik module-1 (opsional)
+    │   └── page.js             # Halaman utama module-1
+    └── module-8/
+        └── page.js             # Halaman utama module-8
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+**Key files:**
+- `layout.js` - Import fonts, setup providers, metadata
+- `globals.css` - Design tokens, color palette, typography
+- `page.js` - Landing page dengan grid 8 modul
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### **public/** - Static Files
+Semua assets yang tidak berubah.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```
+public/
+├── fonts/
+│   ├── Garet-Bold.woff2       # Font Heading
+├── module-1/                  # Asset yang diperlukan oleh module 1
+└── module-2/                  # Asset yang diperlukan oleh module 2
+```
+
+**Catatan:**
+- Font harus di-upload ke `public/fonts/`
+- Import fonts di `app/layout.js` menggunakan `next/font/local`
+
+---
+
+
+## Path Aliases
+
+Untuk import yang lebih clean, gunakan path aliases di `jsconfig.json`:
+
+```json
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./*"],
+      "@components/*": ["./components/*"],
+      "@lib/*": ["./lib/*"],
+      "@public/*": ["./public/*"]
+    }
+  }
+}
+```
+---
+## Tech Stack
+
+- **Frontend Framework:** Next.js 14+
+- **Styling:** Tailwind CSS + Custom CSS
+- **Typography:** 
+  - Heading: Garet Bold (700)
+  - Sub-heading: Lora Italic (400)
+  - Body: DM Sans (400, 500)
+- **Routing:** Next.js App Router (file-based)
+- **Language:** JavaScript (ES2020+)
+
+---
+
+## Workflow
+
+### 1. Setup Environment
+```bash
+# Install dependencies
+pnpm install
+
+# Create .env.local
+cp .env.example .env.local
+```
+
+### 2. Start Development
+```bash
+# Start dev server on http://localhost:3000
+pnpm dev
+```
+
+### 3. Create Feature Branch
+```bash
+# Create branch untuk feature baru
+git checkout -b feature/modul-1/data-table
+
+# Atau untuk bug fix
+git checkout -b fix/modul-2/styling-issue
+```
+
+### 4. Develop & Test
+```bash
+# Develop your feature
+# Test di http://localhost:3000
+
+# Commit changes
+git add .
+git commit -m "feat(modul-1): add data table with sorting"
+
+# Push to remote
+git push origin feature/modul-1/data-table
+```
+
+### 5. Create Pull Request
+- Go to GitHub repository
+- Create Pull Request
+- Wait for review
+- Merge to main
+
+---
