@@ -65,23 +65,27 @@ export default function KomponenPieCard({ title, mainLabel, components }) {
   };
 
   return (
-    <div className="m6-komp-card">
-      <h3 className="m6-komp-card__title">{title}</h3>
-      <div className="m6-komp-card__chart">
-        <Pie data={chartData} options={options} />
+    <div className="m6-komp-card-wrapper">
+      <div className="m6-komp-card">
+        <div className="m6-komp-card-inner">
+          <h3 className="m6-komp-card__title">{title}</h3>
+          <div className="m6-komp-card__chart">
+            <Pie data={chartData} options={options} />
+          </div>
+          <span className="m6-komp-card__main-label">{mainLabel}</span>
+          <ul className="m6-komp-card__legend">
+            {components.map((c, i) => (
+              <li key={c.key} className="m6-komp-card__legend-item">
+                <span
+                  className="m6-komp-card__legend-dot"
+                  style={{ background: colors[i] }}
+                />
+                {c.label}
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
-      <span className="m6-komp-card__main-label">{mainLabel}</span>
-      <ul className="m6-komp-card__legend">
-        {components.map((c, i) => (
-          <li key={c.key} className="m6-komp-card__legend-item">
-            <span
-              className="m6-komp-card__legend-dot"
-              style={{ background: colors[i] }}
-            />
-            {c.label}
-          </li>
-        ))}
-      </ul>
     </div>
   );
 }
