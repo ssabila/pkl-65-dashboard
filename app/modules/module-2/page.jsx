@@ -1,30 +1,29 @@
-import Link from "next/link";
-
-export const metadata = {
-  title: "Modul 2",
-};
+"use client";
+import { useState } from "react";
+import OpeningPage      from "./components/OpeningPage";
+import DashboardLayout  from "./components/DashboardLayout";
+import DataHistorisPage from "./components/DataHistorisPage";
+import FaktorBanjirPage from "./components/FaktorBanjirPage";
+import FaktorLongsorPage from "./components/FaktorLongsorPage";
 
 export default function Modul2Page() {
+  const [currentPage, setCurrentPage] = useState("opening");
+  const [provinsi,    setProvinsi]    = useState("Aceh");
+
+  if (currentPage === "opening") {
+    return <OpeningPage onNavigate={setCurrentPage} />;
+  }
+
   return (
-    <div className="min-h-screen bg-slate-50 p-8">
-      <div className="max-w-4xl mx-auto">
-        <Link
-          href="/"
-          className="text-blue-600 hover:text-blue-800 mb-6 inline-block"
-        >
-          ← Kembali
-        </Link>
-
-        <h1 className="text-4xl font-bold text-slate-900 mb-8">
-          Modul 2
-        </h1>
-
-        <div className="bg-white p-8 rounded-lg shadow border border-slate-200">
-          <p className="text-slate-600 text-lg">
-            Konten Modul 2 ada di sini
-          </p>
-        </div>
-      </div>
-    </div>
+    <DashboardLayout
+      activePage={currentPage}
+      onNavigate={setCurrentPage}
+      provinsi={provinsi}
+      onProvinsiChange={setProvinsi}
+    >
+      {currentPage === "data-historis"  && <DataHistorisPage  provinsi={provinsi} />}
+      {currentPage === "faktor-banjir"  && <FaktorBanjirPage  provinsi={provinsi} />}
+      {currentPage === "faktor-longsor" && <FaktorLongsorPage provinsi={provinsi} />}
+    </DashboardLayout>
   );
 }
