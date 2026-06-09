@@ -1,0 +1,21 @@
+/* ===== Metadata Tab Styles ===== */
+/* Styles specific to the Metadata tab */
+
+.m6-meta-panel {
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  border-radius: 18px;
+  padding: 40px;
+  box-shadow: 0 4px 20px rgba(26, 35, 50, 0.1);
+  text-align: center;
+}
+
+.m6-meta-panel__title {
+  color: #3a4a5c;
+  margin-bottom: 12px;
+}
+
+.m6-meta-panel__text {
+  color: #5a5f6f;
+}

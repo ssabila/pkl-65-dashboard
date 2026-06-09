@@ -1,0 +1,200 @@
+/* ===== Komponen Tab Styles ===== */
+/* Styles specific to the Komponen tab: dual dropdowns, summary card, pie chart cards */
+
+/* Controls row for Komponen tab */
+.m6-komp-controls {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.m6-komp-controls__dropdowns {
+  display: flex;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+/* Summary card */
+.m6-komp-summary {
+  flex: 1;
+  background: linear-gradient(135deg, #2c3e50 0%, #1a2332 100%);
+  border-radius: 14px;
+  padding: 14px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: 0 4px 20px rgba(26, 35, 50, 0.3);
+}
+
+.m6-komp-summary__title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #fff;
+  text-align: center;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.m6-komp-summary__indices {
+  display: flex;
+  gap: 10px;
+}
+
+.m6-komp-index {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.m6-komp-index__label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.75);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.m6-komp-index__box {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 8px;
+  padding: 8px 16px;
+  min-width: 70px;
+  text-align: center;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #1a2332;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Pie chart cards grid */
+.m6-komp-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.m6-komp-card {
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(42, 139, 126, 0.35);
+  border-radius: 18px;
+  padding: 20px;
+  box-shadow: 0 4px 20px rgba(26, 35, 50, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+.m6-komp-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 28px rgba(26, 35, 50, 0.15);
+  border-color: rgba(42, 139, 126, 0.55);
+}
+
+.m6-komp-card__title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #1a2332;
+  text-align: center;
+  margin-bottom: 16px;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.m6-komp-card__chart {
+  width: 220px;
+  height: 220px;
+  position: relative;
+  margin-bottom: 16px;
+}
+
+.m6-komp-card__main-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #1a2332;
+  text-align: center;
+  padding-bottom: 4px;
+  border-bottom: 2px solid #1a2332;
+  margin-bottom: 12px;
+  display: inline-block;
+}
+
+.m6-komp-card__legend {
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.m6-komp-card__legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.82rem;
+  color: #3a4a5c;
+  padding: 3px 0;
+  font-weight: 500;
+}
+
+.m6-komp-card__legend-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* Empty state */
+.m6-komp-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  background: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(10px);
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  text-align: center;
+}
+
+.m6-komp-empty__icon {
+  font-size: 3rem;
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
+
+.m6-komp-empty__text {
+  font-size: 1.05rem;
+  color: #5a5f6f;
+  font-weight: 500;
+}
+
+.m6-komp-empty__sub {
+  font-size: 0.85rem;
+  color: #8b92a9;
+  margin-top: 6px;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 1024px) {
+  .m6-komp-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .m6-komp-controls {
+    flex-wrap: wrap;
+  }
+
+  .m6-komp-summary {
+    flex-direction: column;
+  }
+
+  .m6-komp-summary__indices {
+    flex-wrap: wrap;
+  }
+}
