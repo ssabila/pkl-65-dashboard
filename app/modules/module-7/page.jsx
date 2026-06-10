@@ -21,7 +21,8 @@ export default function Modul7Page() {
 
         <div className="bg-white p-8 rounded-lg shadow border border-slate-200">
           <p className="text-slate-600 text-lg">
-            Konten Modul 7 ada di sini
+            Konten Modul 7 ada di sini, 
+            Testinggg!!!!!!!!!1
           </p>
         </div>
       </div>
