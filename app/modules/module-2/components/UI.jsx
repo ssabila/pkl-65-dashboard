@@ -1,5 +1,108 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect, useRef} from "react";
+import { createPortal } from "react-dom";
+
+export function DropdownPill({ value, options, onChange, disabled = false, tooltip }) {
+  const [open, setOpen] = useState(false);
+  const [showTip, setShowTip] = useState(false);
+  const [pos, setPos] = useState({ top: 0, left: 0, width: 0 });
+  const btnRef = useRef(null);
+
+  const updatePos = () => {
+    if (!btnRef.current) return;
+    const rect = btnRef.current.getBoundingClientRect();
+    setPos({
+      top: rect.bottom + window.scrollY + 4,
+      left: rect.left + window.scrollX,
+      width: rect.width,
+    });
+  };
+
+  const handleOpen = () => {
+    if (disabled) return;
+    updatePos();
+    setOpen(!open);
+  };
+
+  // Tutup saat klik di luar
+  useEffect(() => {
+    if (!open) return;
+    const handler = (e) => {
+      if (!btnRef.current?.contains(e.target)) setOpen(false);
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [open]);
+
+  return (
+    <div className="relative">
+      <button
+        ref={btnRef}
+        disabled={disabled}
+        onClick={handleOpen}
+        onMouseEnter={() => disabled && tooltip && setShowTip(true)}
+        onMouseLeave={() => setShowTip(false)}
+        className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[11px] font-medium transition-all"
+        style={{
+          background: disabled ? "rgba(232,235,239,0.5)" : "rgba(255,255,255,0.7)",
+          backdropFilter: "blur(8px)",
+          border: "1px solid rgba(255,255,255,0.65)",
+          color: disabled ? "rgba(44,62,80,0.3)" : "#2C3E50",
+          cursor: disabled ? "not-allowed" : "pointer",
+          boxShadow: disabled ? "none" : "0 2px 6px rgba(44,62,80,0.07)",
+        }}
+      >
+        {value}
+        <svg viewBox="0 0 10 6" className="w-2.5 h-2.5 opacity-50" fill="none" stroke="currentColor" strokeWidth={1.8}>
+          <path d="M1 1l4 4 4-4" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </button>
+
+      {/* Tooltip */}
+      {showTip && tooltip && (
+        <div className="absolute left-0 top-full mt-1.5 z-50 rounded-xl px-3 py-2 text-[10px] whitespace-nowrap shadow-lg"
+          style={{ background: "rgba(44,62,80,0.85)", backdropFilter: "blur(8px)", color: "#fff" }}>
+          {tooltip}
+        </div>
+      )}
+
+      {/* Dropdown via Portal — menembus semua stacking context */}
+      {open && !disabled && typeof document !== "undefined" && createPortal(
+        <div
+          style={{
+            position: "absolute",
+            top: pos.top,
+            left: pos.left,
+            minWidth: Math.max(pos.width, 120),
+            zIndex: 9999,
+            background: "rgba(255,255,255,0.92)",
+            backdropFilter: "blur(20px)",
+            WebkitBackdropFilter: "blur(20px)",
+            border: "1px solid rgba(255,255,255,0.7)",
+            boxShadow: "0 8px 24px rgba(44,62,80,0.12)",
+            borderRadius: "12px",
+            overflow: "hidden",
+          }}
+        >
+          {options.map(opt => (
+            <button
+              key={opt}
+              onClick={() => { onChange(opt); setOpen(false); }}
+              className="w-full text-left px-3 py-2 text-[11px] hover:bg-white/60 transition-colors"
+              style={{
+                color: opt === value ? "#6D9DC5" : "#2C3E50",
+                fontWeight: opt === value ? "600" : "400",
+              }}
+            >
+              {opt}
+            </button>
+          ))}
+        </div>,
+        document.body
+      )}
+    </div>
+  );
+}
 
 // ─── Glass Card ────────────────────────────────────────
 export function GlassCard({ children, className = "", style = {} }) {
@@ -64,57 +167,6 @@ export function ToggleLabel({ label, active, onClick }) {
 // ─── Divider between toggles ───────────────────────────
 export function ToggleDivider() {
   return <span className="text-[12px]" style={{ color: "rgba(44,62,80,0.2)" }}>|</span>;
-}
-
-// ─── Dropdown pill ─────────────────────────────────────
-export function DropdownPill({ value, options, onChange, disabled = false, tooltip }) {
-  const [open, setOpen] = useState(false);
-  const [showTip, setShowTip] = useState(false);
-
-  return (
-    <div className="relative">
-      <button
-        disabled={disabled}
-        onClick={() => !disabled && setOpen(!open)}
-        onMouseEnter={() => disabled && tooltip && setShowTip(true)}
-        onMouseLeave={() => setShowTip(false)}
-        className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[11px] font-medium transition-all"
-        style={{
-          background: disabled ? "rgba(232,235,239,0.5)" : "rgba(255,255,255,0.7)",
-          backdropFilter: "blur(8px)",
-          border: "1px solid rgba(255,255,255,0.65)",
-          color: disabled ? "rgba(44,62,80,0.3)" : "#2C3E50",
-          cursor: disabled ? "not-allowed" : "pointer",
-          boxShadow: disabled ? "none" : "0 2px 6px rgba(44,62,80,0.07)",
-        }}
-      >
-        {value}
-        <svg viewBox="0 0 10 6" className="w-2.5 h-2.5 opacity-50" fill="none" stroke="currentColor" strokeWidth={1.8}>
-          <path d="M1 1l4 4 4-4" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
-      </button>
-
-      {showTip && tooltip && (
-        <div className="absolute left-0 top-full mt-1.5 z-50 rounded-xl px-3 py-2 text-[10px] whitespace-nowrap shadow-lg"
-          style={{ background: "rgba(44,62,80,0.85)", backdropFilter: "blur(8px)", color: "#fff" }}>
-          {tooltip}
-        </div>
-      )}
-
-      {open && !disabled && (
-        <div className="absolute top-full left-0 mt-1 rounded-xl overflow-hidden z-50 min-w-[120px]"
-          style={{ background: "rgba(255,255,255,0.92)", backdropFilter: "blur(20px)", border: "1px solid rgba(255,255,255,0.7)", boxShadow: "0 8px 24px rgba(44,62,80,0.12)" }}>
-          {options.map(opt => (
-            <button key={opt} onClick={() => { onChange(opt); setOpen(false); }}
-              className="w-full text-left px-3 py-2 text-[11px] hover:bg-white/60 transition-colors"
-              style={{ color: opt === value ? "#6D9DC5" : "#2C3E50", fontWeight: opt === value ? "600" : "400" }}>
-              {opt}
-            </button>
-          ))}
-        </div>
-      )}
-    </div>
-  );
 }
 
 // ─── Risk dot legend ───────────────────────────────────

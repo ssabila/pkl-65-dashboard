@@ -37,7 +37,7 @@ export default function OpeningPage({ onNavigate }) {
   return (
     <div className="relative min-h-screen overflow-hidden flex flex-col aurora-bg">
       {/* Wave blobs */}
-      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+      <div className="pointer-events-none absolute inset-0 overflow-hidden z-0">
         <div
           className="absolute rounded-full opacity-40 blur-3xl"
           style={{ width: 700, height: 500, top: -100, left: -100,
@@ -73,7 +73,7 @@ export default function OpeningPage({ onNavigate }) {
             onMouseEnter={() => setHoveredNav(item.page)}
             onMouseLeave={() => setHoveredNav(null)}
             onClick={() => onNavigate(item.page)}
-            className="text-sm font-medium transition-all duration-200 px-3 py-1.5 rounded-lg"
+            className="text-sm font-medium transition-all duration-200 px-3 py-1.5 rounded-lg z-10"
             style={{
               fontFamily: "var(--font-dm-sans)",
               color: "#fff",
@@ -111,8 +111,11 @@ export default function OpeningPage({ onNavigate }) {
         <button
           onMouseEnter={() => setBtnHovered(true)}
           onMouseLeave={() => setBtnHovered(false)}
-          onClick={() => onNavigate("data-historis")}
-          className="px-10 py-3 rounded-full font-semibold text-sm transition-all duration-300"
+          onClick={() => {
+            console.log("Button Data Historis diklik");
+            onNavigate("data-historis");
+          }}
+          className="px-10 py-3 rounded-full font-semibold text-sm transition-all duration-300 z-10"
           style={{
             fontFamily: "var(--font-dm-sans)",
             background: btnHovered ? "#111" : "rgba(255,255,255,0.95)",
@@ -143,8 +146,11 @@ function GlassMenuCard({ card, onNavigate }) {
     <button
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      onClick={() => onNavigate(card.page)}
-      className="flex flex-col items-center gap-2.5 px-7 py-5 rounded-2xl transition-all duration-300 cursor-pointer text-center"
+      onClick={() => {
+        console.log("Navigating to:", card.page); // debug
+        onNavigate(card.page);
+      }}
+      className="flex flex-col items-center gap-2.5 px-7 py-5 rounded-2xl transition-all duration-300 cursor-pointer text-center z-10"
       style={{
         background: hovered ? "rgba(255,255,255,0.22)" : "rgba(255,255,255,0.13)",
         backdropFilter: "blur(12px)",

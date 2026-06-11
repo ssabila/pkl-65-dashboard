@@ -3,6 +3,8 @@ import { useState } from "react";
 import Link from "next/link";
 import { ChevronRight, ChevronDown, Clock, Bell, PanelLeft, PanelRight, AlertTriangle, Download, LayoutDashboard, Home } from "lucide-react";
 import { ringkasanByProvinsi, alertFeedData, provinsiOptions } from "../data/dummyData";
+import { useRef, useEffect } from "react";
+import { createPortal } from "react-dom";
 
 export default function DashboardLayout({ activePage, onNavigate, provinsi, onProvinsiChange, children }) {
   const [leftOpen,     setLeftOpen]     = useState(true);
@@ -18,6 +20,31 @@ export default function DashboardLayout({ activePage, onNavigate, provinsi, onPr
     { label: "Faktor Pemicu Banjir",  page: "faktor-banjir"  },
     { label: "Faktor Pemicu Longsor", page: "faktor-longsor" },
   ];
+
+  const provinsiRef = useRef(null);
+  const [provinsiPos, setProvinsiPos] = useState({ top: 0, left: 0 });
+
+  // Fungsi buka dropdown provinsi
+  const handleProvinsiOpen = () => {
+    if (provinsiRef.current) {
+      const rect = provinsiRef.current.getBoundingClientRect();
+      setProvinsiPos({
+        top: rect.bottom + window.scrollY + 4,
+        left: rect.left + window.scrollX - 40, // center offset
+      });
+    }
+    setProvinsiOpen(!provinsiOpen);
+  };
+
+  // Tutup saat klik luar
+  useEffect(() => {
+    if (!provinsiOpen) return;
+    const handler = (e) => {
+      if (!provinsiRef.current?.contains(e.target)) setProvinsiOpen(false);
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [provinsiOpen]);
 
   return (
     <div className="flex h-screen overflow-hidden aurora-dashboard-bg" style={{ fontFamily: "var(--font-dm-sans)" }}>
@@ -149,7 +176,8 @@ export default function DashboardLayout({ activePage, onNavigate, provinsi, onPr
           {/* Center — provinsi dropdown */}
           <div className="relative">
             <button
-              onClick={() => setProvinsiOpen(!provinsiOpen)}
+              ref={provinsiRef}
+              onClick={handleProvinsiOpen}
               className="flex items-center gap-2 px-4 py-1.5 rounded-xl text-[12px] font-medium transition-colors"
               style={{
                 background: "rgba(255,255,255,0.7)",
@@ -162,9 +190,22 @@ export default function DashboardLayout({ activePage, onNavigate, provinsi, onPr
               {provinsi}
               <ChevronDown size={12} />
             </button>
-            {provinsiOpen && (
-              <div className="absolute top-full left-1/2 -translate-x-1/2 mt-1 w-48 rounded-xl overflow-hidden z-50"
-                style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(20px)", border: "1px solid rgba(255,255,255,0.7)", boxShadow: "0 8px 24px rgba(44,62,80,0.12)" }}>
+
+            {provinsiOpen && typeof document !== "undefined" && createPortal(
+              <div style={{
+                position: "absolute",
+                top: provinsiPos.top,
+                left: provinsiPos.left,
+                width: "192px",
+                zIndex: 9999,
+                background: "rgba(255,255,255,0.88)",
+                backdropFilter: "blur(20px)",
+                WebkitBackdropFilter: "blur(20px)",
+                border: "1px solid rgba(255,255,255,0.7)",
+                boxShadow: "0 8px 24px rgba(44,62,80,0.12)",
+                borderRadius: "12px",
+                overflow: "hidden",
+              }}>
                 {provinsiOptions.map((p) => (
                   <button key={p} onClick={() => { onProvinsiChange(p); setProvinsiOpen(false); }}
                     className="w-full text-left px-4 py-2.5 text-[12px] hover:bg-white/60 transition-colors"
@@ -172,7 +213,8 @@ export default function DashboardLayout({ activePage, onNavigate, provinsi, onPr
                     {p}
                   </button>
                 ))}
-              </div>
+              </div>,
+              document.body
             )}
           </div>
 
@@ -209,7 +251,7 @@ export default function DashboardLayout({ activePage, onNavigate, provinsi, onPr
                 <span className="absolute top-0.5 right-0.5 w-1.5 h-1.5 rounded-full bg-red-500" />
               </button>
               {notifOpen && (
-                <div className="absolute top-full right-0 mt-1 w-72 rounded-xl overflow-hidden z-50"
+                <div className="absolute top-full right-0 mt-1 w-72 rounded-xl overflow-hidden z-10"
                   style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(20px)", border: "1px solid rgba(255,255,255,0.7)", boxShadow: "0 8px 24px rgba(44,62,80,0.12)" }}>
                   <div className="px-4 py-3 border-b border-white/50">
                     <p className="text-[11px] font-semibold" style={{ color: "#2C3E50" }}>Alert Feed</p>
