@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from "next/link";
+import dynamic from 'next/dynamic';
 import { 
   PieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip,
   BarChart, Bar, XAxis, YAxis, CartesianGrid, LabelList,
@@ -11,6 +12,16 @@ import {
   CloudDownload, Mountain, TrendingDown, Droplets, 
   Map as MapIcon, ChevronDown, ShieldAlert
 } from 'lucide-react';
+
+// Import peta secara dinamis dengan mematikan SSR
+const MapComponent = dynamic(() => import('./MapComponent'), {
+  ssr: false,
+  loading: () => (
+    <div className="absolute inset-0 bg-blue-50/50 flex items-center justify-center">
+      <div className="text-blue-500 font-medium animate-pulse">Memuat Peta...</div>
+    </div>
+  ),
+});
 
 // --- MOCK DATA ---
 const pieData = [
@@ -22,7 +33,6 @@ const pieData = [
   { name: 'Perairan', value: 2, color: '#3b82f6' },
 ];
 
-// Data Mockup untuk Deforestasi (Bar Chart)
 const deforestasiData = [
   { year: '2019', value: 32.1 },
   { year: '2020', value: 29.7 },
@@ -33,7 +43,6 @@ const deforestasiData = [
   { year: '2025', value: 20.1 },
 ];
 
-// Data Mockup untuk Curah Hujan (Line Chart)
 const curahHujanData = [
   { year: '2019', value: 1850 },
   { year: '2020', value: 1980 },
@@ -68,7 +77,7 @@ export default function Modul1Page() {
           </button>
         </div>
 
-        {/* --- TOP METRICS ROW (6 Cards) --- */}
+        {/* --- TOP METRICS ROW --- */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
           <MetricCard title="Elevasi Maksimum" value="3.800" unit="mdpl" icon={<Mountain size={24} className="text-blue-500" />} />
           <MetricCard title="Rata-rata slope" value="18" unit="derajat" icon={<TrendingDown size={24} className="text-slate-500" />} />
@@ -78,16 +87,16 @@ export default function Modul1Page() {
           <MetricCard title="Elevasi Maksimum" value="-21.3%" unit="per tahun" icon={<Mountain size={24} className="text-orange-500" />} isTrend />
         </div>
 
-        {/* --- MAIN GRID CONTENT --- */}
+        {/* --- MAIN CONTENT --- */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           
-          {/* LEFT SECTION (Charts & Map) - Spans 9 cols */}
+          {/* LEFT SECTION (Charts & Map) */}
           <div className="lg:col-span-9 space-y-6">
             
             {/* Charts Row */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               
-              {/* Donut Chart Card */}
+              {/* Donut Chart */}
               <GlassCard className="flex flex-col">
                 <h3 className="font-bold text-slate-800">Distribusi Tutupan Lahan</h3>
                 <p className="text-xs text-slate-500 mb-4">Persentase Luas Wilayah</p>
@@ -113,7 +122,7 @@ export default function Modul1Page() {
                 </div>
               </GlassCard>
 
-              {/* Deforestasi Historis - Bar Chart */}
+              {/* Bar Chart Deforestasi */}
               <GlassCard className="flex flex-col">
                 <h3 className="font-bold text-slate-800 text-sm">Deforestasi Historis (2019-2025)</h3>
                 <p className="text-[10px] text-slate-500 mb-2">Perubahan Luas Tutupan Hutan</p>
@@ -132,7 +141,7 @@ export default function Modul1Page() {
                 </div>
               </GlassCard>
 
-              {/* Curah Hujan Tahunan - Line Chart */}
+              {/* Line Chart Curah Hujan */}
               <GlassCard className="flex flex-col">
                 <h3 className="font-bold text-slate-800 text-sm">Curah Hujan Tahunan (2019-2025)</h3>
                 <p className="text-[10px] text-slate-500 mb-2">Rata-rata curah hujan (mm/tahun)</p>
@@ -153,25 +162,42 @@ export default function Modul1Page() {
 
             {/* Map & Index Row */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {/* Map Placeholder */}
-              <GlassCard className="md:col-span-2 p-0 overflow-hidden relative min-h-[300px]">
-                <div className="absolute inset-0 bg-blue-100 flex items-center justify-center">
-                   <p className="text-blue-400 font-medium">Integrasi Mapbox / Leaflet disini</p>
+              
+              {/* Map Section */}
+              <GlassCard className="md:col-span-2 p-0 overflow-hidden relative min-h-[350px]">
+                
+                {/* Map Component */}
+                <div className="absolute inset-0 z-0">
+                  <MapComponent />
                 </div>
                 
-                <div className="absolute left-4 top-4 bg-white/90 backdrop-blur-sm p-3 rounded-xl shadow-lg w-48 z-10">
+                {/* Overlay Options */}
+                <div className="absolute left-4 top-4 bg-white/90 backdrop-blur-sm p-3 rounded-xl shadow-lg w-48 z-10 border border-white">
                   <p className="text-xs font-bold text-blue-900 mb-2">OPSI TAMPILAN</p>
-                  <div className="space-y-2 text-xs">
-                    {['Batas Provinsi', 'Batas Kabupaten', 'Batas Kecamatan', 'Nama Wilayah'].map(opt => (
+                  <div className="space-y-3 text-xs">
+                    {['Batas Provinsi', 'Batas Kabupaten', 'Batas Kecamatan', 'Nama Wilayah'].map((opt, i) => (
                       <div key={opt} className="flex justify-between items-center">
-                        <span>{opt}</span>
-                        <div className="w-6 h-3 bg-blue-500 rounded-full relative">
-                           <div className="w-3 h-3 bg-white rounded-full absolute right-0"></div>
+                        <span className="font-medium text-slate-700">{opt}</span>
+                        <div className={`w-7 h-4 rounded-full relative cursor-pointer transition-colors ${i < 3 ? 'bg-blue-500' : 'bg-slate-300'}`}>
+                           <div className={`w-3 h-3 bg-white rounded-full absolute top-0.5 transition-all ${i < 3 ? 'right-0.5' : 'left-0.5'}`}></div>
                         </div>
                       </div>
                     ))}
                   </div>
                 </div>
+
+                {/* Legend */}
+                <div className="absolute left-4 bottom-4 bg-white/90 backdrop-blur-sm p-3 rounded-xl shadow-lg z-10 border border-white text-[10px]">
+                  <p className="font-bold text-slate-800 mb-2">Legenda Elevasi (mdpl)</p>
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2"><span className="w-3 h-3 rounded-sm bg-red-600"></span>{'> 3.500'}</div>
+                    <div className="flex items-center gap-2"><span className="w-3 h-3 rounded-sm bg-red-400"></span>{'2.500 - 3.500'}</div>
+                    <div className="flex items-center gap-2"><span className="w-3 h-3 rounded-sm bg-yellow-400"></span>{'1.500 - 2.500'}</div>
+                    <div className="flex items-center gap-2"><span className="w-3 h-3 rounded-sm bg-green-300"></span>{'500 - 1.500'}</div>
+                    <div className="flex items-center gap-2"><span className="w-3 h-3 rounded-sm bg-green-600"></span>{'0 - 500'}</div>
+                  </div>
+                </div>
+
               </GlassCard>
 
               {/* Vulnerability Index */}
