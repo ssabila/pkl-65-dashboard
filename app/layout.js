@@ -1,4 +1,4 @@
-import { DM_Sans, Lora } from "next/font/google";
+import { DM_Sans, Lora, Poppins } from "next/font/google"; // Tambahkan Poppins di sini
 import localFont from "next/font/local";
 import "./globals.css";
 
@@ -16,7 +16,7 @@ const garetBold = localFont({
 const lora = Lora({
   variable: "--font-lora",
   subsets: ["latin"],
-  style: ["italic"],
+  style: ["normal", "italic"],
   weight: ["400", "700"],
 });
 
@@ -24,6 +24,13 @@ const dmSans = DM_Sans({
   variable: "--font-dm-sans",
   subsets: ["latin"],
   weight: ["400", "500", "700"],
+});
+
+// Inisialisasi Poppins untuk Font Body & Label sesuai Guideline Modul 8
+const poppins = Poppins({
+  variable: "--font-poppins",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
 });
 
 export const metadata = {
@@ -35,7 +42,7 @@ export default function RootLayout({ children }) {
   return (
     <html
       lang="id"
-      className={`${garetBold.variable} ${lora.variable} ${dmSans.variable} h-full antialiased bg-background`}
+      className={`${garetBold.variable} ${lora.variable} ${dmSans.variable} ${poppins.variable} h-full antialiased bg-background`}
     >
       <body className="min-h-full flex flex-col text-foreground">{children}</body>
     </html>

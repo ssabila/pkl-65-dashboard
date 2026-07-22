@@ -1,0 +1,25 @@
+/* ═══════════════════════════════════════════════════════
+   AURORA GLASSMORPHISM — paste these classes into your
+   existing globals.css (below the existing rules)
+   ═══════════════════════════════════════════════════════ */
+
+/* Aurora opening-page background */
+.aurora-bg {
+  background:
+    radial-gradient(ellipse at 15% 55%, rgba(109,157,197,0.72) 0%, transparent 52%),
+    radial-gradient(ellipse at 78% 12%, rgba(185,115,210,0.62) 0%, transparent 48%),
+    radial-gradient(ellipse at 88% 78%, rgba(244,124,54,0.52) 0%, transparent 46%),
+    radial-gradient(ellipse at 38% 88%, rgba(109,157,197,0.38) 0%, transparent 40%),
+    linear-gradient(140deg, #1b3a5e 0%, #2c5082 18%, #5a3c7a 44%, #8a5c3a 68%, #4a7faa 100%);
+  min-height: 100vh;
+}
+
+/* Aurora dashboard page background */
+.aurora-dashboard-bg {
+  background:
+    radial-gradient(ellipse at 8%  28%, rgba(109,157,197,0.28) 0%, transparent 48%),
+    radial-gradient(ellipse at 92% 72%, rgba(244,124,54,0.16)  0%, transparent 42%),
+    radial-gradient(ellipse at 52% 0%,  rgba(180,120,200,0.18) 0%, transparent 38%),
+    linear-gradient(155deg, #dce8f5 0%, #e6ecf5 38%, #f0e8f0 66%, #f5ece6 100%);
+  min-height: 100%;
+}

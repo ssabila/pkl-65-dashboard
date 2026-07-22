@@ -27,6 +27,15 @@
   --text-secondary: #5a5f6f;
   --text-light: #8b92a9;
   --text-white: #ffffff;
+
+  /* ======================================================= */
+  /* SPECIFIC MODUL 8 VARIABELS (Dark Aurora Glassmorphism)  */
+  /* ======================================================= */
+  --mod8-bg: #263B4E;          /* Dark Ink / Slate Blue */
+  --mod8-kritis: #D72E38;      /* Kritis - Merah Menyala */
+  --mod8-parah: #F47B2F;       /* Parah - Oranye */
+  --mod8-sedang: #FFD47D;      /* Sedang - Kuning Emas */
+  --mod8-pulih: #168573;       /* Pulih - Hijau Teal */
 }
 
 @theme inline {
@@ -41,6 +50,17 @@
   --font-sans: var(--font-dm-sans);
   --font-heading: var(--font-garet-bold);
   --font-subheading: var(--font-lora);
+
+  /* Mapping Kelas Utilitas Tailwind v4 Baru Khusus Modul 8 */
+  --color-mod8-bg: var(--mod8-bg);
+  --color-mod8-kritis: var(--mod8-kritis);
+  --color-mod8-parah: var(--mod8-parah);
+  --color-mod8-sedang: var(--mod8-sedang);
+  --color-mod8-pulih: var(--mod8-pulih);
+
+  --font-mod8-heading: var(--font-dm-sans);   /* Judul Utama */
+  --font-mod8-sub: var(--font-lora);          /* Sub-judul / Italic */
+  --font-mod8-body: var(--font-poppins);       /* Label Data & Narasi */
 }
 
 /* Typography */
@@ -160,4 +180,24 @@ a:hover {
 /* Smooth scrolling */
 html {
   scroll-behavior: smooth;
+}
+
+/* ======================================================= */
+/* CUSTOM EXTRA CLASSES MODUL 8 (LIGHT THEME)   */
+/* ======================================================= */
+
+/* Efek Latar Belakang Light Aurora Gradien Lembut */
+.bg-aurora-mod8 {
+  background-color: #f5f7fb;
+  background-image: 
+    radial-gradient(circle at 12% 24%, rgba(91, 143, 191, 0.06) 0%, transparent 55%),
+    radial-gradient(circle at 88% 76%, rgba(244, 123, 47, 0.04) 0%, transparent 55%);
+}
+
+/* Efek Glassmorphism Terang untuk Kartu & Panel Navigasi */
+.glass-card-mod8 {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(26, 35, 50, 0.08);
 }
