@@ -1,0 +1,462 @@
+[
+  {
+    "name": "Hilikana",
+    "lng": 98.469899,
+    "lat": -0.524656
+  },
+  {
+    "name": "Hilizamorogotano",
+    "lng": 98.362843,
+    "lat": -0.528788
+  },
+  {
+    "name": "Bawo Orudua",
+    "lng": 98.478862,
+    "lat": -0.217683
+  },
+  {
+    "name": "Pasir Putih",
+    "lng": 97.291909,
+    "lat": 4.727428
+  },
+  {
+    "name": "Danau Pandan",
+    "lng": 98.825567,
+    "lat": 1.497491
+  },
+  {
+    "name": "Jeke",
+    "lng": 98.401546,
+    "lat": -0.373761
+  },
+  {
+    "name": "Karang Hampa",
+    "lng": 95.942463,
+    "lat": 4.40917
+  },
+  {
+    "name": "Gadung Holbung",
+    "lng": 99.639477,
+    "lat": 1.935792
+  },
+  {
+    "name": "Hale Baluta",
+    "lng": 98.43275,
+    "lat": -0.162662
+  },
+  {
+    "name": "Bawositora",
+    "lng": 98.198396,
+    "lat": -0.122917
+  },
+  {
+    "name": "Betumonga",
+    "lng": 100.081827,
+    "lat": -2.7844
+  },
+  {
+    "name": "Lesten",
+    "lng": 97.728955,
+    "lat": 4.148169
+  },
+  {
+    "name": "Bojakan",
+    "lng": 98.924846,
+    "lat": -1.265737
+  },
+  {
+    "name": "Gondia",
+    "lng": 97.881452,
+    "lat": -0.090124
+  },
+  {
+    "name": "Gewat",
+    "lng": 97.100913,
+    "lat": 4.394711
+  },
+  {
+    "name": "Lumbui Melayu",
+    "lng": 98.486256,
+    "lat": -0.490795
+  },
+  {
+    "name": "Duru",
+    "lng": 98.530368,
+    "lat": -0.485293
+  },
+  {
+    "name": "Seuneubok Jaya",
+    "lng": 97.643329,
+    "lat": 2.879482
+  },
+  {
+    "name": "Ukhat Peseluk",
+    "lng": 97.74797,
+    "lat": 3.036666
+  },
+  {
+    "name": "Hilioromao",
+    "lng": 98.471927,
+    "lat": -0.518606
+  },
+  {
+    "name": "Bawo Ofuloa",
+    "lng": 98.441999,
+    "lat": -0.264219
+  },
+  {
+    "name": "Sri Mulya",
+    "lng": 97.744188,
+    "lat": 4.606708
+  },
+  {
+    "name": "Alue Keumuning",
+    "lng": 96.06173,
+    "lat": 4.356268
+  },
+  {
+    "name": "Lumut Maju",
+    "lng": 98.995819,
+    "lat": 1.543236
+  },
+  {
+    "name": "Cimpungan",
+    "lng": 99.04364,
+    "lat": -1.530737
+  },
+  {
+    "name": "Guha",
+    "lng": 97.873215,
+    "lat": 2.456673
+  },
+  {
+    "name": "Baruyu Sibohou",
+    "lng": 98.539091,
+    "lat": -0.534241
+  },
+  {
+    "name": "Akhih Majile",
+    "lng": 97.67914,
+    "lat": 3.076249
+  },
+  {
+    "name": "Gunung Pak-Pak",
+    "lng": 97.697426,
+    "lat": 3.045094
+  },
+  {
+    "name": "Sipot",
+    "lng": 96.223847,
+    "lat": 4.460456
+  },
+  {
+    "name": "Lambak",
+    "lng": 98.43579,
+    "lat": -0.060183
+  },
+  {
+    "name": "Hilinifaese",
+    "lng": 98.537554,
+    "lat": -0.560195
+  },
+  {
+    "name": "Lubuk Kapundung Ii",
+    "lng": 99.088656,
+    "lat": 0.817349
+  },
+  {
+    "name": "Mareu",
+    "lng": 95.539002,
+    "lat": 5.0934
+  },
+  {
+    "name": "Tunas Mude",
+    "lng": 97.777017,
+    "lat": 3.123512
+  },
+  {
+    "name": "Banjar Lancat",
+    "lng": 99.641619,
+    "lat": 0.771146
+  },
+  {
+    "name": "Ie Meudama",
+    "lng": 97.688849,
+    "lat": 2.923862
+  },
+  {
+    "name": "Punce Nali",
+    "lng": 97.640959,
+    "lat": 3.111815
+  },
+  {
+    "name": "Sikundo",
+    "lng": 96.195311,
+    "lat": 4.298285
+  },
+  {
+    "name": "Koto",
+    "lng": 98.243555,
+    "lat": -0.470559
+  },
+  {
+    "name": "Balale Toba'A",
+    "lng": 97.868779,
+    "lat": 1.002873
+  },
+  {
+    "name": "Tempen Baru",
+    "lng": 97.234674,
+    "lat": 4.707246
+  },
+  {
+    "name": "Baling Karang",
+    "lng": 97.828458,
+    "lat": 4.316886
+  },
+  {
+    "name": "Laut Tawar",
+    "lng": 97.632289,
+    "lat": 3.063172
+  },
+  {
+    "name": "Gobo",
+    "lng": 97.886361,
+    "lat": -0.076241
+  },
+  {
+    "name": "Hasahatan",
+    "lng": 99.691763,
+    "lat": 1.954751
+  },
+  {
+    "name": "Payung",
+    "lng": 97.228945,
+    "lat": 4.743123
+  },
+  {
+    "name": "Umang",
+    "lng": 97.106828,
+    "lat": 4.450123
+  },
+  {
+    "name": "Penarun",
+    "lng": 97.086307,
+    "lat": 4.423985
+  },
+  {
+    "name": "Hanofa",
+    "lng": 97.433431,
+    "lat": 0.957297
+  },
+  {
+    "name": "Fuge",
+    "lng": 98.271101,
+    "lat": -0.407238
+  },
+  {
+    "name": "Batahan Iii",
+    "lng": 99.049444,
+    "lat": 0.540134
+  },
+  {
+    "name": "Hiligeho Sogawu",
+    "lng": 98.428549,
+    "lat": -0.222718
+  },
+  {
+    "name": "Alur Bujok",
+    "lng": 97.827725,
+    "lat": 2.89438
+  },
+  {
+    "name": "Maufa",
+    "lng": 97.869766,
+    "lat": -0.06644
+  },
+  {
+    "name": "Sade Ate",
+    "lng": 97.669865,
+    "lat": 3.109849
+  },
+  {
+    "name": "Lahemboho",
+    "lng": 97.351065,
+    "lat": 1.25838
+  },
+  {
+    "name": "Tampur Boor",
+    "lng": 97.74797,
+    "lat": 4.35198
+  },
+  {
+    "name": "Lubuk Kapundung",
+    "lng": 99.11718,
+    "lat": 0.825828
+  },
+  {
+    "name": "Bintang Pepara",
+    "lng": 96.657685,
+    "lat": 4.766324
+  },
+  {
+    "name": "Gumbot",
+    "lng": 99.637508,
+    "lat": 1.761803
+  },
+  {
+    "name": "Lahawa",
+    "lng": 97.472714,
+    "lat": 0.963499
+  },
+  {
+    "name": "Tirmi Ara",
+    "lng": 96.611135,
+    "lat": 4.542792
+  },
+  {
+    "name": "Sah Raja",
+    "lng": 97.478952,
+    "lat": 4.88764
+  },
+  {
+    "name": "Lawe Sekhakut",
+    "lng": 97.66258,
+    "lat": 3.097034
+  },
+  {
+    "name": "Limo Biang",
+    "lng": 98.243555,
+    "lat": -0.470559
+  },
+  {
+    "name": "Rata Mulie",
+    "lng": 97.27963,
+    "lat": 4.70889
+  },
+  {
+    "name": "Antong",
+    "lng": 96.195328,
+    "lat": 4.34149
+  },
+  {
+    "name": "Paya Tampu",
+    "lng": 96.65215,
+    "lat": 4.48421
+  },
+  {
+    "name": "Balowondrate",
+    "lng": 97.457173,
+    "lat": 0.967812
+  },
+  {
+    "name": "Gaye Sendah",
+    "lng": 97.70114,
+    "lat": 3.090729
+  },
+  {
+    "name": "Lae Mbentar",
+    "lng": 98.232353,
+    "lat": 2.457813
+  },
+  {
+    "name": "Paya Sutra",
+    "lng": 97.108427,
+    "lat": 4.966453
+  },
+  {
+    "name": "Teumarom",
+    "lng": 96.069925,
+    "lat": 4.375176
+  },
+  {
+    "name": "Padang Harapan",
+    "lng": 97.708051,
+    "lat": 2.946399
+  },
+  {
+    "name": "Musara Pakat",
+    "lng": 96.772583,
+    "lat": 4.84589
+  },
+  {
+    "name": "Baluta",
+    "lng": 98.411604,
+    "lat": -0.276638
+  },
+  {
+    "name": "Uning Mas",
+    "lng": 96.790938,
+    "lat": 4.839841
+  },
+  {
+    "name": "Alue Gajah",
+    "lng": 96.486259,
+    "lat": 4.092147
+  },
+  {
+    "name": "Permata Musara",
+    "lng": 97.683526,
+    "lat": 3.098877
+  },
+  {
+    "name": "Pantan Penyo",
+    "lng": 96.666872,
+    "lat": 4.757049
+  },
+  {
+    "name": "Goneng",
+    "lng": 97.25686,
+    "lat": 4.70014
+  },
+  {
+    "name": "Labuan Rima Baru",
+    "lng": 98.483168,
+    "lat": -0.155799
+  },
+  {
+    "name": "Blang Cot Mameh",
+    "lng": 96.037576,
+    "lat": 4.33644
+  },
+  {
+    "name": "Kala Ketol",
+    "lng": 96.687244,
+    "lat": 4.75338
+  },
+  {
+    "name": "Lubuk Kancah",
+    "lng": 99.27304,
+    "lat": 0.772718
+  },
+  {
+    "name": "Imana",
+    "lng": 97.464673,
+    "lat": 0.94723
+  },
+  {
+    "name": "Lumbui Nias",
+    "lng": 98.490714,
+    "lat": -0.505707
+  },
+  {
+    "name": "Gampong Baro Wt",
+    "lng": 96.038324,
+    "lat": 4.478233
+  },
+  {
+    "name": "Gerpa",
+    "lng": 97.246319,
+    "lat": 4.683351
+  },
+  {
+    "name": "Kerlang",
+    "lng": 97.232446,
+    "lat": 4.672127
+  },
+  {
+    "name": "Labara",
+    "lng": 98.465335,
+    "lat": -0.136706
+  }
+]

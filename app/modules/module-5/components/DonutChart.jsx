@@ -9,6 +9,17 @@ export default function DonutChart({ data }) {
 
   return (
     <svg viewBox="0 0 140 140" className="w-full" style={{ maxHeight: "140px" }}>
+      {/* Definisi animasi draw-in khusus untuk SVG ini */}
+      <style>
+        {`
+          @keyframes drawIn {
+            from { stroke-dashoffset: ${circ}; }
+          }
+          .anim-draw {
+            animation: drawIn 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+          }
+        `}
+      </style>
       {data.map((d, i) => {
         const dash = (d.value / 100) * circ;
         const gap = circ - dash;
@@ -22,17 +33,12 @@ export default function DonutChart({ data }) {
             stroke={d.color}
             strokeWidth="18"
             strokeDasharray={`${dash} ${gap}`}
-            strokeDashoffset={offset}
+            style={{ strokeDashoffset: offset }}
             strokeLinecap="round"
+            className="anim-draw"
           />
         );
       })}
-      <text x={cx} y={cy - 6} textAnchor="middle" fontSize="20" fontWeight="700" fill={C.navy} fontFamily="sans-serif">
-        38%
-      </text>
-      <text x={cx} y={cy + 12} textAnchor="middle" fontSize="9" fill={C.navy} fontFamily="sans-serif" opacity="0.7">
-        Tergenang
-      </text>
     </svg>
   );
 }

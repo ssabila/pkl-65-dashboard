@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef, useCallback } from "react";
-import { C, STARS_BEFORE, STARS_AFTER } from "../data/constants";
+import { C } from "../data/constants";
 
 // HALAMAN 9
 export default function SectionNightLights({ active, setRef }) {
@@ -33,143 +33,135 @@ export default function SectionNightLights({ active, setRef }) {
   return (
     <section
       ref={setRef}
-      className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden pointer-events-none"
-      style={{ background: "rgba(44, 62, 80, 0.45)" }}
+      className="relative min-h-screen flex items-center justify-center px-6 py-12 pointer-events-none"
+      style={{ background: "linear-gradient(135deg, #4f7396 0%, #0f172a 100%)" }}
     >
-      {/* Static starfield */}
-      {Array.from({ length: 50 }).map((_, i) => (
-        <div
-          key={i}
-          className="absolute rounded-full"
-          style={{
-            left: `${((i * 5003 + 17) % 1000) / 10}%`,
-            top: `${((i * 3847 + 93) % 1000) / 10}%`,
-            width: `${1 + ((i * 1117) % 3)}px`,
-            height: `${1 + ((i * 1117) % 3)}px`,
-            background: `rgba(232,235,239,${0.1 + ((i * 677) % 30) / 100})`,
-          }}
-        />
-      ))}
-
-      {/* Title */}
-      {active && (
-        <div className="relative z-10 text-center mb-7 px-6 anim-fadeInUp">
-          <h2 style={{ fontFamily: "var(--font-garet-bold)", fontSize: "clamp(1.4rem, 3vw, 2.3rem)", color: C.gray, fontWeight: 700, letterSpacing: "0.04em" }}>
-            PENURUNAN INTENSITAS CAHAYA &gt; 50%
-          </h2>
-        </div>
-      )}
-
-      {/* Swipe component */}
+      {/* MAIN CONTAINER */}
       <div
         ref={swipeContainerRef}
-        className="relative z-10 mx-6 rounded-2xl overflow-hidden pointer-events-auto"
+        className={`relative z-10 w-full max-w-7xl h-[80vh] rounded-[2.5rem] overflow-hidden pointer-events-auto transition-all duration-1000 ${active ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-12 scale-95'}`}
         style={{
-          width: "100%",
-          maxWidth: "760px",
-          height: "400px",
           cursor: "ew-resize",
           userSelect: "none",
-          boxShadow: `0 0 60px rgba(109,157,197,0.25)`,
-          border: "1px solid rgba(255,255,255,0.08)",
+          boxShadow: `0 40px 100px rgba(0,0,0,0.6)`,
+          border: "1px solid rgba(255,255,255,0.15)",
         }}
         onMouseDown={() => setIsDragging(true)}
         onTouchStart={() => setIsDragging(true)}
       >
-        {/* AFTER (dark) */}
-        <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, #050810 0%, #0d1520 100%)" }}>
-          <div className="absolute bottom-4 left-4">
-            <span className="px-3 py-1 rounded-full text-xs" style={{ background: "rgba(217,56,58,0.28)", color: C.gray, fontFamily: "var(--font-dm-sans)" }}>
-              SESUDAH BENCANA
+        {/* AFTER (Dark Right Side) */}
+        <div className="absolute inset-0" style={{ background: "#000000" }}>
+          {/* Starry Dust AFTER */}
+          {Array.from({ length: 30 }).map((_, i) => (
+            <div key={i} className="absolute rounded-full" style={{ left: `${((i * 41) % 100)}%`, top: `${((i * 73) % 100)}%`, width: `${(i % 3) + 1}px`, height: `${(i % 3) + 1}px`, background: `rgba(255,220,150,${0.2 + (i % 5) / 10})`, boxShadow: "0 0 10px rgba(255,220,150,0.5)" }} />
+          ))}
+
+          <img
+            src="/data/module-5/ntl_post.svg"
+            alt="Sesudah Bencana"
+            className="w-full h-full object-contain p-4 opacity-90"
+          />
+          <div className="absolute top-8 right-12 z-10">
+            <span style={{ fontFamily: "var(--font-garet-bold)", fontSize: "1.25rem", color: "rgba(255,255,255,0.9)", letterSpacing: "0.02em" }}>
+              Sebelum
             </span>
           </div>
-          {STARS_AFTER.map((s) => (
-            <div key={s.id} className="absolute rounded-full" style={{
-              left: `${s.x}%`, top: `${s.y}%`,
-              width: `${s.s}px`, height: `${s.s}px`,
-              background: `rgba(200,200,150,${s.b * 0.35})`,
-              boxShadow: `0 0 ${s.s * 2}px rgba(200,200,150,${s.b * 0.15})`,
-            }} />
-          ))}
         </div>
 
-        {/* BEFORE (bright) — clipped by swipe position */}
+        {/* BEFORE (Bright Left Side) — clipped by swipe position */}
         <div
           className="absolute inset-0"
           style={{
-            background: "linear-gradient(135deg, #112240 0%, #1e3a5f 100%)",
+            background: "#000000",
             clipPath: `inset(0 ${100 - swipePos}% 0 0)`,
           }}
         >
-          <div className="absolute bottom-4 left-4">
-            <span className="px-3 py-1 rounded-full text-xs" style={{ background: "rgba(32,135,116,0.28)", color: C.gray, fontFamily: "var(--font-dm-sans)" }}>
-              SEBELUM BENCANA
+          {/* Starry Dust BEFORE */}
+          {Array.from({ length: 40 }).map((_, i) => (
+            <div key={`b-${i}`} className="absolute rounded-full" style={{ left: `${((i * 53) % 100)}%`, top: `${((i * 89) % 100)}%`, width: `${(i % 4) + 1.5}px`, height: `${(i % 4) + 1.5}px`, background: `rgba(255,255,255,${0.6 + (i % 4) / 10})`, boxShadow: "0 0 15px rgba(255,255,255,0.9)" }} />
+          ))}
+
+          <img
+            src="/data/module-5/ntl_pre.svg"
+            alt="Sebelum Bencana"
+            className="w-full h-full object-contain p-4 opacity-80"
+          />
+          <div className="absolute top-8 left-12 z-10">
+            <span style={{ fontFamily: "var(--font-garet-bold)", fontSize: "1.25rem", color: "rgba(255,255,255,0.9)", letterSpacing: "0.02em" }}>
+              Sesudah
             </span>
           </div>
-          {STARS_BEFORE.map((s) => (
-            <div key={s.id} className="absolute rounded-full" style={{
-              left: `${s.x}%`, top: `${s.y}%`,
-              width: `${s.s}px`, height: `${s.s}px`,
-              background: `rgba(255,255,200,${s.b})`,
-              boxShadow: `0 0 ${s.s * 3}px rgba(255,255,180,${s.b * 0.75})`,
-            }} />
-          ))}
         </div>
 
-        {/* Slider handle */}
+        {/* SWIPE LINE & HANDLE */}
         <div
           className="absolute top-0 bottom-0 flex items-center justify-center"
-          style={{ left: `${swipePos}%`, transform: "translateX(-50%)", width: "2px", background: "rgba(255,255,255,0.85)", boxShadow: "0 0 16px rgba(255,255,255,0.7)" }}
+          style={{ left: `${swipePos}%`, transform: "translateX(-50%)", width: "4px", background: "#fff", boxShadow: "0 0 25px rgba(255,255,255,0.9)" }}
         >
+          {/* Glowic white neon separator handle */}
           <div
-            className="w-9 h-9 rounded-full flex items-center justify-center"
-            style={{ background: "#fff", boxShadow: "0 0 16px rgba(255,255,255,0.8)", flexShrink: 0 }}
+            className="w-4 h-24 rounded-full"
+            style={{ background: "#fff", boxShadow: "0 0 30px rgba(255,255,255,1)", flexShrink: 0 }}
+          />
+        </div>
+
+        {/* FLOATING TELEMETRY CARD (Bottom Left) */}
+        {active && (
+          <div
+            className="absolute bottom-8 left-8 z-10 rounded-2xl p-5 anim-fadeInLeft pointer-events-auto"
+            style={{
+              background: "rgba(255, 255, 255, 0.05)",
+              backdropFilter: "blur(12px)",
+              border: "1px solid rgba(255,255,255,0.15)",
+              boxShadow: "0 20px 40px rgba(0,0,0,0.4)",
+              width: "280px",
+              animationDelay: "0.4s", opacity: 0, animationFillMode: "forwards"
+            }}
           >
-            <svg width="18" height="18" viewBox="0 0 18 18">
-              <path d="M6 9L2 5V13L6 9Z" fill={C.navy} />
-              <path d="M12 9L16 5V13L12 9Z" fill={C.navy} />
-            </svg>
-          </div>
-        </div>
-      </div>
-
-      <p className="relative z-10 mt-3 text-xs" style={{ fontFamily: "var(--font-dm-sans)", color: "rgba(232,235,239,0.4)" }}>
-        ← Geser slider untuk membandingkan kondisi sebelum dan sesudah bencana →
-      </p>
-
-      {/* Telemetry card */}
-      {active && (
-        <div
-          className="absolute bottom-8 left-8 z-10 glass-dark rounded-xl p-5 anim-fadeInLeft"
-          style={{ animationDelay: "0.35s", opacity: 0, animationFillMode: "forwards" }}
-        >
-          <p className="text-xs mb-3" style={{ fontFamily: "var(--font-dm-sans)", color: C.gray, opacity: 0.5, letterSpacing: "0.12em" }}>
-            VIIRS DNB SENSOR DATA
-          </p>
-          {[
-            { l: "Radiansi Sebelum", v: "42,7 nW/cm²/sr", hi: false },
-            { l: "Radiansi Sesudah", v: "18,3 nW/cm²/sr", hi: false },
-            { l: "Penurunan", v: "57,2%", hi: true },
-          ].map((it) => (
-            <div key={it.l} className="flex gap-6 justify-between mb-1">
-              <span className="text-xs" style={{ fontFamily: "var(--font-dm-sans)", color: "rgba(232,235,239,0.55)" }}>{it.l}</span>
-              <span className="text-xs font-medium" style={{ fontFamily: "var(--font-dm-sans)", color: it.hi ? C.orange : C.gray }}>{it.v}</span>
+            <h3 className="text-sm font-bold mb-4" style={{ fontFamily: "var(--font-dm-sans)", color: "#ffffff" }}>
+              Floating telemetry Card
+            </h3>
+            <div className="flex justify-between text-xs mb-3 border-b border-white/20 pb-2" style={{ fontFamily: "var(--font-dm-sans)", color: "rgba(255,255,255,0.8)" }}>
+              <span>Glassogray</span>
+              <span className="font-semibold text-white">40-60%</span>
             </div>
-          ))}
-        </div>
-      )}
 
-      {/* Description */}
-      {active && (
-        <div
-          className="relative z-10 mt-5 max-w-xl text-center px-6 anim-fadeInUp"
-          style={{ animationDelay: "0.5s", opacity: 0, animationFillMode: "forwards" }}
-        >
-          <p style={{ fontFamily: "var(--font-dm-sans)", fontSize: "0.88rem", color: "rgba(232,235,239,0.72)", lineHeight: 1.78 }}>
-            Pencitraan VIIRS mengungkap realitas pamungkas. Padamnya separuh cahaya malam bukan sekadar kerusakan gardu, melainkan proksi terkuat bahwa roda ekonomi dan denyut kehidupan warga telah berhenti total.
-          </p>
-        </div>
-      )}
+            <h4 className="text-xs font-bold mt-4 mb-2" style={{ fontFamily: "var(--font-dm-sans)", color: "#ffffff" }}>Radiance Statistics</h4>
+            {[
+              { l: "Radiance", v: "42.7 nW" },
+              { l: "Background", v: "40-60%" },
+              { l: "Decrease", v: "> 50%" },
+            ].map((it) => (
+              <div key={it.l} className="flex justify-between text-xs mb-1.5" style={{ fontFamily: "var(--font-dm-sans)", color: "rgba(255,255,255,0.7)" }}>
+                <span>{it.l}</span>
+                <span className="font-medium text-white/90">{it.v}</span>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* FLOATING TITLE & DESC CARD (Bottom Right) */}
+        {active && (
+          <div
+            className="absolute bottom-8 right-8 z-10 rounded-[2rem] p-8 anim-fadeInUp pointer-events-auto"
+            style={{
+              background: "rgba(15, 23, 42, 0.6)",
+              backdropFilter: "blur(20px)",
+              border: "1px solid rgba(255,255,255,0.15)",
+              boxShadow: "0 30px 60px rgba(0,0,0,0.4)",
+              maxWidth: "480px",
+              animationDelay: "0.6s", opacity: 0, animationFillMode: "forwards"
+            }}
+          >
+            <h2 style={{ fontFamily: "var(--font-garet-bold)", fontSize: "1.75rem", color: "#fff", fontWeight: 700, letterSpacing: "0.02em", lineHeight: 1.2, marginBottom: "1rem" }}>
+              PENURUNAN INTENSITAS CAHAYA &gt; 50%
+            </h2>
+            <p style={{ fontFamily: "var(--font-dm-sans)", fontSize: "0.95rem", color: "rgba(255,255,255,0.8)", lineHeight: 1.7 }}>
+              Pencitraan VIIRS mengungkap realitas pamungkas. Padamnya separuh cahaya malam bukan sekadar kerusakan gardu, melainkan proksi terkuat bahwa roda ekonomi dan denyut kehidupan warga telah berhenti total.
+            </p>
+          </div>
+        )}
+      </div>
     </section>
   );
 }

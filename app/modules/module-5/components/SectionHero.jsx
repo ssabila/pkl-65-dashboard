@@ -19,9 +19,21 @@ export default function SectionHero({ active, setRef }) {
     <section
       ref={setRef}
       className="flex flex-col items-center justify-center min-h-screen relative overflow-hidden w-full"
-      style={{ background: "rgba(168, 196, 216, 0.45)" /* Semi-transparent so Mapbox shows */ }}
     >
-      <div className="absolute inset-0 topo-bg" />
+      {/* Background layer with aurora, blur, and mask to fade out at the bottom */}
+      <div
+        className="absolute inset-0 z-0 pointer-events-none"
+        style={{
+          // Aurora gradient background with transparency
+          background: "radial-gradient(circle at 10% 40%, rgba(109, 157, 197, 0.85) 0%, transparent 60%), radial-gradient(circle at 90% 60%, rgba(244, 124, 54, 0.85) 0%, transparent 60%), rgba(232, 235, 239, 0.65)",
+          // Heavy Gaussian blur and thin silhouette effect for the map underneath
+          backdropFilter: "blur(12px) contrast(0.9) brightness(1.1)",
+          WebkitBackdropFilter: "blur(12px) contrast(0.9) brightness(1.1)",
+        }}
+      />
+      <div 
+        className="absolute inset-0 topo-bg z-0 pointer-events-none" 
+      />
 
       {/* Particles */}
       {PARTICLES.map((p) => (
