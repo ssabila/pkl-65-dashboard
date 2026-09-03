@@ -1,128 +1,195 @@
-import { Lora } from "next/font/google";
-
-const loraNormal = Lora({
-    subsets: ["latin"],
-    weight: ["400", "700"],
-    style: ["normal"]
-});
-
+"use client";
+import { useState } from "react";
 
 const STATS = {
-    totalLuasBanjir: 100000,
-    jumlahKotaTerdampak: 10,
-    jumlahKecamatanTerdampak: 10,
-    totalLuasLongsor: 100000,
+  totalLuasBanjir: 100000,
+  jumlahKotaTerdampak: 10,
+  jumlahKecamatanTerdampak: 10,
+  totalLuasLongsor: 100000,
 };
 
 function formatAngka(num) {
-    return num.toLocaleString("id-ID");
+  return num.toLocaleString("id-ID");
 }
 
-// Style glass card sesuai Figma
-const cardStyle = {
-    background: "rgba(255,255,255,0.5)",
-    boxShadow: "inset 0px -2px 4px rgba(0,0,0,0.2), inset 0px 2px 4px rgba(255,255,255,0.4)",
-    backdropFilter: "blur(51.5px)",
-    border: "4px solid rgba(255, 255, 255, 0.3)"
-};
+// Data cards beranda
+const CARDS_DATA = [
+  {
+    id: 1,
+    titleLine1: "Total Luas Area",
+    titleLine2: "Banjir (Ha)",
+    value: formatAngka(STATS.totalLuasBanjir),
+    subtitle: "15% dari total wilayah",
+  },
+  {
+    id: 2,
+    titleLine1: "Jumlah Kota",
+    titleLine2: "Terdampak",
+    value: STATS.jumlahKotaTerdampak,
+    subtitle: "dari 30 kab/kota",
+  },
+  {
+    id: 3,
+    titleLine1: "Jumlah Kecamatan",
+    titleLine2: "Terdampak",
+    value: STATS.jumlahKecamatanTerdampak,
+    subtitle: "dari 30 kecamatan",
+  },
+  {
+    id: 4,
+    titleLine1: "Total Luas Area",
+    titleLine2: "Longsor (Ha)",
+    value: formatAngka(STATS.totalLuasLongsor),
+    subtitle: "15% dari total wilayah",
+  },
+];
 
-// Style angka gradient sesuai Figma
-const gradientNumberStyle = {
-    fontFamily: "var(--font-garet-heavy)",
-    background: "linear-gradient(90deg, #F3BB99 0%, #F43E3E 54.33%, #E50707 100%)",
-    WebkitBackgroundClip: "text",
-    WebkitTextFillColor: "transparent",
-    backgroundClip: "text",
-};
+// Single Card Component
+function StatCard({ item, isCarousel = false }) {
+  return (
+    <div
+      className={`
+        flex flex-col items-center justify-between
+        p-4 sm:p-5 lg:p-6
+        rounded-[28px] sm:rounded-[32px]
+        transition-all duration-300
+        hover:scale-[1.02]
+        ${isCarousel ? "w-full h-full" : "w-full min-h-[220px] sm:min-h-[240px] lg:min-h-[250px]"}
+      `}
+      style={{
+        background: "linear-gradient(135deg, rgba(255, 255, 255, 0.48) 0%, rgba(255, 255, 255, 0.22) 100%)",
+        boxShadow: "inset 0px 2px 4px rgba(255,255,255,0.6), inset 0px -2px 4px rgba(0,0,0,0.25), 0px 12px 36px rgba(0,0,0,0.18)",
+        backdropFilter: "blur(40px)",
+        WebkitBackdropFilter: "blur(40px)",
+        border: "3.5px solid rgba(255, 255, 255, 0.75)",
+      }}
+    >
+      {/* Title */}
+      <p
+        className="
+          text-[17px] sm:text-[20px] lg:text-[22px]
+          font-[850]
+          text-center
+          leading-tight
+          text-white
+          [-webkit-text-stroke:1px_rgba(44,44,44,0.63)]
+          [text-shadow:0_3px_6px_rgba(0,0,0,0.35)]
+        "
+        style={{ fontFamily: "var(--font-garet-heavy), sans-serif" }}
+      >
+        {item.titleLine1}
+        <br />
+        {item.titleLine2}
+      </p>
 
-// Style teks judul card
-const cardTitleStyle = {
-    fontFamily: "var(--font-garet-heavy)",
-    textShadow: "0px 4px 4px rgba(0,0,0,0.25)",
-    color: "#FFFFFF",
-};
+      {/* Divider */}
+      <div
+        className="w-full h-[2px] my-1 opacity-80"
+        style={{ background: "linear-gradient(90deg, #FFFFFF 0%, #E0C9C9 100%)" }}
+      />
 
-// Style teks subtitle
-const subtitleStyle = {
-    fontFamily: "var(--font-garet-heavy)",
-    color: "#FFF4F4",
-};
+      {/* Figma Stat Number (Font 850 Heavy 41px, Gradient #F3BB99 -> #F43E3E -> #E50707, Drop Shadow 0 4px 4px 84%) */}
+      <div className="flex items-baseline justify-center gap-2 my-1">
+        <span
+          className="
+            text-[34px] sm:text-[38px] lg:text-[41px]
+            font-[850]
+            leading-none
+            tracking-normal
+            text-center
+          "
+          style={{
+            fontFamily: "var(--font-garet-heavy), 'Garet-Heavy', sans-serif",
+            background: "linear-gradient(180deg, #F3BB99 0%, #F43E3E 50%, #E50707 100%)",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+            filter: "drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.84))",
+          }}
+        >
+          {item.value}
+        </span>
+      </div>
+
+      {/* Subtitle */}
+      <p
+        className="
+          text-[14px] sm:text-[16px] lg:text-[18px]
+          font-[850]
+          text-center
+          text-[#FFF4F4]
+          [text-shadow:0_2px_4px_rgba(0,0,0,0.4)]
+        "
+        style={{ fontFamily: "var(--font-garet-heavy), sans-serif" }}
+      >
+        {item.subtitle}
+      </p>
+    </div>
+  );
+}
 
 export default function BerandaView() {
-    return (
-        <div className="relative w-[620px] h-[580px]">
+  const [activeIndex, setActiveIndex] = useState(0);
 
-            {/* Card 1: TOTAL LUAS AREA BANJIR */}
-            <div className="absolute top-[0px] left-[0px] rounded-[34px] p-5 flex flex-col items-center gap-2 rotate-[0.68deg] w-[308px] h-[260px]"
-                style={{ ...cardStyle, background: "#FFFFFF80", backdropFilter: "blur(103px)", boxShadow: "inset 0px 2px 4px 0px #FFFFFF66, inset 0px -2px 4px 0px #00000033"
- }}>
-                <p className="text-[23px] [-webkit-text-stroke:1px_rgba(44,44,44,0.63)] font-black uppercase text-center leading-tight" style={cardTitleStyle}>
-                    TOTAL LUAS AREA<br />BANJIR
-                </p>
-                <div className="w-full h-[2px] my-1" style={{ background: "linear-gradient(90deg, #FFFFFF 0%, #E0C9C9 100%)" }}></div>
-                <div className="flex items-baseline gap-5">
-                    <span className="text-[41px] font-black drop-shadow-[0_4px_4px_rgba(0,0,0,1)]" style={gradientNumberStyle}>
-                        {formatAngka(STATS.totalLuasBanjir)}
-                    </span>
-                    <span className="text-[36px] font-bold text-[#FFFFFF] [-webkit-text-stroke:1px_#000000]"
-                        style={{ fontFamily: "var(--font-lora)", opacity: 0.76 }}>
-                        Ha
-                    </span>
-                </div>
-                <p className="text-[19px] font-[850] text-center" style={subtitleStyle}>
-                    15% dari total wilayah
-                </p>
-            </div>
+  const nextCard = () => {
+    setActiveIndex((prev) => (prev + 1) % CARDS_DATA.length);
+  };
 
-            {/* Card 2: Jumlah Kota Terdampak */}
-            <div className="absolute top-[60px] left-[338px] rounded-[21px] p-5 flex flex-col items-center gap-2 rotate-[0.68deg] w-[261.42px] h-[205px]"
-                style={{ ...cardStyle, background: "#FFFFFF5C", backdropFilter: "blur(103px)", boxShadow: "inset 0px 2px 4px 0px #FFFFFF66, 0px -2px 4px 0px #00000033" }}>
-                <p className="text-[23px] font-[850] text-center leading-tight [-webkit-text-stroke:1px_rgba(44,44,44,0.63)]" style={cardTitleStyle}>
-                    Jumlah Kota<br />Terdampak
-                </p>
-                <span className="text-[41px] font-[850] drop-shadow-[0_4px_4px_rgba(0,0,0,1)]" style={gradientNumberStyle}>
-                    {STATS.jumlahKotaTerdampak}
-                </span>
-                <p className="text-[19px] font-[850] text-center" style={subtitleStyle}>
-                    dari 30 kab/kota
-                </p>
-            </div>
+  const prevCard = () => {
+    setActiveIndex((prev) => (prev - 1 + CARDS_DATA.length) % CARDS_DATA.length);
+  };
 
-            {/* Card 3: Jumlah Kecamatan Terdampak */}
-            <div className="absolute top-[288px] left-[20px] rounded-[27px] p-5 flex flex-col items-center gap-2 rotate-[0.68deg]"
-                style={{ ...cardStyle, background: "#FFFFFF54", backdropFilter: "blur(103px)", boxShadow: "inset 0px 2px 4px 0px #FFFFFF66, 0px -2px 4px 0px #00000033" }}>
-                <p className="text-[23px] font-[850] text-center leading-tight [-webkit-text-stroke:1px_rgba(44,44,44,0.63)]" style={cardTitleStyle}>
-                    Jumlah Kecamatan<br />Terdampak
-                </p>
-                <span className="text-[41px] font-[850] drop-shadow-[0_4px_4px_rgba(0,0,0,1)]" style={gradientNumberStyle}>
-                    {STATS.jumlahKecamatanTerdampak}
-                </span>
-                <p className="text-[19px] font-[850] text-center" style={subtitleStyle}>
-                    dari 30 kecamatan
-                </p>
-            </div>
+  return (
+    <div className="w-full max-w-[640px] mx-auto lg:mt-6">
+      {/* Grid Layout for Desktop & Tablet */}
+      <div className="hidden sm:grid grid-cols-2 gap-4 lg:gap-5 beranda-desktop-only">
+        {CARDS_DATA.map((item) => (
+          <StatCard key={item.id} item={item} />
+        ))}
+      </div>
 
-            {/* Card 4: TOTAL LUAS AREA LONGSOR */}
-            <div className="absolute top-[288px] left-[338px] rounded-[34px] p-5 flex flex-col items-center gap-2 rotate-[0.68deg]  w-[308px] h-[260px]"
-                style={cardStyle}>
-                <p className="text-[23px] font-[850] uppercase text-center leading-tight [-webkit-text-stroke:1px_rgba(44,44,44,0.63)]" style={cardTitleStyle}>
-                    TOTAL LUAS AREA<br />LONGSOR
-                </p>
-                <div className="w-full h-[2px] my-1" style={{ background: "linear-gradient(90deg, #FFFFFF 0%, #E0C9C9 100%)" }}></div>
-                <div className="flex items-baseline gap-5">
-                    <span className="text-[41px] font-[850] drop-shadow-[0_4px_4px_rgba(0,0,0,1)]" style={gradientNumberStyle}>
-                        {formatAngka(STATS.totalLuasLongsor)}
-                    </span>
-                    <span className="text-[36px] font-bold   [-webkit-text-stroke:1px_#000000]"
-                        style={{ fontFamily: "var(--font-lora)", color: "#FFFFFF", opacity: 0.76 }}>
-                        Ha
-                    </span>
-                </div>
-                <p className="text-[19px] font-[850] text-center" style={subtitleStyle}>
-                    15% dari total wilayah
-                </p>
-            </div>
+      {/* Mobile Slider / Deck Layout */}
+      <div className="sm:hidden flex flex-col items-center w-full px-2">
+        <div className="relative w-full max-w-[340px] h-[220px] flex items-center justify-center">
+          {/* Arrow Left */}
+          <button
+            type="button"
+            onClick={prevCard}
+            className="hstack-outer-arrow hstack-outer-arrow-left"
+            aria-label="Previous card"
+          >
+            ‹
+          </button>
 
+          {/* Active Card Only for crystal clear mobile rendering */}
+          <div className="w-[82%] h-full">
+            <StatCard item={CARDS_DATA[activeIndex]} isCarousel={true} />
+          </div>
+
+          {/* Arrow Right */}
+          <button
+            type="button"
+            onClick={nextCard}
+            className="hstack-outer-arrow hstack-outer-arrow-right"
+            aria-label="Next card"
+          >
+            ›
+          </button>
         </div>
-    );
+
+        {/* Carousel Indicators */}
+        <div className="carousel-dots-standalone flex items-center justify-center gap-2 mt-3">
+          {CARDS_DATA.map((_, idx) => (
+            <button
+              key={idx}
+              type="button"
+              onClick={() => setActiveIndex(idx)}
+              className={`carousel-dot-bare ${idx === activeIndex ? "active" : ""}`}
+              aria-label={`Go to slide ${idx + 1}`}
+            />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
 }
+
