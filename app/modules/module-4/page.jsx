@@ -98,6 +98,25 @@ const downloadFiles = [
   { id: "complete_vulnerability_profile", name: "Data Tabular Profil Kerentanan Wilayah Komplet (10 Kabupaten)", format: "XLSX", size: "1.1 MB" }
 ];
 
+// Image Coverflow Gallery mock dataset (3 Gambar Provinsi)
+const coverflowItems = [
+  {
+    id: 1,
+    badge: "Provinsi Aceh",
+    image: "/module-4/aceh.jpg"
+  },
+  {
+    id: 2,
+    badge: "Provinsi Sumatera Utara",
+    image: "/module-4/sumut.jpeg"
+  },
+  {
+    id: 3,
+    badge: "Provinsi Sumatera Barat",
+    image: "/module-4/sumbar.jpeg"
+  }
+];
+
 export default function Modul4Page() {
   // Navigation Sidebar States
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -107,8 +126,17 @@ export default function Modul4Page() {
   const [selectedProvinsi, setSelectedProvinsi] = useState("Semua Provinsi");
   const [selectedKabupaten, setSelectedKabupaten] = useState("");
 
-  // Carousel Slider States
+  // Carousel & Coverflow Slider States
   const [sliderIndex, setSliderIndex] = useState(0);
+  const [coverflowIndex, setCoverflowIndex] = useState(0);
+
+  const prevCover = () => {
+    setCoverflowIndex((prev) => (prev === 0 ? coverflowItems.length - 1 : prev - 1));
+  };
+
+  const nextCover = () => {
+    setCoverflowIndex((prev) => (prev === coverflowItems.length - 1 ? 0 : prev + 1));
+  };
 
   // Sorting States for Table
   const [sortOrder, setSortOrder] = useState("desc"); // 'asc' or 'desc'
@@ -380,238 +408,324 @@ export default function Modul4Page() {
           />
         </div>
 
-        <div className="max-w-6xl mx-auto space-y-16 relative z-10">
+        <div className="max-w-7xl mx-auto space-y-16 relative z-10">
 
-          {/* Header Dashboard */}
-          <div className="border-b border-card-border pb-6">
-            <h1 className="font-heading text-text-primary text-3xl sm:text-4xl">
-              Profil Kerentanan Wilayah
-            </h1>
-            <p className="subheading text-sm sm:text-base mt-2">
-              Analisis Komprehensif Risiko Kebencanaan Provinsi Aceh, Sumatera Utara, dan Sumatera Barat Tahun 2025
-            </p>
-          </div>
+          {/* OVERVIEW / HERO (Redesigned) */}
+          <section id="overview" className="scroll-mt-24 flex flex-col items-center justify-center pt-6 space-y-8 sm:space-y-12">
 
-          {/* SECTION 1: OVERVIEW */}
-          <section id="overview" className="scroll-mt-24 space-y-8">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            {/* Judul Utama (Fluid Viewport Scale - Super Large & Proportional) */}
+            <div className="flex flex-col items-center justify-center space-y-0 text-center w-full max-w-7xl mx-auto select-none px-2">
+              {/* PROFIL */}
+              <h1 className="font-heading font-extrabold text-[7vw] md:text-[5.5rem] lg:text-[6.5rem] text-[#0f8575] tracking-wider leading-none uppercase drop-shadow-sm">
+                PROFIL
+              </h1>
 
-              {/* Background Text & Hero Image */}
-              <div className="lg:col-span-7 space-y-6">
-                <h3 className="font-heading text-xl text-text-primary flex items-center gap-2">
-                  <span className="w-1.5 h-6 bg-accent-primary rounded-full"></span>
-                  Latar Belakang & Konteks Wilayah
-                </h3>
-                <div className="font-sans text-text-secondary leading-relaxed space-y-4 text-sm sm:text-base">
-                  <p>
-                    Pada tahun 2025, sejumlah wilayah di Pulau Sumatra, khususnya Provinsi <strong>Aceh</strong>, <strong>Sumatera Utara</strong>, dan <strong>Sumatera Barat</strong>,
-                    mengalami kejadian banjir dan tanah longsoryang menimbulkan dampak signifikan terhadap masyarakat, infrastruktur, serta aktivitas ekonomi.
-                    Kondisi tersebut menunjukkan bahwa tingkat kerentanan suatu wilayah tidak hanya dipengaruhi oleh kejadian bencana alam yang tinggi,
-                    tetapi juga oleh karakteristik sensitivitas lingkungan serta masyarakat dan kapasitas wilayah dalam menghadapi bencana.
-                  </p>
-                  <p>
-                    Dashboard Profil Kerentanan Wilayah ini disusun untuk memberikan gambaran komprehensif mengenai faktor-faktor yang memengaruhi
-                    kerentanan banjir dan tanah longsor di Aceh, Sumatera Utara, dan Sumatera Barat, sehingga dapat menjadi dasar dalam mendukung
-                    upaya mitigasi, perencanaan pembangunan yang lebih tangguh, serta pengambilan keputusan yang berbasis data dalam pengurangan risiko bencana.
-                  </p>
-                </div>
+              {/* KERENTANAN (Gradient Coral-Red to Magenta-Pink) */}
+              <h1 className="font-heading font-black text-[13.5vw] md:text-[11.5rem] lg:text-[13rem] bg-gradient-to-r from-[#ea4e3d] via-[#e8395f] to-[#e42978] bg-clip-text text-transparent tracking-tight leading-[0.85] uppercase drop-shadow-sm py-1">
+                KERENTANAN
+              </h1>
 
-                {/* Hero Frame Image */}
-                <div className="relative rounded-xl overflow-hidden border border-card-border shadow-md aspect-video group bg-slate-100">
-                  <img
-                    src="/module-4/Frame 1.png"
-                    alt="Visualisasi Dekorasi Peta Kerentanan Sumatera"
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    onError={(e) => {
-                      // Fallback visual design if the asset doesn't exist
-                      e.target.style.display = "none";
-                    }}
-                  />
-                  {/* Backup visual inside if image fails to load */}
-                  <div className="absolute inset-0 bg-linear-to-tr from-slate-900 via-slate-800 to-slate-950 flex flex-col justify-end p-6">
-                    <span className="text-[10px] uppercase font-bold tracking-widest text-accent-secondary mb-1">Peta Tematik Utama</span>
-                    <h4 className="text-white text-base font-heading">Sistem Pemetaan Koridor Bukit Barisan</h4>
-                    <p className="text-slate-400 text-xs mt-1 font-sans">
-                      Visualisasi spasial gabungan parameter curah hujan bulanan tinggi dan sebaran kemiringan lereng kritis pulau Sumatra bagian utara.
-                    </p>
-                  </div>
-                </div>
-              </div>
+              {/* WILAYAH (Gradient Steel-Blue to Dark-Navy) */}
+              <h1 className="font-heading font-extrabold text-[11vw] md:text-[9.5rem] lg:text-[10.8rem] bg-gradient-to-r from-[#678ba7] via-[#456784] to-[#29435b] bg-clip-text text-transparent tracking-normal leading-[0.88] uppercase drop-shadow-sm pb-2">
+                WILAYAH
+              </h1>
+            </div>
 
-              {/* Macro Metrics Visualizations */}
-              <div className="lg:col-span-5 space-y-6">
-                <h3 className="font-heading text-xl text-text-primary flex items-center gap-2">
-                  <span className="w-1.5 h-6 bg-accent-secondary rounded-full"></span>
-                  Visualisasi Makro Kebencanaan (2025)
-                </h3>
+            {/* Badge Provinsi */}
+            <div className="bg-[#8e9eb2] px-8 sm:px-16 py-2.5 sm:py-3 rounded-full shadow-lg text-center max-w-fit border border-white/30 backdrop-blur-sm mt-2">
+              <h2 className="text-white font-serif italic font-bold text-base sm:text-2xl md:text-3xl tracking-wide drop-shadow-sm">
+                Provinsi Aceh, Sumatera Utara dan Sumatera Barat
+              </h2>
+            </div>
 
-                <div className="card p-6 space-y-6">
-                  <div className="border-b border-card-border pb-3">
-                    <span className="text-xs uppercase font-bold tracking-wider text-text-light">Ringkasan Korban & Kerusakan</span>
-                  </div>
+            {/* Gallery Images (Interactive 3D Coverflow Style with Navigation) */}
+            <div className="w-full max-w-6xl flex flex-col items-center my-6 sm:my-10 relative group select-none">
 
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="bg-slate-50 p-4 rounded-xl border border-card-border">
-                      <span className="text-xxs uppercase tracking-wider text-text-secondary block font-sans">Total Korban Jiwa</span>
-                      <span className="text-3xl font-heading text-accent-danger font-bold block mt-1">
-                        {Object.values(dataOverview).reduce((a, b) => a + b.korbanJiwa, 0)}
-                      </span>
-                      <span className="text-[10px] text-text-light font-sans block mt-1">Orang meninggal / hilang</span>
-                    </div>
+              {/* Coverflow Main Slider Container */}
+              <div className="w-full flex items-center justify-center relative h-[220px] sm:h-[360px] md:h-[450px]">
 
-                    <div className="bg-slate-50 p-4 rounded-xl border border-card-border">
-                      <span className="text-xxs uppercase tracking-wider text-text-secondary block font-sans">Kerusakan Rumah</span>
-                      <span className="text-3xl font-heading text-accent-warning font-bold block mt-1">
-                        {Object.values(dataOverview).reduce((a, b) => a + b.rumahRusak, 0).toLocaleString()}
-                      </span>
-                      <span className="text-[10px] text-text-light font-sans block mt-1">Unit terdampak parah</span>
-                    </div>
-                  </div>
+                {/* Tombol Panah Kiri */}
+                <button
+                  onClick={prevCover}
+                  aria-label="Gambar Sebelumnya"
+                  className="absolute left-2 sm:left-6 z-40 bg-white/80 hover:bg-white text-slate-800 p-2.5 sm:p-4 rounded-full shadow-xl border border-white/60 backdrop-blur-md transition-all transform hover:scale-110 active:scale-95 cursor-pointer focus:outline-none"
+                >
+                  <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                  </svg>
+                </button>
 
-                  {/* Horizontal Progress Bars for Tiny Percentages */}
-                  <div className="space-y-4 pt-2">
-                    <span className="text-xs font-semibold text-text-primary block">Rata-rata Proporsi Wilayah Terdampak Bencana</span>
+                {/* Tombol Panah Kanan */}
+                <button
+                  onClick={nextCover}
+                  aria-label="Gambar Selanjutnya"
+                  className="absolute right-2 sm:right-6 z-40 bg-white/80 hover:bg-white text-slate-800 p-2.5 sm:p-4 rounded-full shadow-xl border border-white/60 backdrop-blur-md transition-all transform hover:scale-110 active:scale-95 cursor-pointer focus:outline-none"
+                >
+                  <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
 
-                    {/* FLOOD PCT PROGRESS BAR */}
-                    <div className="space-y-1.5">
-                      <div className="flex justify-between items-center text-xs">
-                        <span className="text-text-secondary font-sans font-medium flex items-center gap-2">
-                          <span className="w-2 h-2 rounded-full bg-accent-primary"></span>
-                          Terdampak Banjir
-                        </span>
-                        <span className="font-bold text-accent-primary font-heading">
-                          {(Object.values(dataOverview).reduce((a, b) => a + b.banjirPct, 0) / 3).toFixed(2)}%
-                        </span>
-                      </div>
-                      <div className="h-3 w-full bg-slate-100 rounded-full overflow-hidden border border-slate-200">
-                        {/* We use a scaling multiplier since percentages are naturally < 1%, to make it visually informative */}
-                        <div
-                          className="h-full bg-linear-to-r from-accent-primary to-accent-secondary rounded-full transition-all duration-1000"
-                          style={{ width: `${Math.min(100, (Object.values(dataOverview).reduce((a, b) => a + b.banjirPct, 0) / 3) * 60)}%` }}
-                          title="Visual scale: 1% fills 60% of progress track"
-                        ></div>
-                      </div>
-                      <span className="text-[9px] text-text-light italic font-sans block">
-                        *Skala visual disesuaikan (1% terisi 60% bar) untuk memperjelas angka fraksi kecil.
-                      </span>
-                    </div>
+                {/* Coverflow Cards Rendering (3 Provinsi) */}
+                {coverflowItems.map((item, index) => {
+                  let offset = index - coverflowIndex;
+                  if (offset === -2) offset = 1;
+                  if (offset === 2) offset = -1;
 
-                    {/* LANDSLIDE PCT PROGRESS BAR */}
-                    <div className="space-y-1.5">
-                      <div className="flex justify-between items-center text-xs">
-                        <span className="text-text-secondary font-sans font-medium flex items-center gap-2">
-                          <span className="w-2 h-2 rounded-full bg-accent-danger"></span>
-                          Terdampak Tanah Longsor
-                        </span>
-                        <span className="font-bold text-accent-danger font-heading">
-                          {(Object.values(dataOverview).reduce((a, b) => a + b.longsorPct, 0) / 3).toFixed(2)}%
-                        </span>
-                      </div>
-                      <div className="h-3 w-full bg-slate-100 rounded-full overflow-hidden border border-slate-200">
-                        <div
-                          className="h-full bg-linear-to-r from-accent-warning to-accent-danger rounded-full transition-all duration-1000"
-                          style={{ width: `${Math.min(100, (Object.values(dataOverview).reduce((a, b) => a + b.longsorPct, 0) / 3) * 60)}%` }}
-                          title="Visual scale: 1% fills 60% of progress track"
-                        ></div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Province Comparison breakdown */}
-                  <div className="mt-4 pt-4 border-t border-card-border space-y-2.5">
-                    <span className="text-xs font-semibold text-text-primary block">Rincian Per Provinsi:</span>
-                    {Object.entries(dataOverview).map(([prov, stats]) => (
-                      <div key={prov} className="flex items-center justify-between text-xs py-1 hover:bg-slate-50 px-2 rounded-lg transition-colors">
-                        <span className="text-text-primary font-medium">{prov}</span>
-                        <div className="flex gap-4 font-sans text-text-secondary">
-                          <span>Korban: <strong className="text-text-primary">{stats.korbanJiwa}</strong></span>
-                          <span>Rumah: <strong className="text-text-primary">{stats.rumahRusak.toLocaleString()}</strong></span>
+                  // Active center card
+                  if (offset === 0) {
+                    return (
+                      <div
+                        key={item.id}
+                        className="absolute z-30 w-[64%] sm:w-[50%] md:w-[42%] h-[190px] sm:h-[310px] md:h-[400px] rounded-2xl overflow-hidden shadow-2xl border-4 sm:border-8 border-white/90 transform transition-all duration-500 bg-slate-900 group cursor-pointer"
+                      >
+                        <img src={item.image} alt={item.badge} className="w-full h-full object-cover" />
+                        {/* Overlay Badge Only (Tanpa Deskripsi Teks) */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent flex flex-col justify-end p-4 sm:p-6 text-left pointer-events-none">
+                          <span className="bg-[#0f8575] text-white text-xs sm:text-sm font-heading font-bold uppercase tracking-wider px-3.5 py-1.5 rounded-lg max-w-fit shadow-md">
+                            {item.badge}
+                          </span>
                         </div>
                       </div>
-                    ))}
-                  </div>
+                    );
+                  }
 
-                </div>
+                  // Left Card (-1)
+                  if (offset === -1) {
+                    return (
+                      <div
+                        key={item.id}
+                        onClick={prevCover}
+                        className="absolute left-4 sm:left-12 md:left-20 z-20 w-[40%] sm:w-[34%] md:w-[32%] h-[160px] sm:h-[270px] md:h-[340px] rounded-2xl overflow-hidden shadow-xl opacity-80 blur-[1px] transform scale-90 -rotate-y-6 brightness-75 hover:brightness-90 transition-all duration-500 cursor-pointer group"
+                      >
+                        <img src={item.image} alt={item.badge} className="w-full h-full object-cover" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent flex flex-col justify-end p-3 text-left">
+                          <span className="bg-slate-900/80 backdrop-blur-sm text-slate-200 text-[10px] sm:text-xs font-bold uppercase px-2.5 py-1 rounded-md max-w-fit">
+                            {item.badge}
+                          </span>
+                        </div>
+                      </div>
+                    );
+                  }
+
+                  // Right Card (1)
+                  if (offset === 1) {
+                    return (
+                      <div
+                        key={item.id}
+                        onClick={nextCover}
+                        className="absolute right-4 sm:right-12 md:right-20 z-20 w-[40%] sm:w-[35%] md:w-[32%] h-[160px] sm:h-[270px] md:h-[340px] rounded-2xl overflow-hidden shadow-xl opacity-80 blur-[1px] transform scale-90 rotate-y-6 brightness-75 hover:brightness-90 transition-all duration-500 cursor-pointer group"
+                      >
+                        <img src={item.image} alt={item.badge} className="w-full h-full object-cover" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent flex flex-col justify-end p-3 text-left">
+                          <span className="bg-slate-900/80 backdrop-blur-sm text-slate-200 text-[10px] sm:text-xs font-bold uppercase px-2.5 py-1 rounded-md max-w-fit">
+                            {item.badge}
+                          </span>
+                        </div>
+                      </div>
+                    );
+                  }
+
+                  return null;
+                })}
+              </div>
+
+              {/* Dots Pagination Navigation */}
+              <div className="flex items-center justify-center gap-2 mt-4 z-30">
+                {coverflowItems.map((_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setCoverflowIndex(i)}
+                    aria-label={`Ke Gambar ${i + 1}`}
+                    className={`h-2.5 rounded-full transition-all duration-300 cursor-pointer ${coverflowIndex === i
+                        ? "w-8 bg-[#0f8575] shadow-sm"
+                        : "w-2.5 bg-slate-300 hover:bg-slate-400"
+                      }`}
+                  />
+                ))}
               </div>
 
             </div>
 
-            {/* Slider Mockup Carousel */}
-            <div className="space-y-4">
-              <div className="flex justify-between items-center">
-                <span className="text-sm font-semibold text-text-primary block">
-                  Simulasi Skenario & Rencana Kontinjensi Daerah
-                </span>
-                <div className="flex gap-2">
-                  <button
-                    onClick={prevSlide}
-                    className="w-9 h-9 rounded-full bg-white border border-card-border hover:bg-slate-100 text-text-primary flex items-center justify-center transition-all cursor-pointer shadow-xs active:scale-90"
-                  >
-                    ←
-                  </button>
-                  <button
-                    onClick={nextSlide}
-                    className="w-9 h-9 rounded-full bg-white border border-card-border hover:bg-slate-100 text-text-primary flex items-center justify-center transition-all cursor-pointer shadow-xs active:scale-90"
-                  >
-                    →
-                  </button>
+            {/* Paragraf Latar Belakang */}
+            <div className="w-full max-w-5xl mx-auto px-4 sm:px-6 text-justify text-[#1e3a8a] font-sans font-medium text-xs sm:text-base md:text-[16px] leading-relaxed md:leading-loose">
+              <p className="text-justify leading-relaxed md:leading-loose">
+                Pada tahun 2025, sejumlah wilayah di Pulau Sumatra, khususnya Provinsi Aceh, Sumatera Utara, dan Sumatera Barat, mengalami kejadian banjir dan tanah longsor yang menimbulkan dampak signifikan terhadap masyarakat, infrastruktur, serta aktivitas ekonomi. Kondisi tersebut menunjukkan bahwa tingkat kerentanan suatu wilayah tidak hanya dipengaruhi oleh kejadian bencana alam yang tinggi, tetapi juga oleh karakteristik sensitivitas lingkungan serta masyarakat dan kapasitas wilayah dalam menghadapi bencana. Dashboard Profil Kerentanan Wilayah ini disusun untuk memberikan gambaran komprehensif mengenai faktor-faktor yang memengaruhi kerentanan banjir dan tanah longsor di Aceh, Sumatera Utara, dan Sumatera Barat, sehingga dapat menjadi dasar dalam mendukung upaya mitigasi, perencanaan pembangunan yang lebih tangguh, serta pengambilan keputusan yang berbasis data dalam pengurangan risiko bencana.
+              </p>
+            </div>
+
+            {/* OVERVIEW STATISTICAL METRIC CARDS (ENHANCED PROPORTIONS & TYPOGRAPHY) */}
+            <div className="w-full max-w-6xl mx-auto space-y-10 pt-6 select-none">
+
+              {/* CARD 1: KORBAN JIWA */}
+              <div className="w-full bg-gradient-to-r from-sky-50/90 via-white/95 to-sky-50/90 backdrop-blur-md rounded-[2.5rem] p-8 sm:p-12 border border-slate-200/80 shadow-xl shadow-slate-200/50 flex flex-col md:flex-row items-center justify-between gap-8 md:gap-12 transition-transform duration-300 hover:scale-[1.01]">
+                {/* Left: Giant Number & Title */}
+                <div className="flex flex-col text-left space-y-2 w-full md:w-auto">
+                  <div className="flex items-baseline gap-3">
+                    <span className="font-heading font-black text-6xl sm:text-7xl md:text-8xl text-[#2c4059] tracking-tight drop-shadow-sm">
+                      100.000
+                    </span>
+                    <span className="font-sans font-bold text-2xl sm:text-3xl text-slate-500">
+                      Jiwa
+                    </span>
+                  </div>
+                  <h3 className="font-heading font-black text-2xl sm:text-3xl md:text-4xl text-[#0b8071] leading-tight sm:leading-snug drop-shadow-sm">
+                    Korban Jiwa Akibat Banjir<br className="hidden sm:block" /> dan Tanah Longsor
+                  </h3>
+                </div>
+
+                {/* Right: Province Stat Pills */}
+                <div className="flex flex-col gap-3.5 w-full md:w-[350px]">
+                  {/* Aceh */}
+                  <div className="bg-[#d9822b] text-white font-serif italic font-bold px-7 py-3 sm:py-3.5 rounded-full shadow-md flex items-center justify-between text-lg sm:text-xl">
+                    <span>Aceh</span>
+                    <span className="font-sans not-italic font-black text-xl sm:text-2xl tracking-wide">30.000</span>
+                  </div>
+                  {/* Sumatera Utara */}
+                  <div className="bg-[#d9381e] text-white font-serif italic font-bold px-7 py-3 sm:py-3.5 rounded-full shadow-md flex items-center justify-between text-lg sm:text-xl">
+                    <span>Sumatera Utara</span>
+                    <span className="font-sans not-italic font-black text-xl sm:text-2xl tracking-wide">45.000</span>
+                  </div>
+                  {/* Sumatera Barat */}
+                  <div className="bg-[#e5a93c] text-white font-serif italic font-bold px-7 py-3 sm:py-3.5 rounded-full shadow-md flex items-center justify-between text-lg sm:text-xl">
+                    <span>Sumatera Barat</span>
+                    <span className="font-sans not-italic font-black text-xl sm:text-2xl tracking-wide">25.000</span>
+                  </div>
                 </div>
               </div>
 
-              {/* Slider Content Wrapper */}
-              <div className="relative w-full h-[260px] sm:h-[220px] overflow-hidden flex items-center justify-center px-4">
-                {simulationSlides.map((slide, idx) => {
-                  // Calculate relative offset of slides
-                  let position = "translate-x-full opacity-0 pointer-events-none scale-75";
-                  if (idx === sliderIndex) {
-                    position = "opacity-100 z-20 scale-100 rotate-0 translate-x-0";
-                  } else if (idx === (sliderIndex - 1 + simulationSlides.length) % simulationSlides.length) {
-                    position = "-translate-x-[40%] opacity-40 z-10 scale-90 blur-xs md:blur-sm pointer-events-none";
-                  } else if (idx === (sliderIndex + 1) % simulationSlides.length) {
-                    position = "translate-x-[40%] opacity-40 z-10 scale-90 blur-xs md:blur-sm pointer-events-none";
-                  }
+              {/* CARD 2: RUMAH RUSAK */}
+              <div className="w-full bg-gradient-to-r from-sky-50/90 via-white/95 to-sky-50/90 backdrop-blur-md rounded-[2.5rem] p-8 sm:p-12 border border-slate-200/80 shadow-xl shadow-slate-200/50 flex flex-col md:flex-row items-center justify-between gap-8 md:gap-12 transition-transform duration-300 hover:scale-[1.01]">
+                {/* Left: Province Stat Pills */}
+                <div className="flex flex-col gap-3.5 w-full md:w-[350px] order-2 md:order-1">
+                  {/* Aceh */}
+                  <div className="bg-[#d9822b] text-white font-serif italic font-bold px-7 py-3 sm:py-3.5 rounded-full shadow-md flex items-center justify-between text-lg sm:text-xl">
+                    <span>Aceh</span>
+                    <span className="font-sans not-italic font-black text-xl sm:text-2xl tracking-wide">30.000</span>
+                  </div>
+                  {/* Sumatera Utara */}
+                  <div className="bg-[#d9381e] text-white font-serif italic font-bold px-7 py-3 sm:py-3.5 rounded-full shadow-md flex items-center justify-between text-lg sm:text-xl">
+                    <span>Sumatera Utara</span>
+                    <span className="font-sans not-italic font-black text-xl sm:text-2xl tracking-wide">45.000</span>
+                  </div>
+                  {/* Sumatera Barat */}
+                  <div className="bg-[#e5a93c] text-white font-serif italic font-bold px-7 py-3 sm:py-3.5 rounded-full shadow-md flex items-center justify-between text-lg sm:text-xl">
+                    <span>Sumatera Barat</span>
+                    <span className="font-sans not-italic font-black text-xl sm:text-2xl tracking-wide">25.000</span>
+                  </div>
+                </div>
 
-                  return (
-                    <div
-                      key={slide.id}
-                      className={`absolute w-full max-w-2xl p-6 rounded-2xl border border-slate-800 shadow-2xl flex flex-col justify-between transition-all duration-500 ease-out ${slide.visualStyle} ${slide.glowColor} ${position}`}
-                    >
-                      <div>
-                        <div className="flex items-center justify-between gap-3 flex-wrap">
-                          <span className="text-[10px] uppercase font-bold tracking-widest text-accent-primary">
-                            {slide.region}
-                          </span>
-                          <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${slide.metricColor}`}>
-                            {slide.metricLabel}: {slide.metricValue}
-                          </span>
-                        </div>
-                        <h4 className="text-white text-base sm:text-lg font-heading mt-3 leading-snug">
-                          {slide.title}
-                        </h4>
-                        <p className="text-slate-300 text-xs mt-2 font-sans leading-relaxed">
-                          {slide.desc}
-                        </p>
-                      </div>
-                      <div className="flex justify-between items-center mt-4 pt-3 border-t border-white/10 text-[10px] text-slate-400">
-                        <span>Status: <strong>Siaga Operasional</strong></span>
-                        <span>Update: <strong>Real-time</strong></span>
-                      </div>
+                {/* Right: Giant Number, Unit & Cracked House Icon + Subtitle */}
+                <div className="flex flex-col text-left md:text-right space-y-2 order-1 md:order-2 w-full md:w-auto">
+                  <div className="flex items-center justify-start md:justify-end gap-3.5 flex-wrap">
+                    <span className="font-heading font-black text-6xl sm:text-7xl md:text-8xl text-[#2c4059] tracking-tight drop-shadow-sm">
+                      100.000
+                    </span>
+                    <span className="font-sans font-bold text-2xl sm:text-3xl text-slate-500">
+                      Rumah
+                    </span>
+                    {/* House with crack icon */}
+                    <div className="w-12 h-12 sm:w-16 sm:h-16 relative flex items-center justify-center ml-1">
+                      <svg className="w-full h-full text-[#d9381e] filter drop-shadow-sm" viewBox="0 0 64 64" fill="currentColor">
+                        <path d="M32 6L4 30h8v28h40V30h8L32 6zm16 48H16V28.5l16-13.7 16 13.7V54z" />
+                        <path stroke="#ffffff" strokeWidth="4.5" strokeLinecap="round" strokeLinejoin="round" fill="none" d="M32 18l-4 10 6 8-4 10 4 8" />
+                      </svg>
                     </div>
-                  );
-                })}
+                  </div>
+                  <h3 className="font-heading font-black text-2xl sm:text-3xl md:text-4xl text-[#0b8071] leading-tight sm:leading-snug drop-shadow-sm">
+                    Rusak Akibat Banjir<br className="hidden sm:block" /> dan Tanah Longsor
+                  </h3>
+                </div>
               </div>
 
-              {/* Dot Indicators */}
-              <div className="flex justify-center gap-1.5 mt-2">
-                {simulationSlides.map((_, idx) => (
-                  <button
-                    key={idx}
-                    onClick={() => setSliderIndex(idx)}
-                    className={`w-2.5 h-2.5 rounded-full transition-all cursor-pointer ${idx === sliderIndex ? "bg-accent-primary w-6" : "bg-slate-300"
-                      }`}
-                  ></button>
-                ))}
+              {/* CARD 3: LUAS WILAYAH TERDAMPAK BANJIR */}
+              <div className="w-full bg-gradient-to-r from-sky-50/80 via-white/95 to-sky-50/80 backdrop-blur-md rounded-[2.5rem] p-8 sm:p-12 border border-slate-200/80 shadow-xl shadow-slate-200/50 flex flex-col md:flex-row items-center justify-between gap-8 sm:gap-12 transition-transform duration-300 hover:scale-[1.01]">
+                {/* Left: Title Text */}
+                <div className="text-left max-w-lg w-full md:w-auto">
+                  <h3 className="font-heading font-black text-3xl sm:text-5xl md:text-6xl text-[#0b8071] leading-tight tracking-tight drop-shadow-sm">
+                    Luas Wilayah<br />Terdampak<br />Banjir
+                  </h3>
+                </div>
+
+                {/* Right: 3 Donut Gauges */}
+                <div className="flex items-center justify-center gap-6 sm:gap-12 flex-wrap">
+                  {/* Aceh 0.9% */}
+                  <div className="flex flex-col items-center space-y-3">
+                    <div className="w-28 h-28 sm:w-36 sm:h-36 rounded-full border-[12px] sm:border-[16px] border-[#e5a93c] flex items-center justify-center relative shadow-md bg-white">
+                      <span className="w-4 h-4 sm:w-5 sm:h-5 bg-[#c0392b] rounded-full absolute -top-2 border-2 border-white shadow-md"></span>
+                      <span className="font-sans font-black text-slate-900 text-xl sm:text-3xl">0.9%</span>
+                    </div>
+                    <span className="font-serif italic font-extrabold text-slate-800 text-base sm:text-xl">Aceh</span>
+                  </div>
+
+                  {/* Sumatera Utara 0.2% */}
+                  <div className="flex flex-col items-center space-y-3">
+                    <div className="w-28 h-28 sm:w-36 sm:h-36 rounded-full border-[12px] sm:border-[16px] border-[#e5a93c] flex items-center justify-center relative shadow-md bg-white">
+                      <span className="w-4 h-4 sm:w-5 sm:h-5 bg-[#c0392b] rounded-full absolute -top-2 border-2 border-white shadow-md"></span>
+                      <span className="font-sans font-black text-slate-900 text-xl sm:text-3xl">0.2%</span>
+                    </div>
+                    <span className="font-serif italic font-extrabold text-slate-800 text-base sm:text-xl text-center leading-tight">
+                      Sumatera<br />Utara
+                    </span>
+                  </div>
+
+                  {/* Sumatera Barat 0.1% */}
+                  <div className="flex flex-col items-center space-y-3">
+                    <div className="w-28 h-28 sm:w-36 sm:h-36 rounded-full border-[12px] sm:border-[16px] border-[#e5a93c] flex items-center justify-center relative shadow-md bg-white">
+                      <span className="w-4 h-4 sm:w-5 sm:h-5 bg-[#c0392b] rounded-full absolute -top-2 border-2 border-white shadow-md"></span>
+                      <span className="font-sans font-black text-slate-900 text-xl sm:text-3xl">0.1%</span>
+                    </div>
+                    <span className="font-serif italic font-extrabold text-slate-800 text-base sm:text-xl text-center leading-tight">
+                      Sumatera<br />Barat
+                    </span>
+                  </div>
+                </div>
               </div>
+
+              {/* CARD 4: LUAS WILAYAH TERDAMPAK TANAH LONGSOR */}
+              <div className="w-full bg-gradient-to-r from-sky-50/80 via-white/95 to-sky-50/80 backdrop-blur-md rounded-[2.5rem] p-8 sm:p-12 border border-slate-200/80 shadow-xl shadow-slate-200/50 flex flex-col md:flex-row items-center justify-between gap-8 sm:gap-12 transition-transform duration-300 hover:scale-[1.01]">
+                {/* Left: 3 Donut Gauges */}
+                <div className="flex items-center justify-center gap-6 sm:gap-12 flex-wrap order-2 md:order-1">
+                  {/* Aceh 2.4% */}
+                  <div className="flex flex-col items-center space-y-3">
+                    <div className="w-28 h-28 sm:w-36 sm:h-36 rounded-full border-[12px] sm:border-[16px] border-[#e5a93c] flex items-center justify-center relative shadow-md bg-white">
+                      <span className="w-4 h-4 sm:w-5 sm:h-5 bg-[#c0392b] rounded-full absolute -top-2 border-2 border-white shadow-md"></span>
+                      <span className="font-sans font-black text-slate-900 text-xl sm:text-3xl">2.4%</span>
+                    </div>
+                    <span className="font-serif italic font-extrabold text-slate-800 text-base sm:text-xl">Aceh</span>
+                  </div>
+
+                  {/* Sumatera Utara 0% */}
+                  <div className="flex flex-col items-center space-y-3">
+                    <div className="w-28 h-28 sm:w-36 sm:h-36 rounded-full border-[12px] sm:border-[16px] border-[#e5a93c] flex items-center justify-center relative shadow-md bg-white">
+                      <span className="w-4 h-4 sm:w-5 sm:h-5 bg-[#c0392b] rounded-full absolute -top-2 border-2 border-white shadow-md"></span>
+                      <span className="font-sans font-black text-slate-900 text-xl sm:text-3xl">0%</span>
+                    </div>
+                    <span className="font-serif italic font-extrabold text-slate-800 text-base sm:text-xl text-center leading-tight">
+                      Sumatera<br />Utara
+                    </span>
+                  </div>
+
+                  {/* Sumatera Barat 2% */}
+                  <div className="flex flex-col items-center space-y-3">
+                    <div className="w-28 h-28 sm:w-36 sm:h-36 rounded-full border-[12px] sm:border-[16px] border-[#e5a93c] flex items-center justify-center relative shadow-md bg-white">
+                      <span className="w-4 h-4 sm:w-5 sm:h-5 bg-[#c0392b] rounded-full absolute -top-2 border-2 border-white shadow-md"></span>
+                      <span className="font-sans font-black text-slate-900 text-xl sm:text-3xl">2%</span>
+                    </div>
+                    <span className="font-serif italic font-bold text-slate-800 text-base sm:text-xl text-center leading-tight">
+                      Sumatera<br />Barat
+                    </span>
+                  </div>
+                </div>
+
+                {/* Right: Title Text */}
+                <div className="text-left md:text-right max-w-lg order-1 md:order-2 w-full md:w-auto">
+                  <h3 className="font-heading font-black text-3xl sm:text-5xl md:text-6xl text-[#0b8071] leading-tight tracking-tight drop-shadow-sm">
+                    Luas Wilayah<br />Terdampak<br />Tanah Longsor
+                  </h3>
+                </div>
+              </div>
+
             </div>
 
           </section>
