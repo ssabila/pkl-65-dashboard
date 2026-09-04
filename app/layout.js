@@ -31,6 +31,12 @@ export const metadata = {
   description: "Dashboard untuk manajemen 8 modul analisis big data",
 };
 
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+};
+
 export default function RootLayout({ children }) {
   return (
     <html

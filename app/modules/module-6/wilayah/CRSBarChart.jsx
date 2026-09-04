@@ -41,7 +41,8 @@ export default function CRSBarChart({ data }) {
         }),
         borderRadius: 4,
         borderSkipped: false,
-        barThickness: 22,
+        barThickness: 18,
+        maxBarThickness: 22,
       },
     ],
   };
@@ -57,7 +58,7 @@ export default function CRSBarChart({ data }) {
         titleColor: "#fff",
         bodyColor: "#fff",
         cornerRadius: 8,
-        padding: 12,
+        padding: 10,
         callbacks: {
           title: (items) => {
             const idx = items[0].dataIndex;
@@ -83,7 +84,7 @@ export default function CRSBarChart({ data }) {
         },
         ticks: {
           color: "#5a5f6f",
-          font: { size: 11 },
+          font: { size: 10 },
           callback: (v) => `${v}%`,
         },
       },
@@ -91,13 +92,13 @@ export default function CRSBarChart({ data }) {
         grid: { display: false },
         ticks: {
           color: "#3a4a5c",
-          font: { size: 11, weight: "500" },
-          padding: 8,
+          font: { size: 10, weight: "500" },
+          padding: 4,
         },
       },
     },
     layout: {
-      padding: { right: 10 },
+      padding: { right: 6, left: 0 },
     },
   };
 

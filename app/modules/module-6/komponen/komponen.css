@@ -251,16 +251,65 @@
 }
 
 @media (max-width: 640px) {
-  .m6-komp-cards {
-    grid-template-columns: 1fr;
+  .m6-komp-controls {
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .m6-komp-controls__dropdowns {
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+  }
+
+  .m6-komp-controls__dropdowns button {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .m6-komp-summary__title {
+    font-size: 0.88rem;
+    padding: 10px 14px;
+    letter-spacing: 0.02em;
   }
 
   .m6-komp-summary__indices {
-    flex-wrap: wrap;
-    gap: 12px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    padding: 12px;
   }
   
   .m6-komp-index {
-    min-width: 45%;
+    min-width: 0;
+    width: 100%;
+  }
+
+  .m6-komp-index__label {
+    font-size: 0.72rem;
+  }
+
+  .m6-komp-index__box {
+    font-size: 1rem;
+    padding: 6px 10px;
+    min-height: 36px;
+  }
+
+  .m6-komp-cards {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .m6-komp-card-content {
+    padding: 18px 16px;
+  }
+
+  .m6-komp-card-wrapper::before {
+    transform: translate(4px, 4px);
+    border-radius: 16px;
+  }
+
+  .m6-komp-card-content {
+    border-radius: 16px;
   }
 }

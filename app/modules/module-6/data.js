@@ -528,6 +528,99 @@ export const WILAYAH_DATA = [
   },
 ];
 
+
+// Real geographic coordinates for all 36 kabupaten/kota in Aceh, Sumut, Sumbar
+export const KABUPATEN_COORDINATES = {
+  // Aceh (10 kab/kota)
+  "1101": { lat: 2.6167, lng: 96.0833 }, // Kabupaten Simeulue
+  "1102": { lat: 2.3333, lng: 97.8333 }, // Kabupaten Aceh Singkil
+  "1103": { lat: 3.1667, lng: 97.4167 }, // Kabupaten Aceh Selatan
+  "1104": { lat: 3.3667, lng: 97.7000 }, // Kabupaten Aceh Tenggara
+  "1105": { lat: 4.6333, lng: 97.6333 }, // Kabupaten Aceh Timur
+  "1106": { lat: 4.5333, lng: 96.8500 }, // Kabupaten Aceh Tengah
+  "1107": { lat: 4.4500, lng: 96.1667 }, // Kabupaten Aceh Barat
+  "1108": { lat: 5.3833, lng: 95.5167 }, // Kabupaten Aceh Besar
+  "1109": { lat: 5.1167, lng: 95.9667 }, // Kabupaten Pidie
+  "1110": { lat: 5.5483, lng: 95.3238 }, // Kota Banda Aceh
+
+  // Sumatera Utara (14 kab/kota)
+  "1201": { lat: 1.1333, lng: 97.6000 }, // Kabupaten Nias
+  "1202": { lat: 0.8667, lng: 99.5500 }, // Kabupaten Mandailing Natal
+  "1203": { lat: 1.5167, lng: 99.2500 }, // Kabupaten Tapanuli Selatan
+  "1204": { lat: 1.8667, lng: 98.6667 }, // Kabupaten Tapanuli Tengah
+  "1205": { lat: 2.0167, lng: 99.0667 }, // Kabupaten Tapanuli Utara
+  "1206": { lat: 2.3833, lng: 99.2167 }, // Kabupaten Toba Samosir
+  "1207": { lat: 2.2500, lng: 100.1000 }, // Kabupaten Labuhan Batu
+  "1208": { lat: 2.9833, lng: 99.6333 }, // Kabupaten Asahan
+  "1209": { lat: 2.9667, lng: 99.0667 }, // Kabupaten Simalungun
+  "1210": { lat: 2.8667, lng: 98.3000 }, // Kabupaten Dairi
+  "1211": { lat: 3.1167, lng: 98.5000 }, // Kabupaten Karo
+  "1212": { lat: 3.5167, lng: 98.7167 }, // Kabupaten Deli Serdang
+  "1213": { lat: 3.7333, lng: 98.2167 }, // Kabupaten Langkat
+  "1275": { lat: 3.5952, lng: 98.6722 }, // Kota Medan
+
+  // Sumatera Barat (12 kab/kota)
+  "1301": { lat: -1.3500, lng: 100.5833 }, // Kabupaten Pesisir Selatan
+  "1302": { lat: -0.9667, lng: 100.6500 }, // Kabupaten Solok
+  "1303": { lat: -0.6833, lng: 101.3000 }, // Kabupaten Sijunjung
+  "1304": { lat: -0.4667, lng: 100.5833 }, // Kabupaten Tanah Datar
+  "1305": { lat: -0.6167, lng: 100.2833 }, // Kabupaten Padang Pariaman
+  "1306": { lat: -0.2500, lng: 100.1667 }, // Kabupaten Agam
+  "1307": { lat: -0.0167, lng: 100.6333 }, // Kabupaten Lima Puluh Kota
+  "1308": { lat: 0.3500, lng: 100.0833 }, // Kabupaten Pasaman
+  "1309": { lat: -1.4833, lng: 101.2500 }, // Kabupaten Solok Selatan
+  "1310": { lat: -1.0500, lng: 101.6167 }, // Kabupaten Dharmasraya
+  "1375": { lat: -0.9471, lng: 100.4172 }, // Kota Padang
+  "1376": { lat: -0.3056, lng: 100.3692 }, // Kota Bukittinggi
+};
+
+// Province bounding boxes & centers for Leaflet map navigation
+export const PROVINSI_BOUNDS = {
+  all: {
+    center: [2.5, 98.8],
+    zoom: 6,
+    bounds: [
+      [-2.5, 95.0],
+      [6.2, 102.5],
+    ],
+  },
+  aceh: {
+    center: [4.2, 96.8],
+    zoom: 7,
+    bounds: [
+      [2.0, 95.0],
+      [6.0, 98.5],
+    ],
+  },
+  sumut: {
+    center: [2.5, 99.0],
+    zoom: 7,
+    bounds: [
+      [0.5, 97.0],
+      [4.2, 100.8],
+    ],
+  },
+  sumbar: {
+    center: [-0.65, 100.8],
+    zoom: 8,
+    bounds: [
+      [-2.3, 99.5],
+      [0.6, 102.0],
+    ],
+  },
+};
+
+// Attach coordinates to WILAYAH_DATA items
+WILAYAH_DATA.forEach((item) => {
+  const coords = KABUPATEN_COORDINATES[item.KDPKAB];
+  if (coords) {
+    item.latitude = coords.lat;
+    item.longitude = coords.lng;
+    item.lat = coords.lat;
+    item.lng = coords.lng;
+  }
+});
+
 // Helper functions
 export function getFilteredData(provinsiKey) {
   if (provinsiKey === "all") return WILAYAH_DATA;
@@ -558,3 +651,4 @@ export function getKabupatenList(provinsiKey) {
 export function getWilayahByKDPKAB(kdpkab) {
   return WILAYAH_DATA.find((d) => d.KDPKAB === kdpkab) || null;
 }
+

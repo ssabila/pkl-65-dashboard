@@ -1,12 +1,23 @@
 "use client";
 
 import { useState } from "react";
+import dynamic from "next/dynamic";
 import GenericDropdown from "../components/GenericDropdown";
 import StatCard from "../components/StatCard";
-import SumatraMap from "./SumatraMap";
 import CRSBarChart from "./CRSBarChart";
 import { PROVINSI_LIST, getFilteredData, getStats } from "../data";
 import "./wilayah.css";
+
+// Dynamic client-side import for Leaflet to prevent SSR window reference errors
+const SumatraMap = dynamic(() => import("./SumatraMap"), {
+  ssr: false,
+  loading: () => (
+    <div className="m6-map-loading-container">
+      <div className="m6-map-loading-spinner" />
+      <span className="m6-map-loading-text">Memuat Peta Real Sumatera (Leaflet)...</span>
+    </div>
+  ),
+});
 
 /**
  * Wilayah tab — the primary view of Module 6.

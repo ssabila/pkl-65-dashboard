@@ -18,17 +18,25 @@ const modules = [
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-slate-50 p-8">
+    <div className="min-h-screen bg-slate-50 p-4 sm:p-8">
       <div className="max-w-6xl mx-auto">
-        <h1 className="text-4xl font-bold text-slate-900 mb-2">Dashboard Big Data PKL 65</h1>
-        <p className="text-slate-600 mb-12">Pilih modul yang ingin diakses</p>
+        <h1 className="text-2xl sm:text-4xl font-bold text-slate-900 mb-2">
+          Dashboard Big Data PKL 65
+        </h1>
+        <p className="text-slate-600 mb-6 sm:mb-10 text-sm sm:text-base">
+          Pilih modul yang ingin diakses
+        </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
           {modules.map((module) => (
             <Link key={module.id} href={module.route}>
-              <div className="bg-white p-6 rounded-lg shadow hover:shadow-lg transition-shadow cursor-pointer border border-slate-200">
-                <div className="text-3xl font-bold text-blue-600 mb-3">{module.id}</div>
-                <h2 className="text-xl font-semibold text-slate-900">{module.name}</h2>
+              <div className="bg-white p-4 sm:p-6 rounded-xl shadow-sm hover:shadow-md transition-all cursor-pointer border border-slate-200 hover:border-blue-400">
+                <div className="text-2xl sm:text-3xl font-bold text-blue-600 mb-2 sm:mb-3">
+                  {module.id}
+                </div>
+                <h2 className="text-base sm:text-xl font-semibold text-slate-900">
+                  {module.name}
+                </h2>
               </div>
             </Link>
           ))}
