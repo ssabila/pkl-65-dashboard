@@ -50,7 +50,15 @@ export default function Modul3Page() {
           {/* Peta Sumatra (Right Side) */}
           {activeMenu !== "metadata" && (
             <div className="flex-1 w-full flex items-center justify-center">
-              <PetaSumatra activeMenu={activeMenu} provinsi={filterProvinsi} />
+              <PetaSumatra
+                activeMenu={activeMenu}
+                provinsi={filterProvinsi}
+                setProvinsi={setFilterProvinsi}
+                kabupaten={filterKabupaten}
+                setKabupaten={setFilterKabupaten}
+                kecamatan={filterKecamatan}
+                setKecamatan={setFilterKecamatan}
+              />
             </div>
           )}
         </main>

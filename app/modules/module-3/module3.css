@@ -121,6 +121,7 @@
   flex-shrink: 0;
   width: 100%;
   max-width: 880px;
+  pointer-events: auto;
 }
 
 .mod3-dropdown-wrapper {
@@ -132,15 +133,15 @@
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 20px;
+  padding: 12px 24px;
   gap: 10px;
-  width: clamp(140px, 14vw, 280px);
-  height: auto;
-  min-height: 45px;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0.22) 100%);
-  border: 2px solid rgba(255, 255, 255, 0.75);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12), inset 0px 2px 4px rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(25px);
+  width: clamp(160px, 18vw, 270px);
+  height: 54px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.38) 0%, rgba(255, 255, 255, 0.15) 100%);
+  border: 5px solid rgba(255, 255, 255, 0.45);
+  box-shadow: inset 0px 2px 4px rgba(255, 255, 255, 0.6), inset 0px -2px 4px rgba(0, 0, 0, 0.25), 0 8px 24px rgba(0, 0, 0, 0.12);
+  backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(40px);
   border-radius: 35px;
   transition: all 0.2s;
   cursor: pointer;

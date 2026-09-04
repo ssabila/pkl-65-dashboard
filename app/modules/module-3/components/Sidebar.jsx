@@ -30,7 +30,7 @@ export default function Sidebar({ activeMenu, onMenuChange }) {
               : "inset 0px 2px 4px 0px rgba(255, 255, 255, 0.40), inset 0px -2px 4px 0px rgba(0, 0, 0, 0.20), 0px 9px 11.2px 0px rgba(0, 0, 0, 0.71)",
             backdropFilter: isHovered ? "none" : "blur(103px)",
             WebkitBackdropFilter: isHovered ? "none" : "blur(103px)",
-            border: isHovered ? "2px solid rgba(255,255,255,0.9)" : "3.5px solid rgba(255,255,255,0.75)",
+            border: isHovered ? "2px solid rgba(255,255,255,0.9)" : "5px solid rgba(255, 255, 255, 0.45)",
             borderRadius: isHovered ? "36px" : "70px",
             width: isHovered ? "330px" : "110.85px",
             height: "594.57px",
