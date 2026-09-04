@@ -47,15 +47,14 @@ function formatAngka(num) {
 }
 
 export default function BanjirView({ provinsi, kabupaten, kecamatan }) {
-  // Ambil data terpilih atau fallback default
   const selectedData =
     provinsi && kabupaten && kecamatan
       ? DATA_BANJIR[provinsi]?.[kabupaten]?.[kecamatan]
       : null;
 
-  const displayProv = provinsi ? `Provinsi ${provinsi}` : DEFAULT_DATA.provinsi;
+  const displayProv = provinsi ? (provinsi.startsWith("Provinsi") ? provinsi : `Provinsi ${provinsi}`) : DEFAULT_DATA.provinsi;
   const displayKab = kabupaten ? (kabupaten.startsWith("Kab.") || kabupaten.startsWith("Kota") ? kabupaten : `Kabupaten ${kabupaten}`) : DEFAULT_DATA.kabupaten;
-  const displayKec = kecamatan ? `Kecamatan ${kecamatan}` : DEFAULT_DATA.kecamatan;
+  const displayKec = kecamatan ? (kecamatan.startsWith("Kecamatan") ? kecamatan : `Kecamatan ${kecamatan}`) : DEFAULT_DATA.kecamatan;
 
   const luasBanjir = selectedData ? selectedData.luasBanjir : DEFAULT_DATA.luasBanjir;
   const persentase = selectedData ? selectedData.persentase : DEFAULT_DATA.persentase;
@@ -64,150 +63,196 @@ export default function BanjirView({ provinsi, kabupaten, kecamatan }) {
   const kategoriBahaya = selectedData ? selectedData.kategoriBahaya : DEFAULT_DATA.kategoriBahaya;
 
   return (
-    <div className="flex flex-col gap-4 w-full max-w-[340px] select-none">
-      {/* SINGLE CARD DETAIL WILAYAH BANJIR (IMAGE 1 EXACT DESIGN) */}
+    <div className="w-full max-w-[580px] xl:max-w-[620px] mx-auto mt-2 xl:mt-[40px] 2xl:mt-[56px] select-none">
+      {/* Outer Card - Identik dengan Frosted Glass & Border Beranda */}
       <div
-        className="
-          relative flex flex-col items-center
-          w-full px-5 py-5 sm:px-6 sm:py-6
-          rounded-[32px] sm:rounded-[36px]
-          border-[2.5px] border-white/60
-          shadow-[0_16px_40px_rgba(0,0,0,0.25)]
-          backdrop-blur-xl
-        "
+        className="relative overflow-hidden flex flex-col items-center justify-between p-5 sm:p-6 lg:p-7 rounded-[24px] sm:rounded-[28px] border-[3.5px] sm:border-[4px] lg:border-[5px] border-[rgba(255,255,255,0.45)] transition-all duration-300 shadow-[0px_9px_11.2px_rgba(0,0,0,0.24)]"
         style={{
-          background: "linear-gradient(180deg, rgba(140, 160, 195, 0.50) 0%, rgba(210, 160, 165, 0.45) 100%)",
+          background: "linear-gradient(135deg, rgba(255, 255, 255, 0.42) 0%, rgba(255, 255, 255, 0.20) 100%)",
+          boxShadow: "0px 9px 11.2px rgba(0, 0, 0, 0.24), inset 0px -2px 4px rgba(0, 0, 0, 0.2), inset 0px 2px 4px rgba(255, 255, 255, 0.55)",
+          backdropFilter: "blur(51.5px)",
+          WebkitBackdropFilter: "blur(51.5px)",
         }}
       >
-        {/* Top Header Badge Pill */}
+        {/* Radial Glow Ellipse */}
         <div
-          className="
-            flex items-center justify-center
-            px-6 py-1.5 sm:px-7 sm:py-2
-            rounded-full
-            border border-white/80
-            shadow-[0_4px_12px_rgba(0,0,0,0.2)]
-            mb-4
-          "
+          className="absolute pointer-events-none z-0"
           style={{
-            background: "linear-gradient(180deg, #D85A65 0%, #A53945 100%)",
+            width: "280px",
+            height: "280px",
+            background: "radial-gradient(ellipse at center, #EB8B68 0%, rgba(235, 139, 104, 0.75) 40%, transparent 75%)",
+            right: "-50px",
+            bottom: "-50px",
+            borderRadius: "50%",
+            filter: "blur(65px)",
+            opacity: 0.9,
           }}
-        >
-          <span
-            className="font-black italic text-white text-[17px] sm:text-[19px] tracking-wide"
-            style={{ fontFamily: "var(--font-garet-heavy), sans-serif" }}
-          >
-            Detail Wilayah
-          </span>
-        </div>
+        />
 
-        {/* Info Wilayah (Provinsi, Kabupaten, Kecamatan) */}
-        <div className="w-full text-left mb-3 px-1">
-          <p
-            className="font-black text-[#F7C564] text-[18px] sm:text-[20px] leading-snug drop-shadow-[0_2px_4px_rgba(0,0,0,0.4)]"
-            style={{ fontFamily: "var(--font-garet-heavy), sans-serif" }}
+        {/* Content Wrapper */}
+        <div className="relative z-10 flex flex-col items-center w-full gap-4">
+          {/* Frosted Glass Red Pill Badge "Detail Wilayah" */}
+          <div
+            className="flex items-center justify-center px-7 py-2 sm:px-9 sm:py-2.5 rounded-[40px] border-[3px] border-[rgba(255,255,255,0.65)] shadow-[0_8px_20px_rgba(0,0,0,0.2)] transition-all duration-300"
+            style={{
+              background: "linear-gradient(180deg, rgba(220, 50, 65, 0.75) 0%, rgba(160, 30, 45, 0.65) 100%)",
+              boxShadow: "inset 0px 2px 4px rgba(255,255,255,0.6), inset 0px -2px 4px rgba(0,0,0,0.3), 0 8px 24px rgba(0,0,0,0.2)",
+              backdropFilter: "blur(30px)",
+              WebkitBackdropFilter: "blur(30px)",
+            }}
           >
-            {displayProv}
-          </p>
-          <p
-            className="font-black text-white text-[16px] sm:text-[18px] leading-snug drop-shadow-[0_2px_4px_rgba(0,0,0,0.4)]"
-            style={{ fontFamily: "var(--font-garet-heavy), sans-serif" }}
-          >
-            {displayKab}
-          </p>
-          <p
-            className="font-bold italic text-white/90 text-[14px] sm:text-[15px] leading-snug drop-shadow-[0_1px_3px_rgba(0,0,0,0.3)] mt-0.5"
-            style={{ fontFamily: "var(--font-garet-heavy), sans-serif" }}
-          >
-            {displayKec}
-          </p>
-        </div>
+            <span
+              className="font-black italic text-white text-center text-[18px] sm:text-[21px] lg:text-[23px] [text-shadow:0_4px_8px_rgba(0,0,0,0.6)] whitespace-nowrap [-webkit-text-stroke:1px_rgba(44,44,44,0.4)]"
+              style={{ fontFamily: "var(--font-garet-heavy), 'Garet', sans-serif" }}
+            >
+              Detail Wilayah
+            </span>
+          </div>
 
-        {/* Divider Line Under Info */}
-        <div className="w-full h-[1.5px] bg-white/40 mb-4" />
+          {/* Region Titles */}
+          <div className="w-full text-left px-1 flex flex-col gap-0.5">
+            <p
+              className="font-[850] text-[#F7C564] text-[20px] sm:text-[22px] lg:text-[24px] leading-tight [-webkit-text-stroke:1px_rgba(44,44,44,0.5)] [text-shadow:0_3px_6px_rgba(0,0,0,0.5)]"
+              style={{ fontFamily: "var(--font-garet-heavy), 'Garet', sans-serif" }}
+            >
+              {displayProv}
+            </p>
+            <p
+              className="font-[850] text-white text-[18px] sm:text-[20px] lg:text-[21px] leading-tight [-webkit-text-stroke:1px_rgba(44,44,44,0.5)] [text-shadow:0_3px_6px_rgba(0,0,0,0.5)]"
+              style={{ fontFamily: "var(--font-garet-heavy), 'Garet', sans-serif" }}
+            >
+              {displayKab}
+            </p>
+            <p
+              className="font-[850] italic text-white/95 text-[15px] sm:text-[17px] lg:text-[18px] leading-tight mt-0.5 [-webkit-text-stroke:0.8px_rgba(44,44,44,0.4)] [text-shadow:0_2px_4px_rgba(0,0,0,0.4)]"
+              style={{ fontFamily: "var(--font-garet-heavy), 'Garet', sans-serif" }}
+            >
+              {displayKec}
+            </p>
+          </div>
 
-        {/* White Inner Card */}
-        <div className="w-full bg-white rounded-[22px] p-4 shadow-[0_6px_20px_rgba(0,0,0,0.12)] flex flex-col gap-3">
-          {/* Top Row: Luas Banjir & Persentase */}
-          <div className="grid grid-cols-2 gap-2 text-left">
-            <div>
-              <p
-                className="font-bold text-[#0F5257] text-[13px] sm:text-[14px]"
-                style={{ fontFamily: "var(--font-garet-heavy), sans-serif" }}
-              >
-                Luas Banjir
-              </p>
-              <p
-                className="font-black text-[#EE3B3B] text-[20px] sm:text-[22px] leading-tight"
-                style={{ fontFamily: "var(--font-garet-heavy), sans-serif" }}
-              >
-                {formatAngka(luasBanjir)}{" "}
-                <span className="text-[15px] font-black text-[#EE3B3B]">ha</span>
-              </p>
+          {/* White Inner Card */}
+          <div className="w-full bg-white/95 backdrop-blur-md rounded-[22px] p-4 sm:p-5 shadow-[0_8px_24px_rgba(0,0,0,0.18)] flex flex-col gap-3 border border-white/80">
+            {/* Top Row: Luas Banjir & Persentase */}
+            <div className="grid grid-cols-2 gap-3 text-left">
+              <div>
+                <p
+                  className="font-[850] text-[#0F5257] text-[14px] sm:text-[15px] [-webkit-text-stroke:0.4px_rgba(15,82,87,0.3)] [text-shadow:0_1.5px_3px_rgba(0,0,0,0.25)]"
+                  style={{ fontFamily: "var(--font-garet-heavy), 'Garet', sans-serif" }}
+                >
+                  Luas Banjir
+                </p>
+                <div className="flex items-baseline gap-1 mt-0.5">
+                  <span
+                    className="text-[30px] sm:text-[36px] lg:text-[40px] font-[850] leading-none"
+                    style={{
+                      fontFamily: "var(--font-garet-heavy), 'Garet', sans-serif",
+                      background: "linear-gradient(90deg, #F3BB99 0%, #F43E3E 79.81%, #E50707 100%)",
+                      WebkitBackgroundClip: "text",
+                      WebkitTextFillColor: "transparent",
+                      filter: "drop-shadow(0px 4px 4px #000000E3)",
+                    }}
+                  >
+                    {formatAngka(luasBanjir)}
+                  </span>
+                  <span
+                    className="text-[18px] sm:text-[22px] font-[850]"
+                    style={{
+                      fontFamily: "var(--font-garet-heavy), 'Garet', sans-serif",
+                      background: "linear-gradient(90deg, #F43E3E 0%, #E50707 100%)",
+                      WebkitBackgroundClip: "text",
+                      WebkitTextFillColor: "transparent",
+                      filter: "drop-shadow(0px 4px 4px #000000E3)",
+                    }}
+                  >
+                    ha
+                  </span>
+                </div>
+              </div>
+              <div>
+                <p
+                  className="font-[850] text-[#0F5257] text-[14px] sm:text-[15px] [-webkit-text-stroke:0.4px_rgba(15,82,87,0.3)] [text-shadow:0_1.5px_3px_rgba(0,0,0,0.25)]"
+                  style={{ fontFamily: "var(--font-garet-heavy), 'Garet', sans-serif" }}
+                >
+                  Persentase
+                </p>
+                <div className="flex items-baseline gap-1 mt-0.5">
+                  <span
+                    className="text-[30px] sm:text-[36px] lg:text-[40px] font-[850] leading-none"
+                    style={{
+                      fontFamily: "var(--font-garet-heavy), 'Garet', sans-serif",
+                      background: "linear-gradient(90deg, #F3BB99 0%, #F43E3E 79.81%, #E50707 100%)",
+                      WebkitBackgroundClip: "text",
+                      WebkitTextFillColor: "transparent",
+                      filter: "drop-shadow(0px 4px 4px #000000E3)",
+                    }}
+                  >
+                    {persentase}%
+                  </span>
+                </div>
+              </div>
             </div>
-            <div>
-              <p
-                className="font-bold text-[#0F5257] text-[13px] sm:text-[14px]"
-                style={{ fontFamily: "var(--font-garet-heavy), sans-serif" }}
-              >
-                Persentase
-              </p>
-              <p
-                className="font-black text-[#EE3B3B] text-[20px] sm:text-[22px] leading-tight"
-                style={{ fontFamily: "var(--font-garet-heavy), sans-serif" }}
-              >
-                {persentase}%
-              </p>
+
+            {/* Divider Line */}
+            <div className="flex items-center w-full my-1">
+              <div className="w-2.5 h-2.5 rounded-full bg-[#7C5A37]" />
+              <div className="flex-1 h-[2px] bg-[#7C5A37]" />
+              <div className="w-2.5 h-2.5 rounded-full bg-[#7C5A37]" />
+            </div>
+
+            {/* Bottom Row: Kedalaman Rata-Rata & Kedalaman Maks. */}
+            <div className="grid grid-cols-2 gap-3 text-left">
+              <div>
+                <p
+                  className="font-[850] text-[#0F5257] text-[13px] sm:text-[14px] [-webkit-text-stroke:0.4px_rgba(15,82,87,0.3)] [text-shadow:0_1.5px_3px_rgba(0,0,0,0.25)]"
+                  style={{ fontFamily: "var(--font-garet-heavy), 'Garet', sans-serif" }}
+                >
+                  Kedalaman Rata-Rata
+                </p>
+                <span
+                  className="text-[26px] sm:text-[30px] lg:text-[34px] font-[850] leading-none block mt-0.5"
+                  style={{
+                    fontFamily: "var(--font-garet-heavy), 'Garet', sans-serif",
+                    background: "linear-gradient(90deg, #FFA6A6 6%, #CE2222 100%)",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    filter: "drop-shadow(0px 4px 4px #000000E3)",
+                  }}
+                >
+                  {kedalamanRataRata} m
+                </span>
+              </div>
+              <div>
+                <p
+                  className="font-[850] text-[#0F5257] text-[13px] sm:text-[14px] [-webkit-text-stroke:0.4px_rgba(15,82,87,0.3)] [text-shadow:0_1.5px_3px_rgba(0,0,0,0.25)]"
+                  style={{ fontFamily: "var(--font-garet-heavy), 'Garet', sans-serif" }}
+                >
+                  Kedalaman Maks.
+                </p>
+                <span
+                  className="text-[26px] sm:text-[30px] lg:text-[34px] font-[850] leading-none block mt-0.5"
+                  style={{
+                    fontFamily: "var(--font-garet-heavy), 'Garet', sans-serif",
+                    background: "linear-gradient(90deg, #FFA6A6 6%, #CE2222 100%)",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    filter: "drop-shadow(0px 4px 4px #000000E3)",
+                  }}
+                >
+                  {kedalamanMaks} m
+                </span>
+              </div>
             </div>
           </div>
 
-          {/* Divider Line with Dot Ends (•─────────────•) */}
-          <div className="flex items-center w-full my-0.5">
-            <div className="w-2 h-2 rounded-full bg-[#7C5A37]" />
-            <div className="flex-1 h-[1.5px] bg-[#7C5A37]" />
-            <div className="w-2 h-2 rounded-full bg-[#7C5A37]" />
-          </div>
-
-          {/* Bottom Row: Kedalaman Rata-Rata & Kedalaman Maks. */}
-          <div className="grid grid-cols-2 gap-2 text-left">
-            <div>
-              <p
-                className="font-bold text-[#0F5257] text-[12px] sm:text-[13px]"
-                style={{ fontFamily: "var(--font-garet-heavy), sans-serif" }}
-              >
-                Kedalaman Rata-Rata
-              </p>
-              <p
-                className="font-black text-[#EE7676] text-[18px] sm:text-[20px] leading-tight"
-                style={{ fontFamily: "var(--font-garet-heavy), sans-serif" }}
-              >
-                {kedalamanRataRata} m
-              </p>
-            </div>
-            <div>
-              <p
-                className="font-bold text-[#0F5257] text-[12px] sm:text-[13px]"
-                style={{ fontFamily: "var(--font-garet-heavy), sans-serif" }}
-              >
-                Kedalaman Maks.
-              </p>
-              <p
-                className="font-black text-[#EE7676] text-[18px] sm:text-[20px] leading-tight"
-                style={{ fontFamily: "var(--font-garet-heavy), sans-serif" }}
-              >
-                {kedalamanMaks} m
-              </p>
-            </div>
-          </div>
+          {/* Footer: Kategori Bahaya */}
+          <p
+            className="text-[17px] sm:text-[19px] lg:text-[20px] font-[850] italic text-center text-white [-webkit-text-stroke:1px_rgba(44,44,44,0.63)] [text-shadow:0px_4px_6px_rgba(0,0,0,0.5)] mt-1"
+            style={{ fontFamily: "var(--font-garet-heavy), 'Garet', sans-serif" }}
+          >
+            Kategori Bahaya: {kategoriBahaya}
+          </p>
         </div>
-
-        {/* Bottom Footer Text: Kategori Bahaya */}
-        <p
-          className="font-black italic text-white text-[16px] sm:text-[17px] mt-3 drop-shadow-[0_2px_4px_rgba(0,0,0,0.4)]"
-          style={{ fontFamily: "var(--font-garet-heavy), sans-serif" }}
-        >
-          Kategori Bahaya: {kategoriBahaya}
-        </p>
       </div>
     </div>
   );

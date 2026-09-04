@@ -8,13 +8,30 @@ const JUDUL_PETA = {
   longsor: "Peta Tanah Longsor Sumatra",
 };
 
-// Flood severity colors for Banjir tab
+// Flood severity colors for Banjir tab (Matching Klasifikasi Banjir Image)
 const BANJIR_CLASSIFICATION = {
-  "Kota Medan": "#1D4ED8", // Berat (> 1,5 m)
-  "Kab. Aceh Besar": "#3B82F6", // Sedang (0,5 - 1,5 m)
-  "Kab. Pidie": "#1D4ED8", // Berat
-  "Kota Padang": "#3B82F6", // Sedang
-  "Kab. Deli Serdang": "#93C5FD", // Ringan (< 0,5 m)
+  "Kota Medan": "#0044FF", // Berat (> 1,5 m)
+  "Kab. Aceh Besar": "#0084FF", // Sedang (0,5 - 1,5 m)
+  "Kab. Pidie": "#0044FF", // Berat (> 1,5 m)
+  "Kota Padang": "#0084FF", // Sedang (0,5 - 1,5 m)
+  "Kab. Deli Serdang": "#00D2FF", // Ringan (< 0,5 m)
+};
+
+// Landslide severity colors for Tanah Longsor tab (Matching Klasifikasi Longsor Image)
+const LONGSOR_CLASSIFICATION = {
+  "Kab. Aceh Besar": "#DC2626", // Berat (> 4 dB)
+  "Kab. Pidie": "#DC2626", // Berat (> 4 dB)
+  "Kota Medan": "#DC2626", // Berat (> 4 dB)
+  "Kab. Deli Serdang": "#F97316", // Sedang (2 - 4 dB)
+  "Kota Padang": "#DC2626", // Berat (> 4 dB)
+  "Kab. Aceh Jaya": "#FCD34D", // Ringan (< 2 dB)
+  "Kab. Aceh Barat": "#F97316", // Sedang (2 - 4 dB)
+  "Kab. Aceh Selatan": "#FCD34D", // Ringan (< 2 dB)
+  "Kab. Nagan Raya": "#F97316", // Sedang (2 - 4 dB)
+  "Kab. Karo": "#F97316", // Sedang (2 - 4 dB)
+  "Kab. Simalungun": "#FCD34D", // Ringan (< 2 dB)
+  "Kab. Pesisir Selatan": "#F97316", // Sedang (2 - 4 dB)
+  "Kab. Solok": "#FCD34D", // Ringan (< 2 dB)
 };
 
 function normalizeName(str) {
@@ -84,17 +101,7 @@ export default function PetaSumatra({
     <div className="flex flex-col items-center gap-4 w-full max-w-[1050px] mx-auto select-none">
       {/* Label Glass Pill Button */}
       <div
-        className="
-          flex items-center justify-center
-          w-full max-w-[90vw] sm:w-[480px] lg:w-[573px]
-          h-[48px] sm:h-[52px] lg:h-[58px]
-          rounded-[40px] sm:rounded-[50px]
-          border-[3.5px] sm:border-[4px] lg:border-[5px]
-          border-[rgba(255,255,255,0.45)]
-          transition-all duration-300
-          lg:-mt-12
-          z-20
-        "
+        className="flex items-center justify-center w-full max-w-[90vw] sm:w-[440px] xl:w-[480px] 2xl:w-[573px] h-[44px] sm:h-[48px] xl:h-[52px] 2xl:h-[58px] rounded-[40px] sm:rounded-[50px] border-[3.5px] sm:border-[4px] lg:border-[5px] border-[rgba(255,255,255,0.45)] transition-all duration-300 xl:-mt-6 2xl:-mt-12 z-20"
         style={{
           background: "linear-gradient(180deg, rgba(255,255,255,0.40) 0%, rgba(255,255,255,0.12) 100%)",
           boxShadow: "inset 0px 2px 4px rgba(255,255,255,0.6), inset 0px -2px 4px rgba(0,0,0,0.25), 0 8px 24px rgba(0,0,0,0.15)",
@@ -103,22 +110,16 @@ export default function PetaSumatra({
         }}
       >
         <span
-          className="
-            font-black text-white text-center
-            text-[16px] sm:text-[22px] lg:text-[25px]
-            [text-shadow:0_4px_6px_rgba(0,0,0,0.6)]
-            whitespace-nowrap
-            [-webkit-text-stroke:1px_rgba(44,44,44,0.4)]
-          "
+          className="font-black text-white text-center text-[16px] sm:text-[22px] lg:text-[25px] [text-shadow:0_4px_6px_rgba(0,0,0,0.6)] whitespace-nowrap [-webkit-text-stroke:1px_rgba(44,44,44,0.4)]"
           style={{ fontFamily: "var(--font-garet-heavy), sans-serif" }}
         >
           {JUDUL_PETA[activeMenu] ?? "Peta Wilayah Bencana Sumatra"}
         </span>
       </div>
 
-      {/* Map Viewport Area without background card */}
+      {/* Map Viewport Area */}
       <div
-        className="relative w-full h-[440px] sm:h-[600px] lg:h-[680px] flex items-center justify-center overflow-hidden cursor-grab active:cursor-grabbing"
+        className="relative w-full h-[400px] sm:h-[540px] xl:h-[520px] 2xl:h-[620px] 3xl:h-[680px] flex items-center justify-center overflow-hidden cursor-grab active:cursor-grabbing"
         onWheel={handleWheel}
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
@@ -162,50 +163,111 @@ export default function PetaSumatra({
           </button>
         </div>
 
-        {/* Floating Klasifikasi Banjir Card (Inside Map Viewport) */}
+        {/* Floating Klasifikasi Banjir Card */}
         {activeMenu === "banjir" && (
-          <div
-            className="
-              absolute left-4 bottom-4 z-30
-              flex flex-col gap-2 px-4 py-3 sm:px-5 sm:py-3.5
-              rounded-[20px] sm:rounded-[24px]
-              border border-white/50
-              bg-black/35 backdrop-blur-md
-              shadow-[0_8px_24px_rgba(0,0,0,0.3)]
-              pointer-events-auto
-            "
-          >
+          <div className="absolute left-4 bottom-4 z-30 flex flex-col w-[210px] px-4 py-3 rounded-[22px] border-[1.5px] border-[#8C6B4F] bg-white/95 backdrop-blur-md shadow-[0_10px_25px_rgba(0,0,0,0.25)] pointer-events-auto">
+            {/* Title */}
             <p
-              className="text-white text-[12px] sm:text-[13px] font-black uppercase tracking-wider mb-0.5"
+              className="font-extrabold text-[#0F5257] text-[14px] text-center drop-shadow-[0_1px_2px_rgba(0,0,0,0.15)] mb-1"
               style={{ fontFamily: "var(--font-garet-heavy), sans-serif" }}
             >
               Klasifikasi Banjir
             </p>
-            <div className="flex flex-col gap-1.5 text-[11px] sm:text-[12px] text-white/90">
-              <div className="flex items-center gap-2">
-                <span className="w-3.5 h-3.5 rounded bg-[#1D4ED8] border border-white/60" />
-                <span className="font-semibold">Berat (&gt; 1,5 m)</span>
+            {/* Underline separator */}
+            <div className="w-full h-[1px] bg-[#0F5257]/40 mb-2" />
+
+            {/* Items */}
+            <div className="flex flex-col gap-2 text-[13px] text-gray-900 font-medium">
+              {/* Ringan */}
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2.5">
+                  <span className="w-4 h-4 rounded-full bg-[#00D2FF] shadow-sm flex-shrink-0" />
+                  <span className="font-serif text-[14px]">Ringan</span>
+                </div>
+                <span className="font-serif text-[13px] text-gray-800">&lt; 0,5 m</span>
               </div>
-              <div className="flex items-center gap-2">
-                <span className="w-3.5 h-3.5 rounded bg-[#3B82F6] border border-white/60" />
-                <span className="font-semibold">Sedang (0,5 – 1,5 m)</span>
+
+              {/* Sedang */}
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2.5">
+                  <span className="w-4 h-4 rounded-full bg-[#0084FF] shadow-sm flex-shrink-0" />
+                  <span className="font-serif text-[14px]">Sedang</span>
+                </div>
+                <span className="font-serif text-[13px] text-gray-800">0,5 - 1,5 m</span>
               </div>
-              <div className="flex items-center gap-2">
-                <span className="w-3.5 h-3.5 rounded bg-[#93C5FD] border border-white/60" />
-                <span className="font-semibold">Ringan (&lt; 0,5 m)</span>
+
+              {/* Berat */}
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2.5">
+                  <span className="w-4 h-4 rounded-full bg-[#0044FF] shadow-sm flex-shrink-0" />
+                  <span className="font-serif text-[14px]">Berat</span>
+                </div>
+                <span className="font-serif text-[13px] text-gray-800">&gt; 1,5 m</span>
               </div>
-              <div className="flex items-center gap-2">
-                <span className="w-3.5 h-3.5 rounded bg-[#F2E4C4] border border-gray-400" />
-                <span className="font-semibold text-white/70">Tidak Terdampak</span>
+
+              {/* Tidak Terdampak */}
+              <div className="flex items-center gap-2.5">
+                <span className="w-4 h-4 rounded-full bg-[#F5F5F7] border border-gray-700 shadow-sm flex-shrink-0" />
+                <span className="font-serif text-[14px]">Tidak Terdampak</span>
               </div>
             </div>
           </div>
         )}
 
-        {/* Hover Tooltip / Callout Pointer Line (Image 2 Style for Banjir) */}
+        {/* Floating Klasifikasi Longsor Card */}
+        {activeMenu === "longsor" && (
+          <div className="absolute left-4 bottom-4 z-30 flex flex-col w-[210px] px-4 py-3 rounded-[22px] border-[1.5px] border-[#8C6B4F] bg-white/95 backdrop-blur-md shadow-[0_10px_25px_rgba(0,0,0,0.25)] pointer-events-auto">
+            {/* Title */}
+            <p
+              className="font-extrabold text-[#0F5257] text-[14px] text-center drop-shadow-[0_1px_2px_rgba(0,0,0,0.15)] mb-1"
+              style={{ fontFamily: "var(--font-garet-heavy), sans-serif" }}
+            >
+              Klasifikasi Longsor
+            </p>
+            {/* Underline separator */}
+            <div className="w-full h-[1px] bg-[#0F5257]/40 mb-2" />
+
+            {/* Items */}
+            <div className="flex flex-col gap-2 text-[13px] text-gray-900 font-medium">
+              {/* Ringan */}
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2.5">
+                  <span className="w-4 h-4 rounded-full bg-[#FCD34D] shadow-sm flex-shrink-0" />
+                  <span className="font-serif text-[14px]">Ringan</span>
+                </div>
+                <span className="font-serif text-[13px] text-gray-800">&lt; 2 dB</span>
+              </div>
+
+              {/* Sedang */}
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2.5">
+                  <span className="w-4 h-4 rounded-full bg-[#F97316] shadow-sm flex-shrink-0" />
+                  <span className="font-serif text-[14px]">Sedang</span>
+                </div>
+                <span className="font-serif text-[13px] text-gray-800">2 - 4 dB</span>
+              </div>
+
+              {/* Berat */}
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2.5">
+                  <span className="w-4 h-4 rounded-full bg-[#DC2626] shadow-sm flex-shrink-0" />
+                  <span className="font-serif text-[14px]">Berat</span>
+                </div>
+                <span className="font-serif text-[13px] text-gray-800">&gt; 4 dB</span>
+              </div>
+
+              {/* Tidak Terdampak */}
+              <div className="flex items-center gap-2.5">
+                <span className="w-4 h-4 rounded-full bg-[#F5F5F7] border border-gray-700 shadow-sm flex-shrink-0" />
+                <span className="font-serif text-[14px]">Tidak Terdampak</span>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Hover Tooltip / Callout Pointer Line */}
         {hoveredItem && (
           activeMenu === "banjir" ? (
-            /* IMAGE 2 BANJIR CALLOUT POINTER WITH NOKTAH DOT */
             <div
               className="fixed z-50 pointer-events-none flex items-center gap-1.5 transition-opacity duration-150"
               style={{
@@ -219,13 +281,10 @@ export default function PetaSumatra({
                     <path d="M 0 0 L 10 5 L 0 10 z" fill="#FFFFFF" />
                   </marker>
                 </defs>
-                {/* Noktah White Dot with Red Border */}
                 <circle cx="6" cy="30" r="4.5" fill="#FFFFFF" stroke="#EE3B3B" strokeWidth="2.5" />
-                {/* Arrow Line from Noktah to Callout Box */}
                 <line x1="8" y1="28" x2="34" y2="12" stroke="#FFFFFF" strokeWidth="2" markerEnd="url(#calloutArrow)" />
               </svg>
 
-              {/* White Callout Box (Exact Image 2 Design) */}
               <div className="bg-white/95 backdrop-blur-md px-4 py-2 rounded-[20px] shadow-[0_10px_25px_rgba(0,0,0,0.25)] border border-gray-200/90 flex flex-col ml-1">
                 <span className="font-black text-[#0F5257] text-[14px] leading-snug" style={{ fontFamily: "var(--font-garet-heavy), sans-serif" }}>
                   {hoveredItem.rawTitle || hoveredItem.title}
@@ -241,7 +300,6 @@ export default function PetaSumatra({
               </div>
             </div>
           ) : (
-            /* STANDARD GLASS TOOLTIP FOR BERANDA / LONGSOR */
             <div
               className="fixed z-50 pointer-events-none px-3.5 py-2 rounded-xl bg-gray-900/90 text-white backdrop-blur-md shadow-2xl border border-white/20 text-xs flex flex-col gap-0.5 transition-opacity duration-150"
               style={{
@@ -280,7 +338,7 @@ export default function PetaSumatra({
             </defs>
 
             <g filter="url(#mod3MapExtrudeShadow)">
-              {/* 3D Extrusion Depth Layer (only when 3D mode is active) */}
+              {/* 3D Extrusion Depth Layer */}
               {is3D &&
                 mapData.provinces.map((prov) => (
                   <path
@@ -292,7 +350,7 @@ export default function PetaSumatra({
                   />
                 ))}
 
-              {/* Non-target Provinces (Cream Base Map) */}
+              {/* Non-target Provinces */}
               {nonTargetProvinces.map((prov) => (
                 <path
                   key={`nontarget-${prov.name}`}
@@ -317,7 +375,9 @@ export default function PetaSumatra({
                   const isSelectedKec = normalizeName(item.kec) === normActiveKec;
                   let fillColor = isSelectedKec ? "#FF1744" : "#F2E4C4";
                   if (activeMenu === "banjir" && !isSelectedKec) {
-                    fillColor = BANJIR_CLASSIFICATION[item.kab] || "#3B82F6";
+                    fillColor = BANJIR_CLASSIFICATION[item.kab] || "#0084FF";
+                  } else if (activeMenu === "longsor" && !isSelectedKec) {
+                    fillColor = LONGSOR_CLASSIFICATION[item.kab] || "#F97316";
                   }
 
                   return (
@@ -372,7 +432,11 @@ export default function PetaSumatra({
                   if (activeMenu === "banjir") {
                     fillColor = isKabSelected
                       ? "#FF1744"
-                      : (BANJIR_CLASSIFICATION[kab.kab] || (isProvTarget ? "#3B82F6" : "#F2E4C4"));
+                      : (BANJIR_CLASSIFICATION[kab.kab] || (isProvTarget ? "#0084FF" : "#F2E4C4"));
+                  } else if (activeMenu === "longsor") {
+                    fillColor = isKabSelected
+                      ? "#FF1744"
+                      : (LONGSOR_CLASSIFICATION[kab.kab] || (isProvTarget ? "#F97316" : "#F2E4C4"));
                   } else {
                     fillColor = isRed ? (isKabSelected ? "#FF1744" : "#E33434") : "#F2E4C4";
                   }

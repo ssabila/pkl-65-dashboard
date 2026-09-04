@@ -34,31 +34,37 @@ export default function Modul3Page() {
           setFilterKecamatan={setFilterKecamatan}
         />
 
-        {/* Content row: sidebar | main content (cards/views) | map */}
-        <main className="flex-1 flex flex-col lg:flex-row items-center lg:items-start justify-center gap-6 lg:gap-8 px-4 sm:px-8 lg:px-12 pb-10 pt-2 w-full max-w-[1800px] mx-auto">
-          {/* Sidebar */}
+        {/* Content row: sidebar | main content wrapper */}
+        <main className="flex-1 flex flex-col min-[1150px]:flex-row items-center min-[1150px]:items-start justify-start gap-4 min-[1150px]:gap-5 2xl:gap-8 px-4 sm:px-6 min-[1150px]:px-8 2xl:px-12 pb-10 pt-2 w-full max-w-[1800px] mx-auto">
+          {/* Sidebar - Fixed at left for desktop */}
           <Sidebar activeMenu={activeMenu} onMenuChange={setActiveMenu} />
 
-          {/* Center Main View (Cards / Details) */}
-          <div className="flex-1 w-full max-w-[650px] flex flex-col justify-start">
-            {activeMenu === "beranda" && <BerandaView />}
-            {activeMenu === "banjir" && <BanjirView provinsi={filterProvinsi} kabupaten={filterKabupaten} kecamatan={filterKecamatan} />}
-            {activeMenu === "longsor" && <TanahLongsorView provinsi={filterProvinsi} kabupaten={filterKabupaten} kecamatan={filterKecamatan} />}
-            {activeMenu === "metadata" && <MetadataView />}
-          </div>
+          {/* Main Content Area */}
+          {activeMenu === "metadata" ? (
+            <div className="flex-1 w-full flex justify-center">
+              <MetadataView />
+            </div>
+          ) : (
+            <div className="flex-1 w-full flex flex-col min-[1150px]:flex-row items-center min-[1150px]:items-start justify-center gap-4 min-[1150px]:gap-5 2xl:gap-8">
+              {/* Cards / View details */}
+              <div className="w-full min-[1150px]:w-[430px] 2xl:w-[540px] 3xl:w-[620px] flex-shrink-0 flex flex-col justify-start">
+                {activeMenu === "beranda" && <BerandaView />}
+                {activeMenu === "banjir" && <BanjirView provinsi={filterProvinsi} kabupaten={filterKabupaten} kecamatan={filterKecamatan} />}
+                {activeMenu === "longsor" && <TanahLongsorView provinsi={filterProvinsi} kabupaten={filterKabupaten} kecamatan={filterKecamatan} />}
+              </div>
 
-          {/* Peta Sumatra (Right Side) */}
-          {activeMenu !== "metadata" && (
-            <div className="flex-1 w-full flex items-center justify-center">
-              <PetaSumatra
-                activeMenu={activeMenu}
-                provinsi={filterProvinsi}
-                setProvinsi={setFilterProvinsi}
-                kabupaten={filterKabupaten}
-                setKabupaten={setFilterKabupaten}
-                kecamatan={filterKecamatan}
-                setKecamatan={setFilterKecamatan}
-              />
+              {/* Peta Sumatra */}
+              <div className="flex-1 w-full min-w-0 flex items-center justify-center">
+                <PetaSumatra
+                  activeMenu={activeMenu}
+                  provinsi={filterProvinsi}
+                  setProvinsi={setFilterProvinsi}
+                  kabupaten={filterKabupaten}
+                  setKabupaten={setFilterKabupaten}
+                  kecamatan={filterKecamatan}
+                  setKecamatan={setFilterKecamatan}
+                />
+              </div>
             </div>
           )}
         </main>
