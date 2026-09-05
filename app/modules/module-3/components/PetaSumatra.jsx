@@ -1,6 +1,6 @@
 "use client";
 import { useState, useRef } from "react";
-import mapData from "../../../../sumatra_map_data_optimized.json";
+import mapData from "./sumatra_map_data_optimized.json";
 
 const JUDUL_PETA = {
   beranda: "Peta Wilayah Bencana Sumatra",
