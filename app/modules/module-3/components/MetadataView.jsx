@@ -1,137 +1,238 @@
-const METADATA_INFO = {
-  totalNama: "Peta Banjir dan Tanah Longsor",
-  unitAnalisis: "Kecamatan (Aceh, Sumatera Utara, Sumatera Barat)",
-  waktuPelaksanaan: "Oktober – November 2025",
-  sumberData: "Copernicus Emergency Management Service (CEMS), SAR Sentinel-1",
-  penanggungjawab: "Kelompok PKL 65 – Politeknik Statistika STIS",
-};
-
-const KETERBATASAN = [
-  "Peta genangan banjir merupakan hasil estimasi dari model hidrologi berbasis DEM MERIT, sehingga mungkin terdapat perbedaan dengan kondisi lapangan.",
-  "Data tanah longsor bersumber dari selisih backscatter SAR Sentinel-1 sebelum dan sesudah kejadian, sehingga tidak mencakup longsor di bawah vegetasi lebat.",
-  "Batas kecamatan menggunakan data LapakGIS 2024 yang mungkin belum mencerminkan perubahan administrasi terbaru.",
-  "Analisis dilakukan pada skala kecamatan, sehingga variasi di tingkat desa tidak tertangkap.",
-];
-
-const KONSEP_DEFINISI = [
-  {
-    istilah: "Indikator Banjir",
-    deskripsi:
-      "FW0152 (Flooded Area) – Luas area genangan banjir per kecamatan yang diperoleh dari model FwDET 2.1 berbasis DEM MERIT. Satuan: hektar (Ha).",
-  },
-  {
-    istilah: "Indikator Tanah Longsor",
-    deskripsi:
-      "Selisih rata-rata nilai backscatter SAR Sentinel-1 (dB) antara citra pra-kejadian dan pasca-kejadian. Nilai lebih tinggi mengindikasikan perubahan permukaan yang lebih signifikan.",
-  },
-];
-
-const KLASIFIKASI = [
-  {
-    jenis: "Banjir",
-    warna: "text-blue-300",
-    items: [
-      { label: "Ringan",          range: "Kedalaman < 0,5 m",    color: "bg-blue-200" },
-      { label: "Sedang",          range: "0,5 – 1,5 m",          color: "bg-blue-400" },
-      { label: "Berat",           range: "> 1,5 m",              color: "bg-blue-700" },
-      { label: "Tidak Terdampak", range: "—",                    color: "bg-gray-500" },
-    ],
-  },
-  {
-    jenis: "Tanah Longsor",
-    warna: "text-orange-300",
-    items: [
-      { label: "Ringan",          range: "Selisih < 2 dB",       color: "bg-amber-200" },
-      { label: "Sedang",          range: "2 – 4 dB",             color: "bg-amber-500" },
-      { label: "Berat",           range: "> 4 dB",               color: "bg-amber-800" },
-      { label: "Tidak Terdampak", range: "—",                    color: "bg-gray-500" },
-    ],
-  },
-];
+"use client";
 
 export default function MetadataView() {
   return (
-    <div className="flex gap-4 w-full">
-      {/* Kolom Kiri */}
-      <div className="flex flex-col gap-3 flex-1">
-        {/* Keterbatasan Data */}
-        <div className="bg-black/30 backdrop-blur-md border border-white/20 rounded-2xl p-4">
-          <p className="text-white font-semibold text-sm mb-3 border-b border-white/10 pb-2">
-            Keterbatasan Data
-          </p>
-          <ul className="flex flex-col gap-2">
-            {KETERBATASAN.map((item, i) => (
-              <li key={i} className="flex gap-2 text-white/70 text-xs leading-relaxed">
-                <span className="text-white/40 mt-0.5">•</span>
-                <span>{item}</span>
+    <div className="w-full max-w-[1380px] mx-auto select-none mt-2 xl:mt-4">
+      {/* 2 Column Layout */}
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 xl:gap-8 items-start">
+        
+        {/* ================= LEFT COLUMN ================= */}
+        <div className="flex flex-col gap-5 w-full">
+          {/* Header Pill: Keterbatasan Data */}
+          <div
+            className="flex items-center justify-center px-10 py-2.5 sm:px-14 sm:py-3 rounded-[40px] border-[3px] border-white/70 shadow-[0_8px_20px_rgba(0,0,0,0.25)] w-full max-w-[420px] mx-auto"
+            style={{
+              background: "linear-gradient(180deg, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0.20) 100%)",
+              boxShadow: "inset 0px 2px 4px rgba(255,255,255,0.6), inset 0px -2px 4px rgba(0,0,0,0.2), 0 8px 24px rgba(0,0,0,0.2)",
+              backdropFilter: "blur(40px)",
+              WebkitBackdropFilter: "blur(40px)",
+            }}
+          >
+            <span
+              className="font-black text-white text-center text-[20px] sm:text-[22px] lg:text-[24px] [text-shadow:0_3px_6px_rgba(0,0,0,0.6)] [-webkit-text-stroke:1px_rgba(44,44,44,0.4)] whitespace-nowrap"
+              style={{ fontFamily: "var(--font-garet-heavy), 'Garet', sans-serif" }}
+            >
+              Keterbatasan Data
+            </span>
+          </div>
+
+          {/* Card 1: Keterbatasan Data Points */}
+          <div className="bg-[#243356]/60 backdrop-blur-2xl border-[3px] border-white/40 rounded-[28px] p-6 sm:p-7 shadow-[0_12px_32px_rgba(0,0,0,0.3)] flex flex-col gap-4">
+            <ul className="flex flex-col gap-4 text-white text-[14px] sm:text-[15px] lg:text-[15.5px] leading-relaxed font-serif tracking-wide">
+              <li className="flex gap-2.5 items-start">
+                <span className="text-white text-[18px] leading-none mt-0.5">•</span>
+                <span>
+                  Peta genangan banjir dan sebaran tanah longsor merupakan hasil interpretasi otomatis dari citra satelit SAR (Synthetic Aperture Radar) yang mungkin memiliki tingkat margin error tertentu.
+                </span>
               </li>
-            ))}
-          </ul>
-        </div>
+              <li className="flex gap-2.5 items-start">
+                <span className="text-white text-[18px] leading-none mt-0.5">•</span>
+                <span>
+                  Sistem tidak memperhitungkan kedalaman genangan banjir di bawah tajuk pepohonan lebat (canopy) yang mungkin tidak tertembus sinyal radar.
+                </span>
+              </li>
+              <li className="flex gap-2.5 items-start">
+                <span className="text-white text-[18px] leading-none mt-0.5">•</span>
+                <span>
+                  Resolusi spasial terbatas pada ukuran piksel sensor satelit, area terdampak berukuran sangat kecil (di bawah 10x10 meter) mungkin tidak terdeteksi.
+                </span>
+              </li>
+            </ul>
+          </div>
 
-        {/* Metadata */}
-        <div className="bg-black/30 backdrop-blur-md border border-white/20 rounded-2xl p-4">
-          <p className="text-white font-semibold text-sm mb-3 border-b border-white/10 pb-2">
-            Metadata
-          </p>
-          <div className="flex flex-col gap-2">
-            {Object.entries({
-              "Nama Data":           METADATA_INFO.totalNama,
-              "Unit Analisis":       METADATA_INFO.unitAnalisis,
-              "Waktu Pelaksanaan":   METADATA_INFO.waktuPelaksanaan,
-              "Sumber Data":         METADATA_INFO.sumberData,
-              "Penanggung Jawab":    METADATA_INFO.penanggungjawab,
-            }).map(([key, val]) => (
-              <div key={key} className="grid grid-cols-[140px_1fr] gap-2">
-                <span className="text-white/50 text-xs">{key}</span>
-                <span className="text-white/80 text-xs">{val}</span>
+          {/* Card 2: Metadata Terracotta Glass Card */}
+          <div className="bg-[#B85D5D]/60 backdrop-blur-2xl border-[3px] border-white/45 rounded-[28px] p-6 sm:p-7 shadow-[0_12px_32px_rgba(0,0,0,0.3)] flex flex-col gap-4">
+            <h3
+              className="font-black text-white text-center text-[22px] sm:text-[25px] lg:text-[27px] [text-shadow:0_3px_6px_rgba(0,0,0,0.6)] [-webkit-text-stroke:1px_rgba(44,44,44,0.4)] mb-1"
+              style={{ fontFamily: "var(--font-garet-heavy), 'Garet', sans-serif" }}
+            >
+              Metadata
+            </h3>
+
+            <div className="flex flex-col gap-3 text-white text-[13.5px] sm:text-[14.5px] lg:text-[15px]">
+              <div className="grid grid-cols-[170px_1fr] sm:grid-cols-[190px_1fr] items-center gap-2">
+                <span
+                  className="font-[850] [text-shadow:0_2px_4px_rgba(0,0,0,0.5)]"
+                  style={{ fontFamily: "var(--font-garet-heavy), 'Garet', sans-serif" }}
+                >
+                  Sumber Data Utama
+                </span>
+                <span className="font-serif italic text-white/95">
+                  Sentinel-1 (C-Band SAR) &amp; Sentinel-2 (Multispectral)
+                </span>
               </div>
-            ))}
+
+              <div className="grid grid-cols-[170px_1fr] sm:grid-cols-[190px_1fr] items-center gap-2">
+                <span
+                  className="font-[850] [text-shadow:0_2px_4px_rgba(0,0,0,0.5)]"
+                  style={{ fontFamily: "var(--font-garet-heavy), 'Garet', sans-serif" }}
+                >
+                  Metode Pemrosesan
+                </span>
+                <span className="font-serif italic text-white/95">
+                  Otsu Thresholding (Banjir) &amp; Log-Ratio (Longsor)
+                </span>
+              </div>
+
+              <div className="grid grid-cols-[170px_1fr] sm:grid-cols-[190px_1fr] items-center gap-2">
+                <span
+                  className="font-[850] [text-shadow:0_2px_4px_rgba(0,0,0,0.5)]"
+                  style={{ fontFamily: "var(--font-garet-heavy), 'Garet', sans-serif" }}
+                >
+                  Data Tambahan
+                </span>
+                <span className="font-serif italic text-white/95">
+                  SRTM DEM 30m, Peta Batas Administrasi BPS
+                </span>
+              </div>
+
+              <div className="grid grid-cols-[170px_1fr] sm:grid-cols-[190px_1fr] items-center gap-2">
+                <span
+                  className="font-[850] [text-shadow:0_2px_4px_rgba(0,0,0,0.5)]"
+                  style={{ fontFamily: "var(--font-garet-heavy), 'Garet', sans-serif" }}
+                >
+                  Periode Pengamatan
+                </span>
+                <span className="font-serif italic text-white/95">
+                  Desember 2023 - Januari 2024
+                </span>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Kolom Kanan */}
-      <div className="flex flex-col gap-3 flex-1">
-        {/* Konsep dan Definisi */}
-        <div className="bg-black/30 backdrop-blur-md border border-white/20 rounded-2xl p-4">
-          <p className="text-white font-semibold text-sm mb-3 border-b border-white/10 pb-2">
-            Konsep dan Definisi
-          </p>
-          <div className="flex flex-col gap-3">
-            {KONSEP_DEFINISI.map((item) => (
-              <div key={item.istilah}>
-                <p className="text-yellow-300 text-xs font-semibold mb-1">{item.istilah}</p>
-                <p className="text-white/70 text-xs leading-relaxed">{item.deskripsi}</p>
-              </div>
-            ))}
+        {/* ================= RIGHT COLUMN ================= */}
+        <div className="flex flex-col gap-5 w-full">
+          {/* Header Pill: Konsep dan Definisi */}
+          <div
+            className="flex items-center justify-center px-10 py-2.5 sm:px-14 sm:py-3 rounded-[40px] border-[3px] border-white/70 shadow-[0_8px_20px_rgba(0,0,0,0.25)] w-full max-w-[420px] mx-auto"
+            style={{
+              background: "linear-gradient(180deg, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0.20) 100%)",
+              boxShadow: "inset 0px 2px 4px rgba(255,255,255,0.6), inset 0px -2px 4px rgba(0,0,0,0.2), 0 8px 24px rgba(0,0,0,0.2)",
+              backdropFilter: "blur(40px)",
+              WebkitBackdropFilter: "blur(40px)",
+            }}
+          >
+            <span
+              className="font-black text-white text-center text-[20px] sm:text-[22px] lg:text-[24px] [text-shadow:0_3px_6px_rgba(0,0,0,0.6)] [-webkit-text-stroke:1px_rgba(44,44,44,0.4)] whitespace-nowrap"
+              style={{ fontFamily: "var(--font-garet-heavy), 'Garet', sans-serif" }}
+            >
+              Konsep dan Definisi
+            </span>
           </div>
-        </div>
 
-        {/* Klasifikasi Bahaya */}
-        <div className="bg-black/30 backdrop-blur-md border border-white/20 rounded-2xl p-4">
-          <p className="text-white font-semibold text-sm mb-3 border-b border-white/10 pb-2">
-            Klasifikasi Bahaya
-          </p>
-          <div className="flex gap-4">
-            {KLASIFIKASI.map((kel) => (
-              <div key={kel.jenis} className="flex-1">
-                <p className={`text-xs font-semibold mb-2 ${kel.warna}`}>{kel.jenis}</p>
-                <div className="flex flex-col gap-1.5">
-                  {kel.items.map((item) => (
-                    <div key={item.label} className="flex items-center gap-2">
-                      <div className={`w-4 h-3 rounded-sm flex-shrink-0 ${item.color}`} />
-                      <div>
-                        <span className="text-white/80 text-xs">{item.label}</span>
-                        <span className="text-white/40 text-xs ml-1">({item.range})</span>
-                      </div>
-                    </div>
-                  ))}
+          {/* Card 1: Konsep dan Definisi Points */}
+          <div className="bg-[#243356]/60 backdrop-blur-2xl border-[3px] border-white/40 rounded-[28px] p-6 sm:p-7 shadow-[0_12px_32px_rgba(0,0,0,0.3)] flex flex-col gap-5">
+            {/* Indikator Banjir */}
+            <div>
+              <h4
+                className="font-[850] text-white text-[16px] sm:text-[17px] lg:text-[18px] mb-1 [text-shadow:0_2px_4px_rgba(0,0,0,0.5)]"
+                style={{ fontFamily: "var(--font-garet-heavy), 'Garet', sans-serif" }}
+              >
+                Indikator Banjir
+              </h4>
+              <p className="font-serif italic text-white/95 text-[13.5px] sm:text-[14.5px] leading-relaxed">
+                FwDET2.1 (Floodwater Depth Estimation Tool) digunakan untuk mengestimasi kedalaman banjir dengan menganalisis citra SAR yang dioverlay dengan Digital Elevation Model (DEM)
+              </p>
+            </div>
+
+            {/* Indikator Tanah Longsor */}
+            <div>
+              <h4
+                className="font-[850] text-white text-[16px] sm:text-[17px] lg:text-[18px] mb-1 [text-shadow:0_2px_4px_rgba(0,0,0,0.5)]"
+                style={{ fontFamily: "var(--font-garet-heavy), 'Garet', sans-serif" }}
+              >
+                Indikator Tanah Longsor
+              </h4>
+              <p className="font-serif italic text-white/95 text-[13.5px] sm:text-[14.5px] leading-relaxed">
+                Tanah longsor dideteksi melalui perubahan nilai backscatter amplitudo citra SAR pada saat sebelum dan sesudah kejadian. Penurunan backscatter signifikan sering berkorelasi dengan hilangnya vegetasi dan pergerakan tanah.
+              </p>
+            </div>
+
+            {/* Klasifikasi Bahaya */}
+            <div>
+              <h4
+                className="font-[850] text-white text-[16px] sm:text-[17px] lg:text-[18px] mb-2.5 [text-shadow:0_2px_4px_rgba(0,0,0,0.5)]"
+                style={{ fontFamily: "var(--font-garet-heavy), 'Garet', sans-serif" }}
+              >
+                Klasifikasi Bahaya
+              </h4>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                {/* Ringan (Kuning) */}
+                <div className="bg-[#EBF1A8]/95 rounded-[16px] p-3 border border-white/80 shadow-md flex flex-col justify-between min-h-[90px]">
+                  <p
+                    className="font-[850] text-[#7A6400] text-[13px] text-center mb-1.5"
+                    style={{ fontFamily: "var(--font-garet-heavy), 'Garet', sans-serif" }}
+                  >
+                    Ringan (Kuning)
+                  </p>
+                  <div className="text-[11.5px] text-gray-900 font-serif leading-tight space-y-1">
+                    <p>
+                      <span className="font-sans font-semibold text-gray-900">Banjir</span> : <span className="italic text-gray-800">Kedalaman &lt; 0,5 m</span>
+                    </p>
+                    <p>
+                      <span className="font-sans font-semibold text-gray-900">Longsor</span> : <span className="italic text-gray-800">Perubahan backscatter kecil</span>
+                    </p>
+                  </div>
+                </div>
+
+                {/* Sedang (Orange) */}
+                <div className="bg-[#FCD274]/95 rounded-[16px] p-3 border border-white/80 shadow-md flex flex-col justify-between min-h-[90px]">
+                  <p
+                    className="font-[850] text-[#8C4A00] text-[13px] text-center mb-1.5"
+                    style={{ fontFamily: "var(--font-garet-heavy), 'Garet', sans-serif" }}
+                  >
+                    Sedang (Orange)
+                  </p>
+                  <div className="text-[11.5px] text-gray-900 font-serif leading-tight space-y-1">
+                    <p>
+                      <span className="font-sans font-semibold text-gray-900">Banjir</span> : <span className="italic text-gray-800">Kedalaman 0,5 - 1,5 m</span>
+                    </p>
+                    <p>
+                      <span className="font-sans font-semibold text-gray-900">Longsor</span> : <span className="italic text-gray-800">Perubahan backscatter sedang</span>
+                    </p>
+                  </div>
+                </div>
+
+                {/* Berat (Merah) */}
+                <div className="bg-[#F88F8F]/95 rounded-[16px] p-3 border border-white/80 shadow-md flex flex-col justify-between min-h-[90px]">
+                  <p
+                    className="font-[850] text-[#800000] text-[13px] text-center mb-1.5"
+                    style={{ fontFamily: "var(--font-garet-heavy), 'Garet', sans-serif" }}
+                  >
+                    Berat (Merah)
+                  </p>
+                  <div className="text-[11.5px] text-gray-900 font-serif leading-tight space-y-1">
+                    <p>
+                      <span className="font-sans font-semibold text-gray-900">Banjir</span> : <span className="italic text-gray-800">Kedalaman &gt; 1,5 m</span>
+                    </p>
+                    <p>
+                      <span className="font-sans font-semibold text-gray-900">Longsor</span> : <span className="italic text-gray-800">Perubahan backscatter tinggi</span>
+                    </p>
+                  </div>
                 </div>
               </div>
-            ))}
+            </div>
+          </div>
+
+          {/* Card 2: Ground Truth Disclaimer */}
+          <div className="bg-white/20 backdrop-blur-2xl border-[3px] border-white/50 rounded-[28px] p-5 sm:p-6 shadow-[0_10px_28px_rgba(0,0,0,0.2)] text-center">
+            <p className="font-serif italic text-white text-[14px] sm:text-[15px] lg:text-[15.5px] leading-relaxed [text-shadow:0_2px_4px_rgba(0,0,0,0.5)]">
+              - Dashboard ini dimaksudkan sebagai alat bantu peringatan dini. Untuk operasional penyelamatan lapangan, petugas diwajibkan untuk mengonfirmasi data spasial ini dengan laporan langsung (ground truth) -
+            </p>
           </div>
         </div>
+
       </div>
     </div>
   );

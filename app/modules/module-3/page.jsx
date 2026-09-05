@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import "./module3.css";
 import Sidebar from "./components/Sidebar";
 import Header from "./components/Header";
 import PetaSumatra from "./components/PetaSumatra";
@@ -16,20 +17,11 @@ export default function Modul3Page() {
 
   return (
     <div
-      className="relative min-h-screen bg-cover bg-center bg-no-repeat overflow-hidden"
-      style={{ backgroundImage: "url('/module-3/bg-module-3.webp')" }}
+      className="mod3-root relative min-h-screen overflow-x-hidden"
+      style={{
+        background: "linear-gradient(180deg, #1F5FA8 0%, #D5AF89 100%)",
+      }}
     >
-      {/* Gradient hijau gelap ATAS */}
-      <div className="absolute inset-x-0 top-0 pointer-events-none z-0" style={{
-        height: "200px",
-        background: "linear-gradient(180deg, rgba(35,71,42,0.65) 0%, rgba(86,116,97,0.3) 60%, transparent 100%)"
-      }} />
-
-      {/* Gradient hijau gelap BAWAH */}
-      <div className="absolute inset-x-0 bottom-0 pointer-events-none z-0" style={{
-        height: "100px",
-        background: "linear-gradient(0deg, rgba(15,88,31,0.65) 0%, rgba(43,109,62,0.3) 50%, transparent 100%)"
-      }} />
 
       {/* Konten utama */}
       <div className="relative z-10 flex flex-col min-h-screen">
@@ -42,25 +34,40 @@ export default function Modul3Page() {
           setFilterKecamatan={setFilterKecamatan}
         />
 
-        {/* Content row: sidebar | cards | map */}
-        <div className="flex flex-1 items-start gap-2 px-2 pb-4 pt-2">
-          <Sidebar activeMenu={activeMenu} onMenuChange={setActiveMenu} className="mt-[750px]" />
+        {/* Content row: sidebar | main content wrapper */}
+        <main className="flex-1 flex flex-col min-[1150px]:flex-row items-center min-[1150px]:items-start justify-start gap-4 min-[1150px]:gap-5 2xl:gap-8 px-4 sm:px-6 min-[1150px]:px-8 2xl:px-12 pb-10 pt-2 w-full max-w-[1800px] mx-auto">
+          {/* Sidebar - Fixed at left for desktop */}
+          <Sidebar activeMenu={activeMenu} onMenuChange={setActiveMenu} />
 
-          {/* Cards (fixed width) */}
-          <div className="flex-none mt-[60px] ml-[50px]">
-            {activeMenu === "beranda" && <BerandaView />}
-            {activeMenu === "banjir" && <BanjirView provinsi={filterProvinsi} kabupaten={filterKabupaten} kecamatan={filterKecamatan} />}
-            {activeMenu === "longsor" && <TanahLongsorView provinsi={filterProvinsi} kabupaten={filterKabupaten} kecamatan={filterKecamatan} />}
-            {activeMenu === "metadata" && <MetadataView />}
-          </div>
+          {/* Main Content Area */}
+          {activeMenu === "metadata" ? (
+            <div className="flex-1 w-full flex justify-center">
+              <MetadataView />
+            </div>
+          ) : (
+            <div className="flex-1 w-full flex flex-col min-[1150px]:flex-row items-center min-[1150px]:items-start justify-center gap-4 min-[1150px]:gap-5 2xl:gap-8">
+              {/* Cards / View details */}
+              <div className="w-full min-[1150px]:w-[430px] 2xl:w-[540px] 3xl:w-[620px] flex-shrink-0 flex flex-col justify-start">
+                {activeMenu === "beranda" && <BerandaView />}
+                {activeMenu === "banjir" && <BanjirView provinsi={filterProvinsi} kabupaten={filterKabupaten} kecamatan={filterKecamatan} />}
+                {activeMenu === "longsor" && <TanahLongsorView provinsi={filterProvinsi} kabupaten={filterKabupaten} kecamatan={filterKecamatan} />}
+              </div>
 
-          {/* Peta (flex-1: ambil sisa ruang) */}
-          {activeMenu !== "metadata" && (
-            <div className="flex-1 flex items-center justify-center h-full pr-4">
-              <PetaSumatra activeMenu={activeMenu} provinsi={filterProvinsi} />
+              {/* Peta Sumatra */}
+              <div className="flex-1 w-full min-w-0 flex items-center justify-center">
+                <PetaSumatra
+                  activeMenu={activeMenu}
+                  provinsi={filterProvinsi}
+                  setProvinsi={setFilterProvinsi}
+                  kabupaten={filterKabupaten}
+                  setKabupaten={setFilterKabupaten}
+                  kecamatan={filterKecamatan}
+                  setKecamatan={setFilterKecamatan}
+                />
+              </div>
             </div>
           )}
-        </div>
+        </main>
       </div>
     </div>
   );
