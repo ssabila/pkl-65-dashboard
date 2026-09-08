@@ -35,38 +35,13 @@ export default function OpeningPage({ onNavigate }) {
   ];
 
   return (
-    <div className="relative min-h-screen overflow-hidden flex flex-col aurora-bg">
-      {/* Wave blobs */}
-      <div className="pointer-events-none absolute inset-0 overflow-hidden z-0">
-        <div
-          className="absolute rounded-full opacity-40 blur-3xl"
-          style={{ width: 700, height: 500, top: -100, left: -100,
-            background: "radial-gradient(circle, rgba(109,157,197,0.8) 0%, transparent 70%)" }}
-        />
-        <div
-          className="absolute rounded-full opacity-35 blur-3xl"
-          style={{ width: 600, height: 400, top: 50, right: -50,
-            background: "radial-gradient(circle, rgba(190,120,210,0.7) 0%, transparent 70%)" }}
-        />
-        <div
-          className="absolute rounded-full opacity-30 blur-3xl"
-          style={{ width: 500, height: 400, bottom: -50, right: 100,
-            background: "radial-gradient(circle, rgba(244,124,54,0.6) 0%, transparent 70%)" }}
-        />
-      </div>
+    <div
+      className="relative min-h-screen overflow-hidden flex flex-col bg-cover bg-center"
+      style={{ backgroundImage: "url('/module-2/bg.webp')", backgroundColor: "#1b3a5e" }}
+    >
 
       {/* Navbar */}
       <nav className="relative z-10 flex items-center px-8 py-4 gap-8">
-        {/* Logo icons — placeholder */}
-        <div className="flex items-center gap-2 mr-2">
-          {["🌿","🔵","🟡"].map((icon, i) => (
-            <div key={i} className="w-9 h-9 rounded-full flex items-center justify-center text-base"
-              style={{ background: "rgba(255,255,255,0.18)", backdropFilter: "blur(6px)", border: "1px solid rgba(255,255,255,0.35)" }}>
-              {icon}
-            </div>
-          ))}
-        </div>
-
         {navItems.map((item) => (
           <button
             key={item.page}

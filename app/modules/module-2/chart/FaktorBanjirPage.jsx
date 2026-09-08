@@ -4,14 +4,14 @@ import dynamic from "next/dynamic";
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
 } from "recharts";
-import { curahHujanBulanan, getCurahHujanHarian, bulanOptions, wilayahAceh } from "../data/dummyData";
+import { curahHujanBulananByProvinsi, getCurahHujanHarian, bulanOptions, wilayahByProvinsi } from "../data/realData";
 import { GlassCard, KpiCard, ToggleLabel, ToggleDivider, DropdownPill, RiskLegend, MapDetailPanel } from "./UI";
 import { Search, X } from "lucide-react";
 
-// Dynamic import — Leaflet needs client-only
+// Dynamic import: Leaflet needs client-only
 const InteractiveMap = dynamic(() => import("./InteractiveMap"), { ssr: false, loading: () => (
   <div className="w-full h-full rounded-xl flex items-center justify-center" style={{ background: "rgba(220,232,245,0.5)", minHeight: 260 }}>
-    <p className="text-[11px]" style={{ color: "rgba(44,62,80,0.4)" }}>Memuat peta…</p>
+    <p className="text-[11px]" style={{ color: "rgba(44,62,80,0.4)" }}>Memuat peta...</p>
   </div>
 ) });
 
@@ -23,13 +23,13 @@ export default function FaktorBanjirPage({ provinsi }) {
   const [selectedWilayah,  setSelectedWilayah]  = useState(null);
 
   const chartData = trendMode === "harian"
-    ? getCurahHujanHarian(bulan)
-    : curahHujanBulanan["2026"];
+    ? getCurahHujanHarian(provinsi, bulan)
+    : Object.values(curahHujanBulananByProvinsi[provinsi] || {});
 
   const fmtY = v => v >= 1000 ? `${v / 1000}K` : v;
 
   const filteredWilayah = searchQuery.length > 1
-    ? wilayahAceh.filter(w => w.nama.toLowerCase().includes(searchQuery.toLowerCase()))
+    ? (wilayahByProvinsi[provinsi] || []).filter(w => w.nama.toLowerCase().includes(searchQuery.toLowerCase()))
     : [];
 
   const handleSelect = useCallback((w) => {
@@ -46,7 +46,7 @@ export default function FaktorBanjirPage({ provinsi }) {
   return (
     <div className="space-y-4" style={{ fontFamily: "var(--font-dm-sans)" }}>
       <p className="text-[13px] font-semibold" style={{ color: "#2C3E50", fontFamily: "var(--font-garet-heavy)" }}>
-        Faktor Pemicu Banjir – Analisis Curah Hujan
+        Faktor Pemicu Banjir: Analisis Curah Hujan
       </p>
 
       {/* KPI */}

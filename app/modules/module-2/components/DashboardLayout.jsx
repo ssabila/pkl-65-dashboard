@@ -6,9 +6,9 @@ import {
   ChevronRight, ChevronDown, Clock, Bell, PanelLeft, PanelRight,
   AlertTriangle, LayoutDashboard, Home, Sun, Moon,
 } from "lucide-react";
-import { ringkasanByProvinsi, alertFeedData, provinsiOptions } from "../data/dummyData";
+import { ringkasanByProvinsi, getAlertFeed, provinsiOptions } from "../data/realData";
 
-// ─── Portal helper ─────────────────────────────────────────────────────────────
+// Portal helper
 function Portal({ children }) {
   const [m, setM] = useState(false);
   useEffect(() => setM(true), []);
@@ -27,7 +27,7 @@ function useAnchorPos(ref, open) {
   return pos;
 }
 
-// ─── Main Layout ──────────────────────────────────────────────────────────────
+// Main Layout
 export default function DashboardLayout({ activePage, onNavigate, provinsi, onProvinsiChange, onDarkChange, children }) {
   const [leftOpen,  setLeftOpen]  = useState(true);
   const [rightOpen, setRightOpen] = useState(true);
@@ -46,6 +46,7 @@ export default function DashboardLayout({ activePage, onNavigate, provinsi, onPr
   });
 
   const ringkasan = ringkasanByProvinsi[provinsi];
+  const alertFeedData = getAlertFeed(provinsi);
 
   const navItems = [
     { label: "Data Historis",         page: "data-historis", badge: "31" },
@@ -53,9 +54,8 @@ export default function DashboardLayout({ activePage, onNavigate, provinsi, onPr
     { label: "Faktor Pemicu Longsor", page: "faktor-longsor" },
   ];
 
-  // ── Design tokens ──────────────────────────────────────
+  // Design tokens
   const T = {
-    rootBg:       dark ? "aurora-dark-dashboard-bg"     : "aurora-dashboard-bg",
     sidebarBg:    dark ? "rgba(14,22,36,0.80)"          : "rgba(232,235,239,0.50)",
     sidebarBdr:   dark ? "rgba(255,255,255,0.07)"       : "rgba(255,255,255,0.6)",
     headerBg:     dark ? "rgba(14,22,36,0.78)"          : "rgba(255,255,255,0.60)",
@@ -79,21 +79,14 @@ export default function DashboardLayout({ activePage, onNavigate, provinsi, onPr
 
   return (
     <div
-      className={`flex h-screen overflow-hidden ${T.rootBg}`}
-      style={{ fontFamily: "var(--font-dm-sans)" }}
+      className="flex h-screen overflow-hidden bg-cover bg-center"
+      style={{
+        fontFamily: "var(--font-dm-sans)",
+        backgroundImage: "url('/module-2/bg.webp')",
+        backgroundColor: dark ? "#111827" : "#dce8f5",
+      }}
     >
-      {/* ── Aurora CSS injection for dark bg ── */}
-      <style>{`
-        .aurora-dark-dashboard-bg {
-          background:
-            radial-gradient(ellipse at 8% 28%, rgba(30,60,100,0.45) 0%, transparent 48%),
-            radial-gradient(ellipse at 92% 72%, rgba(80,30,20,0.30) 0%, transparent 42%),
-            radial-gradient(ellipse at 52% 0%,  rgba(60,20,80,0.30) 0%, transparent 38%),
-            linear-gradient(155deg, #0d1520 0%, #121e30 38%, #16102a 66%, #1a1210 100%);
-        }
-      `}</style>
-
-      {/* ─── LEFT SIDEBAR ────────────────────────────────────── */}
+      {/* LEFT SIDEBAR */}
       <aside
         className="flex-shrink-0 transition-all duration-300 overflow-hidden"
         style={{
@@ -137,7 +130,7 @@ export default function DashboardLayout({ activePage, onNavigate, provinsi, onPr
         </div>
       </aside>
 
-      {/* ─── MAIN ─────────────────────────────────────────────── */}
+      {/* MAIN */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
 
         {/* TOP BAR */}
@@ -153,7 +146,7 @@ export default function DashboardLayout({ activePage, onNavigate, provinsi, onPr
             zIndex: 40,
           }}
         >
-          {/* Left — toggle + breadcrumb */}
+          {/* Left: toggle + breadcrumb */}
           <div className="flex items-center gap-2">
             <button onClick={() => setLeftOpen(!leftOpen)}
               className="p-1.5 rounded-lg transition-colors"
@@ -201,7 +194,7 @@ export default function DashboardLayout({ activePage, onNavigate, provinsi, onPr
             </nav>
           </div>
 
-          {/* Center — provinsi dropdown */}
+          {/* Center: provinsi dropdown */}
           <ProvinsiDropdown
             provinsi={provinsi}
             onProvinsiChange={onProvinsiChange}
@@ -265,10 +258,10 @@ export default function DashboardLayout({ activePage, onNavigate, provinsi, onPr
                   Ringkasan Faktor Bencana
                 </p>
                 <div className="space-y-3">
-                  <RightItem icon="📋" label="Total Kejadian Bencana"  value={`${ringkasan.totalKejadian.toLocaleString()} Kejadian`} T={T} />
-                  <RightItem icon="🔍" label="Jenis Bencana Terbanyak" value={ringkasan.jenisBencanaTerbanyak} T={T} />
-                  <RightItem icon="💧" label="Skor Risiko Banjir"      value={ringkasan.skorRisikoBanjir} T={T} />
-                  <RightItem icon="⚠️" label="Skor Risiko Longsor"     value={ringkasan.skorRisikoLongsor} T={T} />
+                  <RightItem label="Total Kejadian Bencana"  value={`${ringkasan.totalKejadian.toLocaleString()} Kejadian`} T={T} />
+                  <RightItem label="Jenis Bencana Terbanyak" value={ringkasan.jenisBencanaTerbanyak} T={T} />
+                  <RightItem label="Skor Risiko Banjir"      value={ringkasan.skorRisikoBanjir} T={T} />
+                  <RightItem label="Skor Risiko Longsor"     value={ringkasan.skorRisikoLongsor} T={T} />
                 </div>
               </div>
               {/* Alert Feed */}
@@ -280,7 +273,6 @@ export default function DashboardLayout({ activePage, onNavigate, provinsi, onPr
                   {alertFeedData.slice(0, 2).map(a => (
                     <div key={a.id} className="flex items-start gap-2 rounded-xl px-3 py-2.5"
                       style={{ background: a.severity === "critical" ? "rgba(244,124,54,0.18)" : "rgba(244,184,54,0.12)", border: "1px solid rgba(255,255,255,0.3)" }}>
-                      <span className="text-sm flex-shrink-0">🌧️</span>
                       <p className="text-[11px] leading-snug font-medium" style={{ color: "#F47C36" }}>{a.message}</p>
                     </div>
                   ))}
@@ -304,7 +296,7 @@ export default function DashboardLayout({ activePage, onNavigate, provinsi, onPr
   );
 }
 
-// ─── Provinsi Dropdown — portal-based ─────────────────────────────────────────
+// Provinsi Dropdown: portal-based
 function ProvinsiDropdown({ provinsi, onProvinsiChange, T, dark }) {
   const [open, setOpen] = useState(false);
   const btnRef = useRef(null);
@@ -354,7 +346,7 @@ function ProvinsiDropdown({ provinsi, onProvinsiChange, T, dark }) {
   );
 }
 
-// ─── History Popup ─────────────────────────────────────────────────────────────
+// History Popup
 function HistoryPopup({ T, dark }) {
   const [open, setOpen] = useState(false);
   const btnRef = useRef(null);
@@ -368,10 +360,10 @@ function HistoryPopup({ T, dark }) {
   }, [open]);
 
   const history = [
-    { label: "Aceh – Data Historis",          time: "2 menit lalu" },
-    { label: "Aceh – Faktor Pemicu Banjir",   time: "18 menit lalu" },
-    { label: "Sumut – Faktor Pemicu Longsor", time: "1 jam lalu" },
-    { label: "Aceh – Data Historis",          time: "3 jam lalu" },
+    { label: "Aceh: Data Historis",          time: "2 menit lalu" },
+    { label: "Aceh: Faktor Pemicu Banjir",   time: "18 menit lalu" },
+    { label: "Sumut: Faktor Pemicu Longsor", time: "1 jam lalu" },
+    { label: "Aceh: Data Historis",          time: "3 jam lalu" },
   ];
 
   return (
@@ -425,7 +417,7 @@ function HistoryPopup({ T, dark }) {
   );
 }
 
-// ─── Notifikasi Popup ──────────────────────────────────────────────────────────
+// Notifikasi Popup
 function NotifPopup({ T, dark }) {
   const [open, setOpen] = useState(false);
   const btnRef = useRef(null);
@@ -499,11 +491,10 @@ function NotifPopup({ T, dark }) {
   );
 }
 
-// ─── Helper sub-components ─────────────────────────────────────────────────────
-function RightItem({ icon, label, value, T }) {
+// Helper sub-components
+function RightItem({ label, value, T }) {
   return (
     <div className="flex items-start gap-2">
-      <span className="text-sm flex-shrink-0 mt-0.5">{icon}</span>
       <div>
         <p className="text-[10px] leading-tight" style={{ color: T.textSec }}>{label}</p>
         <p className="text-[11px] font-semibold mt-0.5" style={{ color: T.textPri }}>{value}</p>
@@ -518,7 +509,7 @@ function EksporBtn({ label, T }) {
     <button onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
       className="w-full flex items-center gap-2 text-left text-[11px] py-1.5 transition-all duration-200 rounded-lg px-1"
       style={{ color: hov ? "#6D9DC5" : T.textSec, background: hov ? "rgba(109,157,197,0.08)" : "transparent" }}>
-      <span>→</span>
+      <span>&gt;</span>
       <span>{label}</span>
     </button>
   );

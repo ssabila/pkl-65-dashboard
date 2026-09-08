@@ -4,7 +4,7 @@ import dynamic from "next/dynamic";
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
 } from "recharts";
-import { longsorBulanan, getCurahHujanHarian, bulanOptions, wilayahAceh } from "../data/dummyData";
+import { longsorBulananByProvinsi, getCurahHujanHarian, bulanOptions, wilayahByProvinsi } from "../data/realData";
 import { GlassCard, KpiCard, ToggleLabel, ToggleDivider, DropdownPill, RiskLegend, MapDetailPanel } from "./UI";
 import { Search, X } from "lucide-react";
 
@@ -12,7 +12,7 @@ const InteractiveMap = dynamic(() => import("./InteractiveMap"), {
   ssr: false,
   loading: () => (
     <div className="w-full h-full rounded-xl flex items-center justify-center" style={{ background: "rgba(220,232,245,0.5)", minHeight: 260 }}>
-      <p className="text-[11px]" style={{ color: "rgba(44,62,80,0.4)" }}>Memuat peta…</p>
+      <p className="text-[11px]" style={{ color: "rgba(44,62,80,0.4)" }}>Memuat peta...</p>
     </div>
   ),
 });
@@ -25,13 +25,13 @@ export default function FaktorLongsorPage({ provinsi }) {
   const [selectedWilayah, setSelectedWilayah] = useState(null);
 
   const chartData = trendMode === "harian"
-    ? getCurahHujanHarian(bulan)
-    : longsorBulanan["2026"];
+    ? getCurahHujanHarian(provinsi, bulan)
+    : Object.values(longsorBulananByProvinsi[provinsi] || {});
 
   const fmtY = v => v >= 1000 ? `${v / 1000}K` : v;
 
   const filteredWilayah = searchQuery.length > 1
-    ? wilayahAceh.filter(w => w.nama.toLowerCase().includes(searchQuery.toLowerCase()))
+    ? (wilayahByProvinsi[provinsi] || []).filter(w => w.nama.toLowerCase().includes(searchQuery.toLowerCase()))
     : [];
 
   const handleSelect = useCallback(w => {
