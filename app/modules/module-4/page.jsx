@@ -85,17 +85,18 @@ const metadataRows = [
     unit: "Nilai Indeks (-1.0 s.d +1.0)",
     dataType: "Desimal",
     year: "2025",
-    source: "Pusat Studi Kebencanaan (Hasil ETL)"
+    source: "Pusat Studi Kebencanaan (Komposit Data Sekunder 2025)"
   }
 ];
 
-// Download files dataset
+// Download files dataset (6 Berkas Resmi)
 const downloadFiles = [
-  { id: "map_geojson", name: "Peta Indeks Kerentanan Wilayah (Aceh, Sumut, Sumbar)", format: "GeoJSON", size: "2.4 MB" },
-  { id: "macro_casualties", name: "Data Tabular Jumlah Korban Jiwa & Pengungsi 2025", format: "XLSX", size: "340 KB" },
-  { id: "flood_landslide_pct", name: "Data Tabular Persentase Luas Wilayah Terdampak Banjir & Longsor", format: "CSV", size: "185 KB" },
-  { id: "health_facilities_cap", name: "Data Tabular Indeks Kapasitas Adaptasi Kesehatan", format: "CSV", size: "94 KB" },
-  { id: "complete_vulnerability_profile", name: "Data Tabular Profil Kerentanan Wilayah Komplet (10 Kabupaten)", format: "XLSX", size: "1.1 MB" }
+  { id: "indeks_penyusun", name: "Indeks Kerentanan dan Penyusunnya", format: "XLSX", size: "57 KB", fileUrl: "/data/Indeks Kerentanan dan Penyusunnya.xlsx" },
+  { id: "korban_jiwa", name: "Jumlah Korban Jiwa", format: "XLSX", size: "9 KB", fileUrl: "/data/Jumlah Korban Jiwa.xlsx" },
+  { id: "rumah_rusak", name: "Jumlah Rumah Rusak", format: "XLSX", size: "9 KB", fileUrl: "/data/Jumlah Rumah Rusak.xlsx" },
+  { id: "luas_banjir", name: "Luas Wilayah Terdampak Banjir", format: "XLSX", size: "11 KB", fileUrl: "/data/Luas Wilayah Terdampak Banjir.xlsx" },
+  { id: "luas_longsor", name: "Luas Wilayah Terdampak Tanah Longsor", format: "XLSX", size: "9 KB", fileUrl: "/data/Luas Wilayah Terdampak Tanah Longsor.xlsx" },
+  { id: "peta_shp", name: "Peta Indeks Kerentanan (Shapefile GIS)", format: "SHP", size: "413 KB", fileUrl: "/data/Peta Indeks Kerentanan.shp" }
 ];
 
 // Image Coverflow Gallery mock dataset (3 Gambar Provinsi)
@@ -258,14 +259,26 @@ export default function Modul4Page() {
     if (selectedFiles.length === 0) {
       setToastMessage({
         type: "warning",
-        text: "Peringatan: Pilih setidaknya satu file untuk diunduh."
+        text: "Peringatan: Pilih setidaknya satu berkas untuk diunduh."
       });
       return;
     }
 
+    // Trigger real file download for each selected file
+    selectedFiles.forEach((file, index) => {
+      setTimeout(() => {
+        const link = document.createElement("a");
+        link.href = file.fileUrl;
+        link.download = file.name;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }, index * 300);
+    });
+
     setToastMessage({
       type: "success",
-      text: `Memulai unduhan untuk ${selectedFiles.length} file: ${selectedFiles.map(f => f.name).join(", ")}`
+      text: `Berhasil mengunduh ${selectedFiles.length} berkas ke perangkat Anda.`
     });
 
     // Auto dismiss toast
@@ -413,20 +426,20 @@ export default function Modul4Page() {
           {/* OVERVIEW / HERO (Redesigned) */}
           <section id="overview" className="scroll-mt-24 flex flex-col items-center justify-center pt-6 space-y-8 sm:space-y-12">
 
-            {/* Judul Utama (Fluid Viewport Scale - Super Large & Proportional) */}
-            <div className="flex flex-col items-center justify-center space-y-0 text-center w-full max-w-7xl mx-auto select-none px-2">
+            {/* Judul Utama (Fluid Proportional Scale) */}
+            <div className="flex flex-col items-center justify-center text-center w-full max-w-7xl mx-auto select-none px-4">
               {/* PROFIL */}
-              <h1 className="font-heading font-extrabold text-[7vw] md:text-[5.5rem] lg:text-[6.5rem] text-[#0f8575] tracking-wider leading-none uppercase drop-shadow-sm">
+              <h1 className="font-heading font-extrabold text-[clamp(2rem,4vw,3.5rem)] text-[#0f8575] tracking-[0.4em] leading-none uppercase pl-[0.4em] mb-2 sm:mb-4">
                 PROFIL
               </h1>
 
               {/* KERENTANAN (Gradient Coral-Red to Magenta-Pink) */}
-              <h1 className="font-heading font-black text-[13.5vw] md:text-[11.5rem] lg:text-[13rem] bg-gradient-to-r from-[#ea4e3d] via-[#e8395f] to-[#e42978] bg-clip-text text-transparent tracking-tight leading-[0.85] uppercase drop-shadow-sm py-1">
+              <h1 className="font-heading font-black text-[clamp(3.5rem,10vw,9.5rem)] bg-gradient-to-r from-[#ea4e3d] via-[#e8395f] to-[#e42978] bg-clip-text text-transparent tracking-tighter leading-none uppercase py-1 sm:py-2">
                 KERENTANAN
               </h1>
 
               {/* WILAYAH (Gradient Steel-Blue to Dark-Navy) */}
-              <h1 className="font-heading font-extrabold text-[11vw] md:text-[9.5rem] lg:text-[10.8rem] bg-gradient-to-r from-[#678ba7] via-[#456784] to-[#29435b] bg-clip-text text-transparent tracking-normal leading-[0.88] uppercase drop-shadow-sm pb-2">
+              <h1 className="font-heading font-extrabold text-[clamp(4.5rem,12.5vw,12rem)] bg-gradient-to-r from-[#678ba7] via-[#456784] to-[#29435b] bg-clip-text text-transparent tracking-[0.02em] leading-none uppercase pb-2 sm:pb-4 pl-[0.02em]">
                 WILAYAH
               </h1>
             </div>
@@ -538,8 +551,8 @@ export default function Modul4Page() {
                     onClick={() => setCoverflowIndex(i)}
                     aria-label={`Ke Gambar ${i + 1}`}
                     className={`h-2.5 rounded-full transition-all duration-300 cursor-pointer ${coverflowIndex === i
-                        ? "w-8 bg-[#0f8575] shadow-sm"
-                        : "w-2.5 bg-slate-300 hover:bg-slate-400"
+                      ? "w-8 bg-[#0f8575] shadow-sm"
+                      : "w-2.5 bg-slate-300 hover:bg-slate-400"
                       }`}
                   />
                 ))}
@@ -554,7 +567,7 @@ export default function Modul4Page() {
               </p>
             </div>
 
-            {/* OVERVIEW STATISTICAL METRIC CARDS (ENHANCED PROPORTIONS & TYPOGRAPHY) */}
+            {/* OVERVIEW STATISTICAL METRIC CARDS (ENHANCED PROPORTIONS & REAL DATA) */}
             <div className="w-full max-w-6xl mx-auto space-y-10 pt-6 select-none">
 
               {/* CARD 1: KORBAN JIWA */}
@@ -563,7 +576,7 @@ export default function Modul4Page() {
                 <div className="flex flex-col text-left space-y-2 w-full md:w-auto">
                   <div className="flex items-baseline gap-3">
                     <span className="font-heading font-black text-6xl sm:text-7xl md:text-8xl text-[#2c4059] tracking-tight drop-shadow-sm">
-                      100.000
+                      {((dataOverview["Aceh"]?.korbanJiwa || 0) + (dataOverview["Sumatera Utara"]?.korbanJiwa || 0) + (dataOverview["Sumatera Barat"]?.korbanJiwa || 0)).toLocaleString("id-ID")}
                     </span>
                     <span className="font-sans font-bold text-2xl sm:text-3xl text-slate-500">
                       Jiwa
@@ -579,17 +592,17 @@ export default function Modul4Page() {
                   {/* Aceh */}
                   <div className="bg-[#d9822b] text-white font-serif italic font-bold px-7 py-3 sm:py-3.5 rounded-full shadow-md flex items-center justify-between text-lg sm:text-xl">
                     <span>Aceh</span>
-                    <span className="font-sans not-italic font-black text-xl sm:text-2xl tracking-wide">30.000</span>
+                    <span className="font-sans not-italic font-black text-xl sm:text-2xl tracking-wide">{dataOverview["Aceh"]?.korbanJiwa?.toLocaleString("id-ID")}</span>
                   </div>
                   {/* Sumatera Utara */}
                   <div className="bg-[#d9381e] text-white font-serif italic font-bold px-7 py-3 sm:py-3.5 rounded-full shadow-md flex items-center justify-between text-lg sm:text-xl">
                     <span>Sumatera Utara</span>
-                    <span className="font-sans not-italic font-black text-xl sm:text-2xl tracking-wide">45.000</span>
+                    <span className="font-sans not-italic font-black text-xl sm:text-2xl tracking-wide">{dataOverview["Sumatera Utara"]?.korbanJiwa?.toLocaleString("id-ID")}</span>
                   </div>
                   {/* Sumatera Barat */}
                   <div className="bg-[#e5a93c] text-white font-serif italic font-bold px-7 py-3 sm:py-3.5 rounded-full shadow-md flex items-center justify-between text-lg sm:text-xl">
                     <span>Sumatera Barat</span>
-                    <span className="font-sans not-italic font-black text-xl sm:text-2xl tracking-wide">25.000</span>
+                    <span className="font-sans not-italic font-black text-xl sm:text-2xl tracking-wide">{dataOverview["Sumatera Barat"]?.korbanJiwa?.toLocaleString("id-ID")}</span>
                   </div>
                 </div>
               </div>
@@ -601,25 +614,25 @@ export default function Modul4Page() {
                   {/* Aceh */}
                   <div className="bg-[#d9822b] text-white font-serif italic font-bold px-7 py-3 sm:py-3.5 rounded-full shadow-md flex items-center justify-between text-lg sm:text-xl">
                     <span>Aceh</span>
-                    <span className="font-sans not-italic font-black text-xl sm:text-2xl tracking-wide">30.000</span>
+                    <span className="font-sans not-italic font-black text-xl sm:text-2xl tracking-wide">{dataOverview["Aceh"]?.rumahRusak?.toLocaleString("id-ID")}</span>
                   </div>
                   {/* Sumatera Utara */}
                   <div className="bg-[#d9381e] text-white font-serif italic font-bold px-7 py-3 sm:py-3.5 rounded-full shadow-md flex items-center justify-between text-lg sm:text-xl">
                     <span>Sumatera Utara</span>
-                    <span className="font-sans not-italic font-black text-xl sm:text-2xl tracking-wide">45.000</span>
+                    <span className="font-sans not-italic font-black text-xl sm:text-2xl tracking-wide">{dataOverview["Sumatera Utara"]?.rumahRusak?.toLocaleString("id-ID")}</span>
                   </div>
                   {/* Sumatera Barat */}
                   <div className="bg-[#e5a93c] text-white font-serif italic font-bold px-7 py-3 sm:py-3.5 rounded-full shadow-md flex items-center justify-between text-lg sm:text-xl">
                     <span>Sumatera Barat</span>
-                    <span className="font-sans not-italic font-black text-xl sm:text-2xl tracking-wide">25.000</span>
+                    <span className="font-sans not-italic font-black text-xl sm:text-2xl tracking-wide">{dataOverview["Sumatera Barat"]?.rumahRusak?.toLocaleString("id-ID")}</span>
                   </div>
                 </div>
 
                 {/* Right: Giant Number, Unit & Cracked House Icon + Subtitle */}
                 <div className="flex flex-col text-left md:text-right space-y-2 order-1 md:order-2 w-full md:w-auto">
                   <div className="flex items-center justify-start md:justify-end gap-3.5 flex-wrap">
-                    <span className="font-heading font-black text-6xl sm:text-7xl md:text-8xl text-[#2c4059] tracking-tight drop-shadow-sm">
-                      100.000
+                    <span className="font-heading font-black text-5xl sm:text-6xl md:text-7xl lg:text-8xl text-[#2c4059] tracking-tight drop-shadow-sm">
+                      {((dataOverview["Aceh"]?.rumahRusak || 0) + (dataOverview["Sumatera Utara"]?.rumahRusak || 0) + (dataOverview["Sumatera Barat"]?.rumahRusak || 0)).toLocaleString("id-ID")}
                     </span>
                     <span className="font-sans font-bold text-2xl sm:text-3xl text-slate-500">
                       Rumah
@@ -653,7 +666,7 @@ export default function Modul4Page() {
                   <div className="flex flex-col items-center space-y-3">
                     <div className="w-28 h-28 sm:w-36 sm:h-36 rounded-full border-[12px] sm:border-[16px] border-[#e5a93c] flex items-center justify-center relative shadow-md bg-white">
                       <span className="w-4 h-4 sm:w-5 sm:h-5 bg-[#c0392b] rounded-full absolute -top-2 border-2 border-white shadow-md"></span>
-                      <span className="font-sans font-black text-slate-900 text-xl sm:text-3xl">0.9%</span>
+                      <span className="font-sans font-black text-slate-900 text-xl sm:text-3xl">{dataOverview["Aceh"]?.banjirPct}%</span>
                     </div>
                     <span className="font-serif italic font-extrabold text-slate-800 text-base sm:text-xl">Aceh</span>
                   </div>
@@ -662,7 +675,7 @@ export default function Modul4Page() {
                   <div className="flex flex-col items-center space-y-3">
                     <div className="w-28 h-28 sm:w-36 sm:h-36 rounded-full border-[12px] sm:border-[16px] border-[#e5a93c] flex items-center justify-center relative shadow-md bg-white">
                       <span className="w-4 h-4 sm:w-5 sm:h-5 bg-[#c0392b] rounded-full absolute -top-2 border-2 border-white shadow-md"></span>
-                      <span className="font-sans font-black text-slate-900 text-xl sm:text-3xl">0.2%</span>
+                      <span className="font-sans font-black text-slate-900 text-xl sm:text-3xl">{dataOverview["Sumatera Utara"]?.banjirPct}%</span>
                     </div>
                     <span className="font-serif italic font-extrabold text-slate-800 text-base sm:text-xl text-center leading-tight">
                       Sumatera<br />Utara
@@ -673,7 +686,7 @@ export default function Modul4Page() {
                   <div className="flex flex-col items-center space-y-3">
                     <div className="w-28 h-28 sm:w-36 sm:h-36 rounded-full border-[12px] sm:border-[16px] border-[#e5a93c] flex items-center justify-center relative shadow-md bg-white">
                       <span className="w-4 h-4 sm:w-5 sm:h-5 bg-[#c0392b] rounded-full absolute -top-2 border-2 border-white shadow-md"></span>
-                      <span className="font-sans font-black text-slate-900 text-xl sm:text-3xl">0.1%</span>
+                      <span className="font-sans font-black text-slate-900 text-xl sm:text-3xl">{dataOverview["Sumatera Barat"]?.banjirPct}%</span>
                     </div>
                     <span className="font-serif italic font-extrabold text-slate-800 text-base sm:text-xl text-center leading-tight">
                       Sumatera<br />Barat
@@ -690,7 +703,7 @@ export default function Modul4Page() {
                   <div className="flex flex-col items-center space-y-3">
                     <div className="w-28 h-28 sm:w-36 sm:h-36 rounded-full border-[12px] sm:border-[16px] border-[#e5a93c] flex items-center justify-center relative shadow-md bg-white">
                       <span className="w-4 h-4 sm:w-5 sm:h-5 bg-[#c0392b] rounded-full absolute -top-2 border-2 border-white shadow-md"></span>
-                      <span className="font-sans font-black text-slate-900 text-xl sm:text-3xl">2.4%</span>
+                      <span className="font-sans font-black text-slate-900 text-xl sm:text-3xl">{dataOverview["Aceh"]?.longsorPct}%</span>
                     </div>
                     <span className="font-serif italic font-extrabold text-slate-800 text-base sm:text-xl">Aceh</span>
                   </div>
@@ -699,7 +712,7 @@ export default function Modul4Page() {
                   <div className="flex flex-col items-center space-y-3">
                     <div className="w-28 h-28 sm:w-36 sm:h-36 rounded-full border-[12px] sm:border-[16px] border-[#e5a93c] flex items-center justify-center relative shadow-md bg-white">
                       <span className="w-4 h-4 sm:w-5 sm:h-5 bg-[#c0392b] rounded-full absolute -top-2 border-2 border-white shadow-md"></span>
-                      <span className="font-sans font-black text-slate-900 text-xl sm:text-3xl">0%</span>
+                      <span className="font-sans font-black text-slate-900 text-xl sm:text-3xl">{dataOverview["Sumatera Utara"]?.longsorPct}%</span>
                     </div>
                     <span className="font-serif italic font-extrabold text-slate-800 text-base sm:text-xl text-center leading-tight">
                       Sumatera<br />Utara
@@ -710,7 +723,7 @@ export default function Modul4Page() {
                   <div className="flex flex-col items-center space-y-3">
                     <div className="w-28 h-28 sm:w-36 sm:h-36 rounded-full border-[12px] sm:border-[16px] border-[#e5a93c] flex items-center justify-center relative shadow-md bg-white">
                       <span className="w-4 h-4 sm:w-5 sm:h-5 bg-[#c0392b] rounded-full absolute -top-2 border-2 border-white shadow-md"></span>
-                      <span className="font-sans font-black text-slate-900 text-xl sm:text-3xl">2%</span>
+                      <span className="font-sans font-black text-slate-900 text-xl sm:text-3xl">{dataOverview["Sumatera Barat"]?.longsorPct}%</span>
                     </div>
                     <span className="font-serif italic font-bold text-slate-800 text-base sm:text-xl text-center leading-tight">
                       Sumatera<br />Barat
@@ -861,12 +874,15 @@ export default function Modul4Page() {
                               {row.indeks.toFixed(2)}
                             </td>
                             <td className="p-3 text-center">
-                              <span className={`inline-block px-2 py-0.5 rounded-full text-xxs font-bold font-sans ${row.status === "Sangat Tinggi"
-                                ? "bg-accent-danger/10 text-accent-danger"
-                                : row.status === "Tinggi"
-                                  ? "bg-accent-warning/10 text-accent-warning"
-                                  : "bg-accent-secondary/10 text-accent-secondary"
-                                }`}>
+                              <span className={`inline-block px-2.5 py-0.5 rounded-full text-xxs font-bold font-sans ${
+                                row.status === "Sangat Tinggi"
+                                  ? "bg-red-500/15 text-red-700"
+                                  : row.status === "Tinggi"
+                                  ? "bg-orange-500/15 text-orange-700"
+                                  : row.status === "Sedang"
+                                  ? "bg-amber-500/15 text-amber-700"
+                                  : "bg-emerald-500/15 text-emerald-700"
+                              }`}>
                                 {row.status}
                               </span>
                             </td>
@@ -977,7 +993,7 @@ export default function Modul4Page() {
 
             <p className="font-sans text-text-secondary text-sm sm:text-base leading-relaxed">
               Tabel operasional di bawah mendefinisikan batas lingkup indikator, formula representasi, tahun pendataan,
-              dan validasi sumber hukum data sekunder hasil ekstraksi (ETL) yang dipergunakan dalam visualisasi dashboard ini.
+              dan validasi sumber data sekunder (format JSON) yang dipergunakan dalam visualisasi dashboard ini.
             </p>
 
             <div className="overflow-x-auto rounded-xl border border-card-border shadow-xs bg-white">
@@ -999,7 +1015,7 @@ export default function Modul4Page() {
                       <td className="p-3.5 font-sans">{row.definition}</td>
                       <td className="p-3.5 text-center font-sans">{row.unit}</td>
                       <td className="p-3.5 text-center font-sans">
-                        <span className="px-1.5 py-0.5 rounded-md bg-slate-100 text-slate-600 font-mono text-[10px]">
+                        <span className="inline-block px-2.5 py-1 rounded-md bg-slate-100 text-slate-700 font-sans font-medium text-xs whitespace-nowrap border border-slate-200">
                           {row.dataType}
                         </span>
                       </td>
@@ -1061,12 +1077,13 @@ export default function Modul4Page() {
                         </td>
                         <td className="p-3 font-sans text-text-primary">{file.name}</td>
                         <td className="p-3 text-center font-sans">
-                          <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold ${file.format === "GeoJSON"
-                            ? "bg-purple-100 text-purple-700"
-                            : file.format === "XLSX"
-                              ? "bg-green-100 text-green-700"
+                          <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold ${
+                            file.format === "SHP"
+                              ? "bg-purple-100 text-purple-700"
+                              : file.format === "XLSX"
+                              ? "bg-emerald-100 text-emerald-700"
                               : "bg-blue-100 text-blue-700"
-                            }`}>
+                          }`}>
                             {file.format}
                           </span>
                         </td>
