@@ -4,7 +4,7 @@ import dynamic from "next/dynamic";
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
 } from "recharts";
-import { longsorBulanan, getCurahHujanHarian, bulanOptions, wilayahAceh } from "../data/dummyData";
+import { longsorBulananByProvinsi, getCurahHujanHarian, bulanOptions, wilayahByProvinsi, getLatestMetrics } from "../data/realData";
 import { GlassCard, KpiCard, ToggleLabel, ToggleDivider, DropdownPill, RiskLegend, MapDetailPanel } from "./UI";
 import { Search, X } from "lucide-react";
 
@@ -12,7 +12,7 @@ const InteractiveMap = dynamic(() => import("./InteractiveMap"), {
   ssr: false,
   loading: () => (
     <div className="w-full h-full rounded-xl flex items-center justify-center" style={{ background: "rgba(220,232,245,0.5)", minHeight: 260 }}>
-      <p className="text-[11px]" style={{ color: "rgba(44,62,80,0.4)" }}>Memuat peta…</p>
+      <p className="text-[11px]" style={{ color: "rgba(44,62,80,0.4)" }}>Memuat peta...</p>
     </div>
   ),
 });
@@ -25,24 +25,26 @@ export default function FaktorLongsorPage({ provinsi }) {
   const [selectedWilayah, setSelectedWilayah] = useState(null);
 
   const chartData = trendMode === "harian"
-    ? getCurahHujanHarian(bulan)
-    : longsorBulanan["2026"];
+    ? getCurahHujanHarian(provinsi, bulan)
+    : Object.values(longsorBulananByProvinsi[provinsi] || {});
 
   const fmtY = v => v >= 1000 ? `${v / 1000}K` : v;
 
+  const wilayah = wilayahByProvinsi[provinsi] || [];
   const filteredWilayah = searchQuery.length > 1
-    ? wilayahAceh.filter(w => w.nama.toLowerCase().includes(searchQuery.toLowerCase()))
+    ? wilayah.filter(w => w.nama.toLowerCase().includes(searchQuery.toLowerCase()))
     : [];
 
   const handleSelect = useCallback(w => {
     setSelectedWilayah(prev => prev?.nama === w.nama ? null : w);
   }, []);
 
+  const metrics = getLatestMetrics(provinsi);
   const kpis = [
-    { label: "Jenis/Struktur Tanah",         value: "Regosol, Aluvial, Entisol, Andosol", change: "+11.01%" },
-    { label: "Kemiringan Lereng",              value: "22 meter",  change: "+11.01%" },
-    { label: "Tutupan Lahan (NDVI & NDBI)",    value: "NDVI: 1.5 / NDBI: 2.6", change: "+11.01%" },
-    { label: "Soil Moisture",                  value: "7,265",     change: "+11.01%" },
+    { label: "Jenis/Struktur Tanah", value: "Data tanah tersedia" },
+    { label: "Kemiringan Lereng", value: `${metrics.slope.toFixed(2)} derajat` },
+    { label: "Tutupan Lahan (NDVI & NDBI)", value: `NDVI: ${metrics.ndvi.toFixed(2)} / NDBI: ${metrics.ndbi.toFixed(2)}` },
+    { label: "Soil Moisture", value: `${metrics.moisture.toFixed(2)}` },
   ];
 
   return (
@@ -52,7 +54,7 @@ export default function FaktorLongsorPage({ provinsi }) {
       </p>
 
       {/* KPI */}
-      <div className="grid grid-cols-4 gap-3">
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         {kpis.map(k => <KpiCard key={k.label} {...k} />)}
       </div>
 
@@ -135,7 +137,7 @@ export default function FaktorLongsorPage({ provinsi }) {
         </div>
 
         {/* Map + Detail */}
-        <div className="flex gap-4" style={{ minHeight: "280px" }}>
+        <div className="flex flex-col gap-4 sm:flex-row" style={{ minHeight: "280px" }}>
           <div className="flex-1 rounded-xl overflow-hidden" style={{ minHeight: "260px" }}>
             <InteractiveMap
               provinsi={provinsi}

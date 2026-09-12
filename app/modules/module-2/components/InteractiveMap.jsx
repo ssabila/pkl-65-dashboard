@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import { wilayahAceh } from "../data/dummyData";
+import { wilayahByProvinsi, getCenter } from "../data/realData";
 
 const RISK_COLOR = {
   Rendah:  "#208774",
@@ -39,7 +39,7 @@ export default function InteractiveMap({
 
       if (!mapRef.current || !isMounted) return;
 
-      const center = PROVINSI_CENTER[provinsi] || [4.6, 96.5];
+      const center = getCenter(provinsi) || PROVINSI_CENTER[provinsi] || [4.6, 96.5];
       const map = L.map(mapRef.current, {
         center,
         zoom: 8,
@@ -47,9 +47,9 @@ export default function InteractiveMap({
         scrollWheelZoom: true,
       });
 
-      // Tile layer — CartoDB Positron (clean, light)
+      // Tile layer: CartoDB Positron (clean, light)
       L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", {
-        attribution: "© OpenStreetMap © CartoDB",
+        attribution: "OpenStreetMap, CartoDB",
         subdomains: "abcd",
         maxZoom: 19,
       }).addTo(map);
@@ -65,7 +65,7 @@ export default function InteractiveMap({
   // Re-center when provinsi changes
   useEffect(() => {
     if (!mapInstance.current) return;
-    const center = PROVINSI_CENTER[provinsi] || [4.6, 96.5];
+    const center = getCenter(provinsi) || PROVINSI_CENTER[provinsi] || [4.6, 96.5];
     mapInstance.current.setView(center, 8, { animate: true });
   }, [provinsi]);
 
@@ -78,7 +78,9 @@ export default function InteractiveMap({
     markersRef.current.forEach(m => m.remove());
     markersRef.current = [];
 
-    wilayahAceh.forEach(w => {
+    const wilayah = wilayahByProvinsi[provinsi] || [];
+    wilayah.forEach(w => {
+      if (!Number.isFinite(w.lat) || !Number.isFinite(w.lng)) return;
       const riskKey = type === "banjir" ? w.risikoB : w.risikoL;
       const color   = RISK_COLOR[riskKey] || "#6D9DC5";
       const isSelected = selectedWilayah?.nama === w.nama;

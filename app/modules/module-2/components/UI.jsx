@@ -66,7 +66,7 @@ export function DropdownPill({ value, options, onChange, disabled = false, toolt
         </div>
       )}
 
-      {/* Dropdown via Portal — menembus semua stacking context */}
+      {/* Dropdown via Portal: menembus semua stacking context */}
       {open && !disabled && typeof document !== "undefined" && createPortal(
         <div
           style={{
@@ -104,7 +104,7 @@ export function DropdownPill({ value, options, onChange, disabled = false, toolt
   );
 }
 
-// ─── Glass Card ────────────────────────────────────────
+// Glass Card
 export function GlassCard({ children, className = "", style = {} }) {
   return (
     <div
@@ -124,7 +124,7 @@ export function GlassCard({ children, className = "", style = {} }) {
   );
 }
 
-// ─── KPI Card ──────────────────────────────────────────
+// KPI Card
 export function KpiCard({ label, value, change, suffix }) {
   return (
     <GlassCard className="p-4 flex flex-col gap-1">
@@ -138,7 +138,7 @@ export function KpiCard({ label, value, change, suffix }) {
         {suffix && <span className="text-[11px] mb-0.5" style={{ color: "rgba(44,62,80,0.5)" }}>{suffix}</span>}
         {change && (
           <span className="text-[11px] font-semibold mb-0.5 flex items-center gap-0.5" style={{ color: "#208774" }}>
-            {change} ↗
+            {change}
           </span>
         )}
       </div>
@@ -146,7 +146,7 @@ export function KpiCard({ label, value, change, suffix }) {
   );
 }
 
-// ─── Toggle text (Banjir / Longsor / Harian / Bulanan) ─
+// Toggle text (Banjir / Longsor / Harian / Bulanan)
 export function ToggleLabel({ label, active, onClick }) {
   return (
     <button
@@ -164,12 +164,12 @@ export function ToggleLabel({ label, active, onClick }) {
   );
 }
 
-// ─── Divider between toggles ───────────────────────────
+// Divider between toggles
 export function ToggleDivider() {
   return <span className="text-[12px]" style={{ color: "rgba(44,62,80,0.2)" }}>|</span>;
 }
 
-// ─── Risk dot legend ───────────────────────────────────
+// Risk dot legend
 export function RiskLegend() {
   const levels = [
     { label: "Rendah",  color: "#208774" },
@@ -189,7 +189,7 @@ export function RiskLegend() {
   );
 }
 
-// ─── Faktor Pemicu dash rows ───────────────────────────
+// Faktor Pemicu dash rows
 // level 1-4 rendered as short horizontal dashes
 export function FaktorPemicuRow({ faktor, level }) {
   const maxLevel = 4;
@@ -219,21 +219,21 @@ export function FaktorPemicuRow({ faktor, level }) {
   );
 }
 
-// ─── Map detail panel (glass) ─────────────────────────
+// Map detail panel (glass)
 export function MapDetailPanel({ wilayah, onClose, type = "banjir" }) {
   if (!wilayah) return null;
 
   const banjirItems = [
-    { icon: "💧", label: "Curah Hujan",    value: wilayah.curahHujan    },
-    { icon: "🌊", label: "Luas Genangan",  value: wilayah.luasGenangan  },
-    { icon: "⚠️", label: "Skor Risiko",    value: wilayah.skorRisiko    },
+    { label: "Curah Hujan",    value: wilayah.curahHujan    },
+    { label: "Luas Genangan",  value: wilayah.luasGenangan  },
+    { label: "Skor Risiko",    value: wilayah.skorRisiko    },
   ];
   const longsorItems = [
-    { icon: "🪨", label: "Jenis Tanah",       value: wilayah.jenisTanah       },
-    { icon: "⛰️", label: "Kemiringan Lereng", value: wilayah.kemiringan        },
-    { icon: "🌿", label: "Tutupan Lahan",     value: wilayah.tutupanLahan      },
-    { icon: "💧", label: "Soil Moisture",     value: wilayah.soilMoisture      },
-    { icon: "⚠️", label: "Skor Risiko",       value: wilayah.skorRisikoLongsor },
+    { label: "Jenis Tanah",       value: wilayah.jenisTanah       },
+    { label: "Kemiringan Lereng", value: wilayah.kemiringan        },
+    { label: "Tutupan Lahan",     value: wilayah.tutupanLahan      },
+    { label: "Soil Moisture",     value: wilayah.soilMoisture      },
+    { label: "Skor Risiko",       value: wilayah.skorRisikoLongsor },
   ];
 
   const items = type === "banjir" ? banjirItems : longsorItems;
@@ -253,13 +253,12 @@ export function MapDetailPanel({ wilayah, onClose, type = "banjir" }) {
         <button onClick={onClose}
           className="w-5 h-5 rounded-full flex items-center justify-center text-slate-400 hover:text-slate-600 text-xs"
           style={{ background: "rgba(44,62,80,0.08)" }}>
-          ×
+          X
         </button>
       </div>
       <div className="space-y-2.5">
         {items.map(item => (
           <div key={item.label} className="flex items-start gap-2">
-            <span className="text-sm flex-shrink-0 mt-px">{item.icon}</span>
             <div>
               <p className="text-[10px]" style={{ color: "rgba(44,62,80,0.45)" }}>{item.label}</p>
               <p className="text-[11px] font-semibold" style={{ color: "#2C3E50" }}>{item.value}</p>

@@ -5,9 +5,10 @@ import {
   PieChart, Pie, Cell, BarChart, Bar, Cell as BarCell,
 } from "recharts";
 import {
-  trendTahunanData, faktorPemicuByProvinsi, donutBanjirByProvinsi,
+  faktorPemicuByProvinsi, donutBanjirByProvinsi,
   donutLongsorByProvinsi, frekuensiBencana, tahunOptions, ringkasanByProvinsi,
-} from "../data/dummyData";
+  getTrend,
+} from "../data/realData";
 import { GlassCard, KpiCard, ToggleLabel, ToggleDivider, DropdownPill, FaktorPemicuRow } from "./UI";
 
 // Donut palette matching design (black, blue, teal, light gray)
@@ -19,7 +20,7 @@ export default function DataHistorisPage({ provinsi }) {
   const [activeMayoritas, setActiveMayoritas] = useState("banjir"); // 'banjir' | 'longsor'
 
   const ringkasan = ringkasanByProvinsi[provinsi];
-  const chartData = trendTahunanData[tahun] || trendTahunanData["2026"];
+  const chartData = getTrend(provinsi, tahun);
   const faktor    = faktorPemicuByProvinsi[provinsi] || [];
   const donutData = activeMayoritas === "longsor"
     ? (donutLongsorByProvinsi[provinsi] || [])
@@ -36,11 +37,11 @@ export default function DataHistorisPage({ provinsi }) {
     <div className="space-y-4" style={{ fontFamily: "var(--font-dm-sans)" }}>
       {/* Title */}
       <p className="text-[13px] font-semibold" style={{ color: "#2C3E50", fontFamily: "var(--font-garet-heavy)" }}>
-        Data Historis Bencana Selama 10 Tahun Terakhir (2016–2026)
+        Data Historis Bencana Selama 10 Tahun Terakhir (2016 sampai 2026)
       </p>
 
-      {/* ── KPI row ─────────────────────────────────────────── */}
-      <div className="grid grid-cols-3 gap-3">
+      {/* KPI row */}
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
         <KpiCard label="Total Kejadian Bencana"
           value={ringkasan.totalKejadian.toLocaleString()}
           change={ringkasan.perubahan} />
@@ -52,8 +53,8 @@ export default function DataHistorisPage({ provinsi }) {
           suffix={ringkasan.persentasePuncak} />
       </div>
 
-      {/* ── Charts row ──────────────────────────────────────── */}
-      <div className="grid grid-cols-[1fr_280px] gap-3">
+      {/* Charts row */}
+      <div className="grid grid-cols-1 gap-3 lg:grid-cols-[minmax(0,1fr)_280px]">
 
         {/* Tren Tahunan */}
         <GlassCard className="p-4">
@@ -98,15 +99,15 @@ export default function DataHistorisPage({ provinsi }) {
         </GlassCard>
       </div>
 
-      {/* ── Bottom row ──────────────────────────────────────── */}
-      <div className="grid grid-cols-2 gap-3">
+      {/* Bottom row */}
+      <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
 
         {/* Donut chart */}
         <GlassCard className="p-4">
           <p className="text-[12px] font-semibold mb-3" style={{ color: "#2C3E50" }}>
             Mayoritas Bencana Berdasarkan Kabupaten/Kota
           </p>
-          <div className="flex items-center gap-4">
+          <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center">
             <div className="flex-shrink-0">
               <ResponsiveContainer width={140} height={140}>
                 <PieChart>
@@ -139,7 +140,7 @@ export default function DataHistorisPage({ provinsi }) {
           </div>
         </GlassCard>
 
-        {/* Bar chart — Frekuensi per Jenis Bencana */}
+        {/* Bar chart: Frekuensi per Jenis Bencana */}
         <GlassCard className="p-4">
           <p className="text-[12px] font-semibold mb-1" style={{ color: "#2C3E50" }}>
             Frekuensi per Jenis Bencana

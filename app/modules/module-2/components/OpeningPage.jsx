@@ -35,45 +35,20 @@ export default function OpeningPage({ onNavigate }) {
   ];
 
   return (
-    <div className="relative min-h-screen overflow-hidden flex flex-col aurora-bg">
-      {/* Wave blobs */}
-      <div className="pointer-events-none absolute inset-0 overflow-hidden z-0">
-        <div
-          className="absolute rounded-full opacity-40 blur-3xl"
-          style={{ width: 700, height: 500, top: -100, left: -100,
-            background: "radial-gradient(circle, rgba(109,157,197,0.8) 0%, transparent 70%)" }}
-        />
-        <div
-          className="absolute rounded-full opacity-35 blur-3xl"
-          style={{ width: 600, height: 400, top: 50, right: -50,
-            background: "radial-gradient(circle, rgba(190,120,210,0.7) 0%, transparent 70%)" }}
-        />
-        <div
-          className="absolute rounded-full opacity-30 blur-3xl"
-          style={{ width: 500, height: 400, bottom: -50, right: 100,
-            background: "radial-gradient(circle, rgba(244,124,54,0.6) 0%, transparent 70%)" }}
-        />
-      </div>
+    <div
+      className="relative min-h-screen overflow-hidden flex flex-col bg-cover bg-center"
+      style={{ backgroundImage: "url('/module-2/bg.webp')", backgroundColor: "#1b3a5e" }}
+    >
 
       {/* Navbar */}
-      <nav className="relative z-10 flex items-center px-8 py-4 gap-8">
-        {/* Logo icons — placeholder */}
-        <div className="flex items-center gap-2 mr-2">
-          {["🌿","🔵","🟡"].map((icon, i) => (
-            <div key={i} className="w-9 h-9 rounded-full flex items-center justify-center text-base"
-              style={{ background: "rgba(255,255,255,0.18)", backdropFilter: "blur(6px)", border: "1px solid rgba(255,255,255,0.35)" }}>
-              {icon}
-            </div>
-          ))}
-        </div>
-
+      <nav className="relative z-10 flex flex-wrap items-center justify-center px-4 py-4 gap-2 sm:gap-4 sm:px-8">
         {navItems.map((item) => (
           <button
             key={item.page}
             onMouseEnter={() => setHoveredNav(item.page)}
             onMouseLeave={() => setHoveredNav(null)}
             onClick={() => onNavigate(item.page)}
-            className="text-sm font-medium transition-all duration-200 px-3 py-1.5 rounded-lg z-10"
+            className="text-xs font-medium transition-all duration-200 px-2.5 py-1.5 rounded-lg z-10 sm:text-sm sm:px-3"
             style={{
               fontFamily: "var(--font-dm-sans)",
               color: "#fff",
@@ -87,7 +62,7 @@ export default function OpeningPage({ onNavigate }) {
       </nav>
 
       {/* Hero */}
-      <div className="relative z-10 flex-1 flex flex-col items-center justify-center text-center px-8 py-8">
+      <div className="relative z-10 flex-1 flex flex-col items-center justify-center text-center px-4 py-8 sm:px-8">
         <h1
           className="font-bold text-black mb-5 tracking-tight leading-tight"
           style={{
@@ -131,7 +106,7 @@ export default function OpeningPage({ onNavigate }) {
       </div>
 
       {/* Bottom cards */}
-      <div className="relative z-10 flex justify-center gap-5 px-8 pb-14 flex-wrap">
+      <div className="relative z-10 flex justify-center gap-3 px-4 pb-8 flex-wrap sm:gap-5 sm:px-8 sm:pb-14">
         {menuCards.map((card, i) => (
           <GlassMenuCard key={i} card={card} onNavigate={onNavigate} />
         ))}

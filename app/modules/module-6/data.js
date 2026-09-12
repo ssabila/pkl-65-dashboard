@@ -1,6 +1,6 @@
 // Real dataset for Module 6 - Prioritas Penanganan
 // Loaded directly from public/data/modul6_crs.json
-import rawCRSData from "@/public/data/modul6_crs.json";
+import rawCRSData from "../../../public/data/modul6_crs.json";
 
 export const PROVINSI_LIST = [
   { value: "all", label: "Semua Provinsi" },

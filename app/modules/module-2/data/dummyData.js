@@ -1,5 +1,5 @@
 // ============================================================
-// DUMMY DATA — Semua angka akan diganti data riil dari DB
+// DUMMY DATA: Semua angka akan diganti data riil dari DB
 // ============================================================
 
 export const provinsiOptions = ["Aceh", "Sumatera Utara", "Sumatera Barat"];
@@ -12,9 +12,9 @@ export const ringkasanByProvinsi = {
     persentaseMayoritas: "47%",
     puncakBencana: "Desember",
     persentasePuncak: "47%",
-    skorRisikoBanjir: "5.6 – Waspada",
-    skorRisikoLongsor: "7.5 – Bahaya",
-    jenisBencanaTerbanyak: "Longsor – 47%",
+    skorRisikoBanjir: "5.6: Waspada",
+    skorRisikoLongsor: "7.5: Bahaya",
+    jenisBencanaTerbanyak: "Longsor: 47%",
   },
   "Sumatera Utara": {
     totalKejadian: 5432,
@@ -23,9 +23,9 @@ export const ringkasanByProvinsi = {
     persentaseMayoritas: "52%",
     puncakBencana: "November",
     persentasePuncak: "38%",
-    skorRisikoBanjir: "6.2 – Waspada",
-    skorRisikoLongsor: "6.1 – Waspada",
-    jenisBencanaTerbanyak: "Banjir – 52%",
+    skorRisikoBanjir: "6.2: Waspada",
+    skorRisikoLongsor: "6.1: Waspada",
+    jenisBencanaTerbanyak: "Banjir: 52%",
   },
   "Sumatera Barat": {
     totalKejadian: 4123,
@@ -34,13 +34,13 @@ export const ringkasanByProvinsi = {
     persentaseMayoritas: "61%",
     puncakBencana: "Oktober",
     persentasePuncak: "41%",
-    skorRisikoBanjir: "4.9 – Sedang",
-    skorRisikoLongsor: "8.1 – Bahaya",
-    jenisBencanaTerbanyak: "Longsor – 61%",
+    skorRisikoBanjir: "4.9: Sedang",
+    skorRisikoLongsor: "8.1: Bahaya",
+    jenisBencanaTerbanyak: "Longsor: 61%",
   },
 };
 
-// Tren tahunan — dua series (solid + dashed)
+// Tren tahunan: dua series (solid + dashed)
 export const trendTahunanData = {
   "2026": [
     { bulan: "Jan", solid: 10000, dashed: 8000 },
@@ -89,7 +89,7 @@ for (let y = 2016; y <= 2023; y++) {
   }));
 }
 
-// Faktor Pemicu — ditampilkan sebagai dashes (relative intensity)
+// Faktor Pemicu: ditampilkan sebagai dashes (relative intensity)
 export const faktorPemicuByProvinsi = {
   Aceh: [
     { faktor: "Curah Hujan",       level: 3 },
@@ -117,7 +117,7 @@ export const faktorPemicuByProvinsi = {
   ],
 };
 
-// Donut — mayoritas bencana per kabupaten
+// Donut: mayoritas bencana per kabupaten
 export const donutBanjirByProvinsi = {
   Aceh: [
     { name: "Aceh Tamiang", value: 52.1 },
@@ -206,55 +206,55 @@ export const longsorBulanan = {
   ],
 };
 
-// Wilayah Aceh — koordinat real (lat/lng)
+// Wilayah Aceh: koordinat real (lat/lng)
 export const wilayahAceh = [
   {
     nama: "Bener Meriah", lat: 4.72, lng: 96.82, risikoB: "Tinggi",  risikoL: "Kritis",
-    curahHujan: "5.6 – Waspada", luasGenangan: "5.6 – Genangan Berat", skorRisiko: "5.6 – Risiko Tinggi",
-    jenisTanah: "Allovial, Andosol", kemiringan: "5.6 – Curam", tutupanLahan: "5.6 – Risiko Tinggi",
-    soilMoisture: "5.6 – Risiko Tinggi", skorRisikoLongsor: "5.6 – Risiko Tinggi",
+    curahHujan: "5.6: Waspada", luasGenangan: "5.6: Genangan Berat", skorRisiko: "5.6: Risiko Tinggi",
+    jenisTanah: "Allovial, Andosol", kemiringan: "5.6: Curam", tutupanLahan: "5.6: Risiko Tinggi",
+    soilMoisture: "5.6: Risiko Tinggi", skorRisikoLongsor: "5.6: Risiko Tinggi",
   },
   {
     nama: "Aceh Tengah",  lat: 4.50, lng: 96.50, risikoB: "Kritis",  risikoL: "Kritis",
-    curahHujan: "6.1 – Bahaya",  luasGenangan: "7.2 – Genangan Berat", skorRisiko: "7.2 – Risiko Kritis",
-    jenisTanah: "Latosol, Andosol", kemiringan: "6.1 – Curam", tutupanLahan: "6.1 – Risiko Tinggi",
-    soilMoisture: "6.1 – Risiko Tinggi", skorRisikoLongsor: "6.1 – Risiko Kritis",
+    curahHujan: "6.1: Bahaya",  luasGenangan: "7.2: Genangan Berat", skorRisiko: "7.2: Risiko Kritis",
+    jenisTanah: "Latosol, Andosol", kemiringan: "6.1: Curam", tutupanLahan: "6.1: Risiko Tinggi",
+    soilMoisture: "6.1: Risiko Tinggi", skorRisikoLongsor: "6.1: Risiko Kritis",
   },
   {
     nama: "Aceh Tamiang", lat: 4.18, lng: 97.82, risikoB: "Kritis",  risikoL: "Sedang",
-    curahHujan: "7.2 – Bahaya",  luasGenangan: "9.5 – Genangan Berat", skorRisiko: "8.5 – Risiko Kritis",
-    jenisTanah: "Aluvial, Gleisol", kemiringan: "3.2 – Landai", tutupanLahan: "3.2 – Risiko Sedang",
-    soilMoisture: "3.2 – Risiko Sedang", skorRisikoLongsor: "3.2 – Risiko Sedang",
+    curahHujan: "7.2: Bahaya",  luasGenangan: "9.5: Genangan Berat", skorRisiko: "8.5: Risiko Kritis",
+    jenisTanah: "Aluvial, Gleisol", kemiringan: "3.2: Landai", tutupanLahan: "3.2: Risiko Sedang",
+    soilMoisture: "3.2: Risiko Sedang", skorRisikoLongsor: "3.2: Risiko Sedang",
   },
   {
     nama: "Gayo Lues",   lat: 3.80, lng: 97.10, risikoB: "Tinggi",  risikoL: "Tinggi",
-    curahHujan: "4.9 – Waspada", luasGenangan: "3.5 – Genangan Sedang", skorRisiko: "7.1 – Risiko Tinggi",
-    jenisTanah: "Kambisol, Andosol", kemiringan: "4.9 – Curam", tutupanLahan: "4.9 – Risiko Tinggi",
-    soilMoisture: "4.9 – Risiko Tinggi", skorRisikoLongsor: "4.9 – Risiko Tinggi",
+    curahHujan: "4.9: Waspada", luasGenangan: "3.5: Genangan Sedang", skorRisiko: "7.1: Risiko Tinggi",
+    jenisTanah: "Kambisol, Andosol", kemiringan: "4.9: Curam", tutupanLahan: "4.9: Risiko Tinggi",
+    soilMoisture: "4.9: Risiko Tinggi", skorRisikoLongsor: "4.9: Risiko Tinggi",
   },
   {
     nama: "Pidie",       lat: 4.95, lng: 96.00, risikoB: "Sedang",  risikoL: "Tinggi",
-    curahHujan: "4.3 – Waspada", luasGenangan: "2.8 – Genangan Sedang", skorRisiko: "6.4 – Risiko Tinggi",
-    jenisTanah: "Regosol, Mediteran", kemiringan: "4.3 – Curam", tutupanLahan: "4.3 – Risiko Sedang",
-    soilMoisture: "4.3 – Risiko Sedang", skorRisikoLongsor: "4.3 – Risiko Tinggi",
+    curahHujan: "4.3: Waspada", luasGenangan: "2.8: Genangan Sedang", skorRisiko: "6.4: Risiko Tinggi",
+    jenisTanah: "Regosol, Mediteran", kemiringan: "4.3: Curam", tutupanLahan: "4.3: Risiko Sedang",
+    soilMoisture: "4.3: Risiko Sedang", skorRisikoLongsor: "4.3: Risiko Tinggi",
   },
   {
     nama: "Aceh Besar",  lat: 5.40, lng: 95.45, risikoB: "Tinggi",  risikoL: "Sedang",
-    curahHujan: "5.8 – Waspada", luasGenangan: "6.2 – Genangan Berat", skorRisiko: "7.2 – Risiko Tinggi",
-    jenisTanah: "Aluvial, Latosol", kemiringan: "3.5 – Landai", tutupanLahan: "3.5 – Risiko Sedang",
-    soilMoisture: "3.5 – Risiko Sedang", skorRisikoLongsor: "3.5 – Risiko Sedang",
+    curahHujan: "5.8: Waspada", luasGenangan: "6.2: Genangan Berat", skorRisiko: "7.2: Risiko Tinggi",
+    jenisTanah: "Aluvial, Latosol", kemiringan: "3.5: Landai", tutupanLahan: "3.5: Risiko Sedang",
+    soilMoisture: "3.5: Risiko Sedang", skorRisikoLongsor: "3.5: Risiko Sedang",
   },
   {
     nama: "Banda Aceh",  lat: 5.55, lng: 95.32, risikoB: "Kritis",  risikoL: "Rendah",
-    curahHujan: "8.1 – Bahaya",  luasGenangan: "9.5 – Genangan Berat", skorRisiko: "8.8 – Risiko Kritis",
-    jenisTanah: "Aluvial", kemiringan: "1.2 – Datar", tutupanLahan: "1.2 – Risiko Rendah",
-    soilMoisture: "1.2 – Risiko Rendah", skorRisikoLongsor: "1.2 – Risiko Rendah",
+    curahHujan: "8.1: Bahaya",  luasGenangan: "9.5: Genangan Berat", skorRisiko: "8.8: Risiko Kritis",
+    jenisTanah: "Aluvial", kemiringan: "1.2: Datar", tutupanLahan: "1.2: Risiko Rendah",
+    soilMoisture: "1.2: Risiko Rendah", skorRisikoLongsor: "1.2: Risiko Rendah",
   },
   {
     nama: "Sabang",      lat: 5.88, lng: 95.32, risikoB: "Rendah",  risikoL: "Sedang",
-    curahHujan: "3.1 – Aman",  luasGenangan: "1.2 – Genangan Ringan", skorRisiko: "3.5 – Risiko Rendah",
-    jenisTanah: "Regosol", kemiringan: "3.8 – Landai", tutupanLahan: "3.8 – Risiko Sedang",
-    soilMoisture: "3.8 – Risiko Sedang", skorRisikoLongsor: "3.8 – Risiko Sedang",
+    curahHujan: "3.1: Aman",  luasGenangan: "1.2: Genangan Ringan", skorRisiko: "3.5: Risiko Rendah",
+    jenisTanah: "Regosol", kemiringan: "3.8: Landai", tutupanLahan: "3.8: Risiko Sedang",
+    soilMoisture: "3.8: Risiko Sedang", skorRisikoLongsor: "3.8: Risiko Sedang",
   },
 ];
 
@@ -262,7 +262,7 @@ export const bulanOptions = ["Jan","Feb","Mar","Apr","Mei","Jun","Jul","Agu","Se
 export const tahunOptions  = Array.from({ length: 11 }, (_, i) => String(2016 + i));
 
 export const alertFeedData = [
-  { id: 1, message: "Curah Hujan 3 Hari 218mm – Melampaui Batas", severity: "critical", time: "2 mnt lalu" },
+  { id: 1, message: "Curah Hujan 3 Hari 218mm: Melampaui Batas", severity: "critical", time: "2 mnt lalu" },
   { id: 2, message: "Potensi Banjir Tinggi di Aceh Tamiang", severity: "high", time: "15 mnt lalu" },
   { id: 3, message: "Longsor Terdeteksi di Bener Meriah", severity: "high", time: "1 jam lalu" },
 ];
