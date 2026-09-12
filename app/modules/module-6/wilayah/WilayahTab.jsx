@@ -1,12 +1,23 @@
 "use client";
 
 import { useState } from "react";
+import dynamic from "next/dynamic";
 import GenericDropdown from "../components/GenericDropdown";
 import StatCard from "../components/StatCard";
-import SumatraMap from "./SumatraMap";
 import CRSBarChart from "./CRSBarChart";
 import { PROVINSI_LIST, getFilteredData, getStats } from "../data";
 import "./wilayah.css";
+
+// Dynamic client-side import for Leaflet to prevent SSR window reference errors
+const SumatraMap = dynamic(() => import("./SumatraMap"), {
+  ssr: false,
+  loading: () => (
+    <div className="m6-map-loading-container">
+      <div className="m6-map-loading-spinner" />
+      <span className="m6-map-loading-text">Memuat Peta Real Sumatera (Leaflet)...</span>
+    </div>
+  ),
+});
 
 /**
  * Wilayah tab — the primary view of Module 6.
@@ -67,13 +78,22 @@ export default function WilayahTab() {
             <CRSBarChart data={filteredData} />
           </div>
           <div className="m6-chart-legend">
+            <span className="m6-chart-legend__title">Tingkat Risiko:</span>
             <span className="m6-chart-legend__item">
-              <span className="m6-chart-legend__dot m6-chart-legend__dot--wilayah" />
-              Nama Wilayah
+              <span className="m6-chart-legend__dot m6-chart-legend__dot--sangat-tinggi" />
+              Sangat Tinggi
             </span>
             <span className="m6-chart-legend__item">
-              <span className="m6-chart-legend__dot m6-chart-legend__dot--crs" />
-              CRS
+              <span className="m6-chart-legend__dot m6-chart-legend__dot--tinggi" />
+              Tinggi
+            </span>
+            <span className="m6-chart-legend__item">
+              <span className="m6-chart-legend__dot m6-chart-legend__dot--sedang" />
+              Sedang
+            </span>
+            <span className="m6-chart-legend__item">
+              <span className="m6-chart-legend__dot m6-chart-legend__dot--rendah" />
+              Rendah
             </span>
           </div>
         </div>

@@ -30,18 +30,19 @@ export default function CRSBarChart({ data }) {
         backgroundColor: topData.map((d) => {
           switch (d.status_crs) {
             case "Sangat Tinggi":
-              return "rgba(142, 36, 36, 0.75)";
+              return "rgba(185, 28, 28, 0.85)";
             case "Tinggi":
-              return "rgba(107, 158, 207, 0.85)";
+              return "rgba(220, 38, 38, 0.75)";
             case "Sedang":
-              return "rgba(107, 158, 207, 0.65)";
+              return "rgba(217, 119, 6, 0.75)";
             default:
-              return "rgba(107, 158, 207, 0.5)";
+              return "rgba(5, 150, 105, 0.75)";
           }
         }),
         borderRadius: 4,
         borderSkipped: false,
-        barThickness: 22,
+        barThickness: 18,
+        maxBarThickness: 22,
       },
     ],
   };
@@ -57,7 +58,7 @@ export default function CRSBarChart({ data }) {
         titleColor: "#fff",
         bodyColor: "#fff",
         cornerRadius: 8,
-        padding: 12,
+        padding: 10,
         callbacks: {
           title: (items) => {
             const idx = items[0].dataIndex;
@@ -66,7 +67,7 @@ export default function CRSBarChart({ data }) {
           label: (item) => {
             const idx = item.dataIndex;
             return [
-              `CRS: ${item.raw.toFixed(1)}%`,
+              `CRS: ${topData[idx].indeks_crs.toFixed(4)} (${item.raw.toFixed(1)}%)`,
               `Status: ${topData[idx].status_crs}`,
               `Provinsi: ${topData[idx].WADMPP}`,
             ];
@@ -83,7 +84,7 @@ export default function CRSBarChart({ data }) {
         },
         ticks: {
           color: "#5a5f6f",
-          font: { size: 11 },
+          font: { size: 10 },
           callback: (v) => `${v}%`,
         },
       },
@@ -91,13 +92,13 @@ export default function CRSBarChart({ data }) {
         grid: { display: false },
         ticks: {
           color: "#3a4a5c",
-          font: { size: 11, weight: "500" },
-          padding: 8,
+          font: { size: 10, weight: "500" },
+          padding: 4,
         },
       },
     },
     layout: {
-      padding: { right: 10 },
+      padding: { right: 6, left: 0 },
     },
   };
 
