@@ -50,7 +50,7 @@ export default function FaktorBanjirPage({ provinsi }) {
       </p>
 
       {/* KPI */}
-      <div className="grid grid-cols-4 gap-3">
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         {kpis.map(k => <KpiCard key={k.label} {...k} />)}
       </div>
 
@@ -134,7 +134,7 @@ export default function FaktorBanjirPage({ provinsi }) {
         </div>
 
         {/* Map + Detail */}
-        <div className="flex gap-4" style={{ minHeight: "280px" }}>
+        <div className="flex flex-col gap-4 sm:flex-row" style={{ minHeight: "280px" }}>
           <div className="flex-1 rounded-xl overflow-hidden" style={{ minHeight: "260px" }}>
             <InteractiveMap
               provinsi={provinsi}

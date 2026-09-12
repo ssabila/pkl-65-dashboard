@@ -88,7 +88,7 @@ export default function DashboardLayout({ activePage, onNavigate, provinsi, onPr
     >
       {/* LEFT SIDEBAR */}
       <aside
-        className="flex-shrink-0 transition-all duration-300 overflow-hidden"
+        className="module2-left-sidebar flex-shrink-0 transition-all duration-300 overflow-hidden"
         style={{
           width: leftOpen ? "210px" : "0px",
           background: T.sidebarBg,
@@ -156,7 +156,7 @@ export default function DashboardLayout({ activePage, onNavigate, provinsi, onPr
               <PanelLeft size={15} style={{ color: T.textSec }} />
             </button>
 
-            <nav className="flex items-center gap-0.5" aria-label="Breadcrumb">
+            <nav className="module2-breadcrumb flex items-center gap-0.5" aria-label="Breadcrumb">
               <button onClick={() => onNavigate("opening")} title="Kembali ke halaman utama"
                 className="p-1.5 rounded-lg transition-colors"
                 onMouseEnter={e => e.currentTarget.style.background = T.hoverBg}
@@ -242,7 +242,7 @@ export default function DashboardLayout({ activePage, onNavigate, provinsi, onPr
 
           {/* RIGHT SIDEBAR */}
           <aside
-            className="flex-shrink-0 transition-all duration-300 overflow-hidden"
+            className="module2-right-sidebar flex-shrink-0 transition-all duration-300 overflow-hidden"
             style={{
               width: rightOpen ? "210px" : "0px",
               background: T.rightBg,
@@ -310,7 +310,7 @@ function ProvinsiDropdown({ provinsi, onProvinsiChange, T, dark }) {
   }, [open]);
 
   return (
-    <div ref={btnRef}>
+    <div ref={btnRef} className="module2-provinsi-control">
       <button onClick={() => setOpen(o => !o)}
         className="flex items-center gap-2 px-4 py-1.5 rounded-xl text-[12px] font-medium transition-colors"
         style={{ background: T.pillBg, backdropFilter: "blur(8px)", border: `1px solid ${T.pillBdr}`, color: T.textPri, boxShadow: "0 2px 8px rgba(44,62,80,0.08)" }}>

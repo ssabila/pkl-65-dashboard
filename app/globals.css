@@ -268,6 +268,14 @@ html {
   position: relative;
 }
 
+.satellite-orbit {
+  position: relative;
+  width: min(100%, 620px);
+  aspect-ratio: 1;
+  margin-inline: auto;
+  isolation: isolate;
+}
+
 @media (min-width: 1024px) {
   .hero-satellite {
     min-height: calc(100svh - 80px);
@@ -276,16 +284,45 @@ html {
   }
 
   .satellite-orbit {
-    width: min(100%, 58svh, 620px);
+    width: min(100%, max(500px, 68svh), 620px);
   }
 }
 
-.satellite-orbit {
-  position: relative;
-  width: min(100%, 620px);
-  aspect-ratio: 1;
-  margin-inline: auto;
-  isolation: isolate;
+@media (max-width: 1023px) {
+  .satellite-orbit {
+    width: min(100%, 72vw, 480px);
+  }
+
+  .hero-satellite {
+    min-width: 0;
+  }
+}
+
+@media (max-width: 900px) {
+  .module2-left-sidebar,
+  .module2-right-sidebar {
+    width: 0 !important;
+    border-width: 0 !important;
+  }
+
+  .module2-breadcrumb span {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .module2-breadcrumb {
+    display: none;
+  }
+
+  .module2-provinsi-control {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .module2-breadcrumb > * {
+    flex-shrink: 0;
+  }
 }
 
 .satellite-orbit__halo,

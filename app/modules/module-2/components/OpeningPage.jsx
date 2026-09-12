@@ -41,14 +41,14 @@ export default function OpeningPage({ onNavigate }) {
     >
 
       {/* Navbar */}
-      <nav className="relative z-10 flex items-center px-8 py-4 gap-8">
+      <nav className="relative z-10 flex flex-wrap items-center justify-center px-4 py-4 gap-2 sm:gap-4 sm:px-8">
         {navItems.map((item) => (
           <button
             key={item.page}
             onMouseEnter={() => setHoveredNav(item.page)}
             onMouseLeave={() => setHoveredNav(null)}
             onClick={() => onNavigate(item.page)}
-            className="text-sm font-medium transition-all duration-200 px-3 py-1.5 rounded-lg z-10"
+            className="text-xs font-medium transition-all duration-200 px-2.5 py-1.5 rounded-lg z-10 sm:text-sm sm:px-3"
             style={{
               fontFamily: "var(--font-dm-sans)",
               color: "#fff",
@@ -62,7 +62,7 @@ export default function OpeningPage({ onNavigate }) {
       </nav>
 
       {/* Hero */}
-      <div className="relative z-10 flex-1 flex flex-col items-center justify-center text-center px-8 py-8">
+      <div className="relative z-10 flex-1 flex flex-col items-center justify-center text-center px-4 py-8 sm:px-8">
         <h1
           className="font-bold text-black mb-5 tracking-tight leading-tight"
           style={{
@@ -106,7 +106,7 @@ export default function OpeningPage({ onNavigate }) {
       </div>
 
       {/* Bottom cards */}
-      <div className="relative z-10 flex justify-center gap-5 px-8 pb-14 flex-wrap">
+      <div className="relative z-10 flex justify-center gap-3 px-4 pb-8 flex-wrap sm:gap-5 sm:px-8 sm:pb-14">
         {menuCards.map((card, i) => (
           <GlassMenuCard key={i} card={card} onNavigate={onNavigate} />
         ))}

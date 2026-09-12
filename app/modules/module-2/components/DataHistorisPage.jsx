@@ -41,7 +41,7 @@ export default function DataHistorisPage({ provinsi }) {
       </p>
 
       {/* KPI row */}
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
         <KpiCard label="Total Kejadian Bencana"
           value={ringkasan.totalKejadian.toLocaleString()}
           change={ringkasan.perubahan} />
@@ -54,7 +54,7 @@ export default function DataHistorisPage({ provinsi }) {
       </div>
 
       {/* Charts row */}
-      <div className="grid grid-cols-[1fr_280px] gap-3">
+      <div className="grid grid-cols-1 gap-3 lg:grid-cols-[minmax(0,1fr)_280px]">
 
         {/* Tren Tahunan */}
         <GlassCard className="p-4">
@@ -100,14 +100,14 @@ export default function DataHistorisPage({ provinsi }) {
       </div>
 
       {/* Bottom row */}
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
 
         {/* Donut chart */}
         <GlassCard className="p-4">
           <p className="text-[12px] font-semibold mb-3" style={{ color: "#2C3E50" }}>
             Mayoritas Bencana Berdasarkan Kabupaten/Kota
           </p>
-          <div className="flex items-center gap-4">
+          <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center">
             <div className="flex-shrink-0">
               <ResponsiveContainer width={140} height={140}>
                 <PieChart>
