@@ -32,33 +32,83 @@ export default function KomponenTab() {
 
   const selectedWilayah = getWilayahByKDPKAB(kompKabupaten);
 
-  // Build component data for pie charts
+  // Build component data for pie charts from real dataset
   const hazardComponents = selectedWilayah
     ? [
-        { key: "hujan", label: "Curah Hujan", value: selectedWilayah.hazard_components.hujan_norm },
-        { key: "slope", label: "Kemiringan Lereng", value: selectedWilayah.hazard_components.slope_norm },
-        { key: "elevasi", label: "Elevasi", value: selectedWilayah.hazard_components.elevasi_norm },
-        { key: "ndbi", label: "NDBI", value: selectedWilayah.hazard_components.ndbi_norm },
-        { key: "ndvi", label: "NDVI", value: selectedWilayah.hazard_components.ndvi_norm },
-        { key: "ndwi", label: "NDWI", value: selectedWilayah.hazard_components.ndwi_norm },
-        { key: "soil_risk", label: "Risiko Tanah", value: selectedWilayah.hazard_components.soil_risk_norm },
-        { key: "soil_div", label: "Diversitas Tanah", value: selectedWilayah.hazard_components.soil_div_norm },
+        {
+          key: "banjir",
+          label: "Bahaya Banjir",
+          value:
+            selectedWilayah.hazard_components?.banjir ??
+            selectedWilayah.hazard?.skor_banjir ??
+            0,
+        },
+        {
+          key: "longsor",
+          label: "Bahaya Longsor",
+          value:
+            selectedWilayah.hazard_components?.longsor ??
+            selectedWilayah.hazard?.skor_longsor ??
+            0,
+        },
       ]
     : [];
 
   const exposureComponents = selectedWilayah
     ? [
-        { key: "use", label: "Penggunaan Bangunan", value: selectedWilayah.exposure_components.norm_use },
-        { key: "jumlah", label: "Jumlah Bangunan", value: selectedWilayah.exposure_components.norm_jumlah },
-        { key: "ndbi", label: "NDBI", value: selectedWilayah.exposure_components.norm_ndbi },
+        {
+          key: "landuse",
+          label: "Tutupan Lahan",
+          value:
+            selectedWilayah.exposure_components?.landuse ??
+            selectedWilayah.exposure?.norm_landuse ??
+            0,
+        },
+        {
+          key: "penduduk",
+          label: "Kepadatan Penduduk",
+          value:
+            selectedWilayah.exposure_components?.penduduk ??
+            selectedWilayah.exposure?.norm_penduduk ??
+            0,
+        },
+        {
+          key: "ndbi",
+          label: "Kerapatan Bangunan (NDBI)",
+          value:
+            selectedWilayah.exposure_components?.ndbi ??
+            selectedWilayah.exposure?.norm_ndbi ??
+            0,
+        },
       ]
     : [];
 
   const vulnerabilityComponents = selectedWilayah
     ? [
-        { key: "keterpaparan", label: "Keterpaparan", value: selectedWilayah.vulnerability_components.indeks_keterpaparan },
-        { key: "sensitivitas", label: "Sensitivitas", value: selectedWilayah.vulnerability_components.indeks_sensitivitas },
-        { key: "adaptasi", label: "Kapasitas Adaptasi", value: selectedWilayah.vulnerability_components.indeks_adaptasi },
+        {
+          key: "keterpaparan",
+          label: "Keterpaparan",
+          value:
+            selectedWilayah.vulnerability_components?.keterpaparan ??
+            selectedWilayah.vulnerability?.indeks_keterpaparan ??
+            0,
+        },
+        {
+          key: "sensitivitas",
+          label: "Sensitivitas",
+          value:
+            selectedWilayah.vulnerability_components?.sensitivitas ??
+            selectedWilayah.vulnerability?.indeks_sensitivitas ??
+            0,
+        },
+        {
+          key: "adaptasi",
+          label: "Kapasitas Adaptasi",
+          value:
+            selectedWilayah.vulnerability_components?.adaptasi ??
+            selectedWilayah.vulnerability?.indeks_adaptasi ??
+            0,
+        },
       ]
     : [];
 
@@ -85,30 +135,120 @@ export default function KomponenTab() {
 
         {selectedWilayah ? (
           <div className="m6-komp-summary" id="m6-komp-summary">
-            <h3 className="m6-komp-summary__title">{selectedWilayah.WADMKK}</h3>
+            <h3 className="m6-komp-summary__title">
+              {selectedWilayah.WADMKK} ({selectedWilayah.WADMPP})
+            </h3>
             <div className="m6-komp-summary__indices">
               <div className="m6-komp-index">
-                <span className="m6-komp-index__label">CRS</span>
-                <span className="m6-komp-index__box">
-                  {(selectedWilayah.norm_crs * 100).toFixed(1)}
+                <span className="m6-komp-index__label">CRS (Indeks / Norm)</span>
+                <span
+                  className="m6-komp-index__box"
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "2px",
+                    padding: "4px 8px",
+                  }}
+                >
+                  <span style={{ fontSize: "1.05rem", fontWeight: "700" }}>
+                    {selectedWilayah.indeks_crs.toFixed(4)}
+                  </span>
+                  <span style={{ fontSize: "0.75rem", fontWeight: "600", opacity: 0.8 }}>
+                    ({(selectedWilayah.norm_crs * 100).toFixed(1)}%)
+                  </span>
+                </span>
+                <span
+                  className={`m6-komp-badge m6-komp-badge--${(
+                    selectedWilayah.status_crs || ""
+                  )
+                    .toLowerCase()
+                    .replace(/\s+/g, "-")}`}
+                >
+                  {selectedWilayah.status_crs}
                 </span>
               </div>
               <div className="m6-komp-index">
                 <span className="m6-komp-index__label">Hazard</span>
-                <span className="m6-komp-index__box">
-                  {(selectedWilayah.indeks_hazard * 100).toFixed(1)}
+                <span
+                  className="m6-komp-index__box"
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "2px",
+                    padding: "4px 8px",
+                  }}
+                >
+                  <span style={{ fontSize: "1.05rem", fontWeight: "700" }}>
+                    {selectedWilayah.indeks_hazard.toFixed(4)}
+                  </span>
+                  <span style={{ fontSize: "0.75rem", fontWeight: "600", opacity: 0.8 }}>
+                    ({(selectedWilayah.indeks_hazard * 100).toFixed(1)}%)
+                  </span>
+                </span>
+                <span
+                  className={`m6-komp-badge m6-komp-badge--${(
+                    selectedWilayah.status_hazard || ""
+                  )
+                    .toLowerCase()
+                    .replace(/\s+/g, "-")}`}
+                >
+                  {selectedWilayah.status_hazard}
                 </span>
               </div>
               <div className="m6-komp-index">
                 <span className="m6-komp-index__label">Vulnerability</span>
-                <span className="m6-komp-index__box">
-                  {(selectedWilayah.indeks_kerentanan * 100).toFixed(1)}
+                <span
+                  className="m6-komp-index__box"
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "2px",
+                    padding: "4px 8px",
+                  }}
+                >
+                  <span style={{ fontSize: "1.05rem", fontWeight: "700" }}>
+                    {selectedWilayah.indeks_kerentanan.toFixed(4)}
+                  </span>
+                  <span style={{ fontSize: "0.75rem", fontWeight: "600", opacity: 0.8 }}>
+                    ({(selectedWilayah.indeks_kerentanan * 100).toFixed(1)}%)
+                  </span>
+                </span>
+                <span
+                  className={`m6-komp-badge m6-komp-badge--${(
+                    selectedWilayah.status_vulnerability || ""
+                  )
+                    .toLowerCase()
+                    .replace(/\s+/g, "-")}`}
+                >
+                  {selectedWilayah.status_vulnerability}
                 </span>
               </div>
               <div className="m6-komp-index">
                 <span className="m6-komp-index__label">Exposure</span>
-                <span className="m6-komp-index__box">
-                  {(selectedWilayah.indeks_exposure * 100).toFixed(1)}
+                <span
+                  className="m6-komp-index__box"
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "2px",
+                    padding: "4px 8px",
+                  }}
+                >
+                  <span style={{ fontSize: "1.05rem", fontWeight: "700" }}>
+                    {selectedWilayah.indeks_exposure.toFixed(4)}
+                  </span>
+                  <span style={{ fontSize: "0.75rem", fontWeight: "600", opacity: 0.8 }}>
+                    ({(selectedWilayah.indeks_exposure * 100).toFixed(1)}%)
+                  </span>
+                </span>
+                <span
+                  className={`m6-komp-badge m6-komp-badge--${(
+                    selectedWilayah.status_exposure || ""
+                  )
+                    .toLowerCase()
+                    .replace(/\s+/g, "-")}`}
+                >
+                  {selectedWilayah.status_exposure}
                 </span>
               </div>
             </div>

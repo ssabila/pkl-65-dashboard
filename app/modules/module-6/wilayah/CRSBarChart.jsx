@@ -30,13 +30,13 @@ export default function CRSBarChart({ data }) {
         backgroundColor: topData.map((d) => {
           switch (d.status_crs) {
             case "Sangat Tinggi":
-              return "rgba(142, 36, 36, 0.75)";
+              return "rgba(185, 28, 28, 0.85)";
             case "Tinggi":
-              return "rgba(107, 158, 207, 0.85)";
+              return "rgba(220, 38, 38, 0.75)";
             case "Sedang":
-              return "rgba(107, 158, 207, 0.65)";
+              return "rgba(217, 119, 6, 0.75)";
             default:
-              return "rgba(107, 158, 207, 0.5)";
+              return "rgba(5, 150, 105, 0.75)";
           }
         }),
         borderRadius: 4,
@@ -67,7 +67,7 @@ export default function CRSBarChart({ data }) {
           label: (item) => {
             const idx = item.dataIndex;
             return [
-              `CRS: ${item.raw.toFixed(1)}%`,
+              `CRS: ${topData[idx].indeks_crs.toFixed(4)} (${item.raw.toFixed(1)}%)`,
               `Status: ${topData[idx].status_crs}`,
               `Provinsi: ${topData[idx].WADMPP}`,
             ];

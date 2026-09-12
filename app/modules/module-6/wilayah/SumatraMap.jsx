@@ -185,7 +185,7 @@ export default function SumatraMap({ data = [], provinsiKey = "all" }) {
             <div class="m6-l-tooltip__badge ${statusBadgeClass}">${item.status_crs}</div>
             <div class="m6-l-tooltip__row">
               <span>Skor CRS:</span>
-              <b>${(item.norm_crs * 100).toFixed(1)}%</b>
+              <b>${item.indeks_crs.toFixed(4)} (${(item.norm_crs * 100).toFixed(1)}%)</b>
             </div>
           </div>
           `,
@@ -210,7 +210,7 @@ export default function SumatraMap({ data = [], provinsiKey = "all" }) {
             <div class="m6-popup-metrics">
               <div class="m6-popup-metric-item highlight">
                 <span class="label">Composite Risk (CRS)</span>
-                <span class="val">${(item.norm_crs * 100).toFixed(1)}%</span>
+                <span class="val">${item.indeks_crs.toFixed(4)} <small style="font-size: 0.8em; font-weight: 500; opacity: 0.85;">(${(item.norm_crs * 100).toFixed(1)}%)</small></span>
               </div>
               <div class="m6-popup-metric-item">
                 <span class="label">Indeks Hazard</span>
@@ -311,7 +311,7 @@ export default function SumatraMap({ data = [], provinsiKey = "all" }) {
             onClick={() => setActiveBasemap(key)}
             title={`Ganti tampilan ke ${config.name}`}
           >
-            {key === "voyager" ? "🗺️ Terang" : key === "osm" ? "🧭 OSM" : "🛰️ Satelit"}
+            {key === "voyager" ? "Terang" : key === "osm" ? "OSM" : "Satelit"}
           </button>
         ))}
       </div>

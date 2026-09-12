@@ -78,13 +78,22 @@ export default function WilayahTab() {
             <CRSBarChart data={filteredData} />
           </div>
           <div className="m6-chart-legend">
+            <span className="m6-chart-legend__title">Tingkat Risiko:</span>
             <span className="m6-chart-legend__item">
-              <span className="m6-chart-legend__dot m6-chart-legend__dot--wilayah" />
-              Nama Wilayah
+              <span className="m6-chart-legend__dot m6-chart-legend__dot--sangat-tinggi" />
+              Sangat Tinggi
             </span>
             <span className="m6-chart-legend__item">
-              <span className="m6-chart-legend__dot m6-chart-legend__dot--crs" />
-              CRS
+              <span className="m6-chart-legend__dot m6-chart-legend__dot--tinggi" />
+              Tinggi
+            </span>
+            <span className="m6-chart-legend__item">
+              <span className="m6-chart-legend__dot m6-chart-legend__dot--sedang" />
+              Sedang
+            </span>
+            <span className="m6-chart-legend__item">
+              <span className="m6-chart-legend__dot m6-chart-legend__dot--rendah" />
+              Rendah
             </span>
           </div>
         </div>
