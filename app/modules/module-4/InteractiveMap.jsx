@@ -1,221 +1,400 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
-// Coordinates are relative percentage positions (x, y) on our custom SVG map container
-const regencyCoordinates = {
-  "Simeulue": { x: 15, y: 35, color: "text-accent-warning" },
-  "Aceh Singkil": { x: 28, y: 45, color: "text-accent-danger" },
-  "Aceh Selatan": { x: 25, y: 38, color: "text-accent-danger" },
-  "Kota Gunungsitoli": { x: 26, y: 62, color: "text-accent-danger" },
-  "Tapanuli Selatan": { x: 48, y: 65, color: "text-accent-danger" },
-  "Asahan": { x: 58, y: 52, color: "text-accent-danger" },
-  "Pasaman": { x: 58, y: 75, color: "text-accent-danger" },
-  "Agam": { x: 62, y: 82, color: "text-accent-primary" },
-  "Lima Puluh Kota": { x: 72, y: 80, color: "text-accent-warning" },
-  "Padang Pariaman": { x: 64, y: 88, color: "text-accent-danger" }
-};
+// Helper to normalize names for robust matching
+function normalizeName(str) {
+  if (!str) return "";
+  return str.toLowerCase().replace(/[^a-z0-9]/g, "");
+}
 
-export default function InteractiveMap({ selectedProvinsi, selectedKabupaten, onSelectKabupaten, dataKerentanan }) {
-  const [hoveredRegency, setHoveredRegency] = useState(null);
+// Calculate centroid of a GeoJSON geometry (Polygon or MultiPolygon)
+function getGeometryCentroid(geometry) {
+  if (!geometry || !geometry.coordinates) return [98, 3];
+  let sumLon = 0, sumLat = 0, count = 0;
 
-  // Group coordinates and vulnerability indices together
-  const mapMarkers = dataKerentanan.map(item => {
-    const coords = regencyCoordinates[item.kabupaten] || { x: 50, y: 50 };
-    return {
-      ...item,
-      x: coords.x,
-      y: coords.y
-    };
-  });
+  const processRing = (ring) => {
+    ring.forEach(([lon, lat]) => {
+      sumLon += lon;
+      sumLat += lat;
+      count++;
+    });
+  };
 
-  // Filter markers based on selected province
-  const filteredMarkers = mapMarkers.filter(marker => {
-    if (selectedProvinsi && selectedProvinsi !== "Semua Provinsi") {
-      return marker.provinsi === selectedProvinsi;
+  if (geometry.type === "Polygon") {
+    geometry.coordinates.forEach(processRing);
+  } else if (geometry.type === "MultiPolygon") {
+    geometry.coordinates.forEach((poly) => poly.forEach(processRing));
+  }
+
+  if (count === 0) return [98, 3];
+  return [sumLon / count, sumLat / count];
+}
+
+export default function InteractiveMap({ selectedProvinsi, selectedKabupaten, onSelectKabupaten, dataKerentanan = [] }) {
+  const [hoveredFeature, setHoveredFeature] = useState(null);
+  const [geoJsonData, setGeoJsonData] = useState(null);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+
+  // Load GeoJSON map
+  useEffect(() => {
+    fetch("/data/peta_kerentanan.geojson")
+      .then((res) => {
+        if (res.ok) return res.json();
+        throw new Error("GeoJSON not found");
+      })
+      .then((data) => setGeoJsonData(data))
+      .catch((err) => console.log("GeoJSON map load error:", err));
+  }, []);
+
+  // Helper to project GeoJSON (lon, lat) to SVG canvas coordinates (800x600)
+  const projectPoint = ([lon, lat]) => {
+    const px = ((lon - 94.5) / (101.5 - 94.5)) * 740 + 30;
+    const py = ((6.5 - lat) / (6.5 - (-3.5))) * 520 + 45;
+    return `${px.toFixed(1)},${py.toFixed(1)}`;
+  };
+
+  const projectPointObj = ([lon, lat]) => {
+    const px = ((lon - 94.5) / (101.5 - 94.5)) * 740 + 30;
+    const py = ((6.5 - lat) / (6.5 - (-3.5))) * 520 + 45;
+    return { x: px, y: py };
+  };
+
+  // Convert GeoJSON geometry to SVG Path string
+  const renderGeometryPath = (geometry) => {
+    if (!geometry || !geometry.coordinates) return "";
+    const renderRing = (ring) => "M" + ring.map(projectPoint).join("L") + "Z";
+
+    if (geometry.type === "Polygon") {
+      return geometry.coordinates.map(renderRing).join(" ");
+    } else if (geometry.type === "MultiPolygon") {
+      return geometry.coordinates.flatMap((poly) => poly.map(renderRing)).join(" ");
     }
-    return true;
-  });
+    return "";
+  };
+
+  // Mouse move handler for smooth tooltip tracking
+  const handleMouseMove = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    setMousePos({
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top
+    });
+  };
 
   return (
-    <div className="relative w-full h-[450px] bg-slate-950 rounded-xl border border-card-border overflow-hidden shadow-inner flex flex-col justify-between p-4">
-      {/* Map Header */}
-      <div className="z-10 bg-slate-900/80 backdrop-blur-xs p-3 rounded-lg border border-slate-800 max-w-sm">
-        <h5 className="text-white text-sm font-heading flex items-center gap-2">
-          <span className="w-2.5 h-2.5 rounded-full bg-accent-danger animate-pulse"></span>
-          Peta Indeks Kerentanan Bencana Sumatra
-        </h5>
-        <p className="text-slate-400 text-xs mt-1 font-sans">
-          Klik pin kabupaten untuk melihat detail profil kerentanan atau gunakan filter dropdown di atas.
-        </p>
+    <div
+      className="relative w-full h-[520px] bg-[#0c1322] rounded-2xl border border-slate-800 shadow-2xl overflow-hidden flex flex-col justify-between p-4 sm:p-5 select-none"
+      onMouseMove={handleMouseMove}
+    >
+      {/* Top Header Layer (Compact Floating Pill) */}
+      <div className="z-10 flex items-center justify-between gap-3 pointer-events-none">
+        <div className="bg-slate-900/80 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-slate-800/80 shadow-md pointer-events-auto flex items-center gap-2.5 text-xs text-slate-300">
+          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span className="font-heading font-semibold text-white">Peta Kerentanan Sumatra</span>
+          <span className="text-slate-600">•</span>
+          <span className="text-slate-400 text-[11px]">Arahkan kursor / klik kabupaten</span>
+        </div>
+
+        {/* Selected Province Badge */}
+        {selectedProvinsi && selectedProvinsi !== "Semua Provinsi" && (
+          <div className="bg-emerald-500/10 border border-emerald-500/30 backdrop-blur-md px-3 py-1 rounded-full text-emerald-400 font-sans text-xs font-semibold shadow-md pointer-events-auto flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
+            Fokus: {selectedProvinsi}
+          </div>
+        )}
       </div>
 
-      {/* SVG Canvas Map Representation */}
-      <div className="absolute inset-0 w-full h-full flex items-center justify-center pointer-events-none">
+      {/* SVG Canvas Map Container */}
+      <div className="absolute inset-0 w-full h-full flex items-center justify-center p-2">
         <svg
           viewBox="0 0 800 600"
-          className="w-full h-full opacity-30 object-contain text-slate-800 p-8"
+          className="w-full h-full object-contain"
           fill="none"
-          stroke="currentColor"
-          strokeWidth="1.5"
         >
-          {/* Abstract path representing Sumatra outline (North-West to South-East direction) */}
-          <path
-            d="M 120 80 
-               C 150 60, 200 70, 250 110 
-               C 280 130, 320 180, 380 240 
-               C 420 280, 480 340, 520 380 
-               C 560 420, 620 460, 680 500 
-               C 720 530, 750 560, 720 580 
-               C 680 600, 600 560, 550 510 
-               C 500 460, 440 400, 380 340 
-               C 320 280, 260 220, 200 180 
-               C 160 150, 110 110, 100 95 
-               Z"
-            fill="rgba(42, 139, 126, 0.05)"
-            stroke="rgba(91, 143, 191, 0.3)"
-            strokeWidth="3"
-            strokeDasharray="4 4"
-          />
-          {/* Simeulue Island Mockup */}
-          <path
-            d="M 80 180 C 70 190, 60 220, 90 230 C 110 210, 100 190, 80 180 Z"
-            fill="rgba(91, 143, 191, 0.1)"
-            stroke="rgba(91, 143, 191, 0.3)"
-            strokeWidth="2"
-          />
-          {/* Nias Island Mockup */}
-          <path
-            d="M 160 360 C 140 370, 150 410, 180 400 C 190 380, 180 365, 160 360 Z"
-            fill="rgba(91, 143, 191, 0.1)"
-            stroke="rgba(91, 143, 191, 0.3)"
-            strokeWidth="2"
-          />
-          {/* Grid lines for coordinate mapping */}
-          <line x1="50" y1="0" x2="50" y2="600" stroke="rgba(255,255,255,0.02)" />
-          <line x1="100" y1="0" x2="100" y2="600" stroke="rgba(255,255,255,0.02)" />
-          <line x1="200" y1="0" x2="200" y2="600" stroke="rgba(255,255,255,0.02)" />
-          <line x1="300" y1="0" x2="300" y2="600" stroke="rgba(255,255,255,0.02)" />
-          <line x1="400" y1="0" x2="400" y2="600" stroke="rgba(255,255,255,0.02)" />
-          <line x1="500" y1="0" x2="500" y2="600" stroke="rgba(255,255,255,0.02)" />
-          <line x1="600" y1="0" x2="600" y2="600" stroke="rgba(255,255,255,0.02)" />
-          <line x1="700" y1="0" x2="700" y2="600" stroke="rgba(255,255,255,0.02)" />
+          {/* Subtle Grid Background Pattern */}
+          <defs>
+            <pattern id="mapGrid" width="40" height="40" patternUnits="userSpaceOnUse">
+              <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255, 255, 255, 0.03)" strokeWidth="0.5" />
+            </pattern>
+          </defs>
+          <rect width="800" height="600" fill="url(#mapGrid)" />
+
+          {/* Region Label Watermarks inside SVG Canvas */}
+          <text x="180" y="140" fill="rgba(255, 255, 255, 0.08)" fontSize="18" fontWeight="bold" letterSpacing="4" uppercase="true">ACEH</text>
+          <text x="360" y="270" fill="rgba(255, 255, 255, 0.08)" fontSize="18" fontWeight="bold" letterSpacing="4" uppercase="true">SUMATERA UTARA</text>
+          <text x="520" y="470" fill="rgba(255, 255, 255, 0.08)" fontSize="18" fontWeight="bold" letterSpacing="4" uppercase="true">SUMATERA BARAT</text>
+
+          {/* Vector Map Features Layer */}
+          {geoJsonData && geoJsonData.features ? (
+            geoJsonData.features.map((feature, idx) => {
+              const rawName = feature.properties?.NAME_2 || "";
+              const rawProv = feature.properties?.NAME_1 || "";
+
+              // Find matching entry from dataKerentanan
+              const matchData = dataKerentanan.find((k) =>
+                normalizeName(k.rawKabupaten) === normalizeName(rawName) ||
+                normalizeName(k.kabupaten) === normalizeName(rawName)
+              );
+
+              const status = matchData?.status || feature.properties?.["Data Ind11"] || "Sedang";
+              const kabName = matchData?.kabupaten || rawName;
+              const provName = matchData?.provinsi || (rawProv.includes("Sumatera Utara") ? "Sumatera Utara" : rawProv.includes("Sumatera Barat") ? "Sumatera Barat" : "Aceh");
+
+              // Filter check: is this regency inside the selected province?
+              const isProvinceActive =
+                !selectedProvinsi ||
+                selectedProvinsi === "Semua Provinsi" ||
+                provName === selectedProvinsi;
+
+              const isSelected = selectedKabupaten === kabName;
+              const isHovered = hoveredFeature?.kabName === kabName;
+
+              // Special handling for water bodies (Lake Toba)
+              const isWaterBody = rawName.toLowerCase().includes("lake") || rawName.toLowerCase().includes("danau");
+              if (isWaterBody) {
+                return (
+                  <path
+                    key={idx}
+                    d={renderGeometryPath(feature.geometry)}
+                    fill="rgba(14, 165, 233, 0.35)"
+                    stroke="rgba(56, 189, 248, 0.6)"
+                    strokeWidth="1"
+                    className="pointer-events-auto cursor-default"
+                    onMouseEnter={() =>
+                      setHoveredFeature({
+                        kabName: "Danau Toba",
+                        provName: "Sumatera Utara",
+                        status: "Danau / Perairan",
+                        indeks: "-",
+                        isWater: true
+                      })
+                    }
+                    onMouseLeave={() => setHoveredFeature(null)}
+                  />
+                );
+              }
+
+              // Color mapping per vulnerability status
+              let fillColor = "rgba(234, 179, 8, 0.55)"; // Sedang (Yellow)
+              let strokeColor = "rgba(234, 179, 8, 0.8)";
+              let dotColor = "#eab308";
+
+              if (status === "Sangat Tinggi") {
+                fillColor = "rgba(239, 68, 68, 0.65)"; // Vibrant Red
+                strokeColor = "rgba(239, 68, 68, 0.9)";
+                dotColor = "#ef4444";
+              } else if (status === "Tinggi") {
+                fillColor = "rgba(249, 115, 22, 0.6)"; // Warm Orange
+                strokeColor = "rgba(249, 115, 22, 0.85)";
+                dotColor = "#f97316";
+              } else if (status === "Rendah") {
+                fillColor = "rgba(16, 185, 129, 0.5)"; // Emerald Green
+                strokeColor = "rgba(16, 185, 129, 0.8)";
+                dotColor = "#10b981";
+              }
+
+              // Dim non-selected provinces
+              let opacity = isProvinceActive ? 1 : 0.15;
+              if (isSelected || isHovered) {
+                fillColor = fillColor.replace(/0\.\d+/, "0.9");
+                strokeColor = "#ffffff";
+                opacity = 1;
+              }
+
+              // Centroid for SVG pinned marker
+              const centroid = getGeometryCentroid(feature.geometry);
+              const point = projectPointObj(centroid);
+
+              return (
+                <g key={idx} className="transition-all duration-200">
+                  {/* Regency Polygon Path */}
+                  <path
+                    d={renderGeometryPath(feature.geometry)}
+                    fill={fillColor}
+                    stroke={strokeColor}
+                    strokeWidth={isSelected ? "2.5" : isHovered ? "2" : "0.8"}
+                    opacity={opacity}
+                    className="cursor-pointer transition-all duration-200 hover:brightness-125"
+                    onClick={() => onSelectKabupaten(kabName)}
+                    onMouseEnter={() =>
+                      setHoveredFeature({
+                        kabName,
+                        provName,
+                        status,
+                        indeks: matchData?.indeks ?? "-",
+                        banjir: matchData?.banjir ?? 0,
+                        longsor: matchData?.longsor ?? 0,
+                        miskinPct: matchData?.miskinPct ?? 0,
+                        faskes: matchData?.faskes ?? 0
+                      })
+                    }
+                    onMouseLeave={() => setHoveredFeature(null)}
+                  />
+
+                  {/* SVG Centroid Marker Pin (100% Perfectly Aligned with Polygon) */}
+                  {isProvinceActive && (
+                    <g
+                      transform={`translate(${point.x}, ${point.y})`}
+                      className="cursor-pointer pointer-events-none"
+                    >
+                      {/* Animated Pulse Ring for Selected or Highly Vulnerable */}
+                      {(isSelected || isHovered || status === "Sangat Tinggi") && (
+                        <circle
+                          r="9"
+                          fill={dotColor}
+                          opacity="0.4"
+                          className="animate-ping"
+                        />
+                      )}
+
+                      {/* Main Marker Dot */}
+                      <circle
+                        r={isSelected ? "5" : isHovered ? "4.5" : "3"}
+                        fill={dotColor}
+                        stroke="#ffffff"
+                        strokeWidth={isSelected || isHovered ? "1.5" : "0.8"}
+                        className="transition-all duration-200 shadow-lg"
+                      />
+                    </g>
+                  )}
+                </g>
+              );
+            })
+          ) : (
+            /* Sleek Loading Fallback */
+            <g>
+              <text x="400" y="300" textAnchor="middle" fill="#94a3b8" fontSize="14" fontFamily="sans-serif">
+                Memuat Peta Vektor GeoJSON...
+              </text>
+            </g>
+          )}
         </svg>
-
-        {/* Region Labels */}
-        <div className="absolute top-[18%] left-[26%] text-slate-500 font-heading text-xs uppercase tracking-widest font-semibold opacity-70">
-          Aceh
-        </div>
-        <div className="absolute top-[48%] left-[48%] text-slate-500 font-heading text-xs uppercase tracking-widest font-semibold opacity-70">
-          Sumatera Utara
-        </div>
-        <div className="absolute top-[75%] left-[68%] text-slate-500 font-heading text-xs uppercase tracking-widest font-semibold opacity-70">
-          Sumatera Barat
-        </div>
       </div>
 
-      {/* Markers Layer (Clickable & Hoverable) */}
-      <div className="absolute inset-0 w-full h-full pointer-events-none">
-        {filteredMarkers.map((marker) => {
-          const isSelected = selectedKabupaten === marker.kabupaten;
-          const isHovered = hoveredRegency === marker.kabupaten;
-
-          // Determine marker color based on vulnerability status
-          let statusColor = "bg-accent-secondary"; // Rendah / Sedang
-          if (marker.status === "Tinggi") {
-            statusColor = "bg-accent-warning";
-          } else if (marker.status === "Sangat Tinggi") {
-            statusColor = "bg-accent-danger";
-          }
-
-          return (
-            <button
-              key={marker.kabupaten}
-              className="absolute pointer-events-auto group focus:outline-none -translate-x-1/2 -translate-y-1/2 cursor-pointer z-20"
-              style={{ left: `${marker.x}%`, top: `${marker.y}%` }}
-              onClick={() => onSelectKabupaten(marker.kabupaten)}
-              onMouseEnter={() => setHoveredRegency(marker.kabupaten)}
-              onMouseLeave={() => setHoveredRegency(null)}
+      {/* Floating Hover Tooltip (Positioned safely away from cursor) */}
+      {hoveredFeature && (
+        <div
+          className="pointer-events-none absolute z-50 bg-slate-900/95 backdrop-blur-md border border-slate-700/90 rounded-xl px-3 py-1.5 text-white shadow-2xl flex items-center gap-2.5 whitespace-nowrap transition-all duration-75"
+          style={{
+            left: `${mousePos.x > 550 ? mousePos.x - 200 : mousePos.x + 22}px`,
+            top: `${mousePos.y < 60 ? mousePos.y + 24 : mousePos.y - 54}px`
+          }}
+        >
+          <div className="flex items-center gap-2">
+            <span className="font-heading font-bold text-xs text-white">
+              {hoveredFeature.kabName}
+            </span>
+            <span
+              className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${hoveredFeature.isWater
+                ? "bg-sky-500/20 text-sky-400 border border-sky-500/30"
+                : hoveredFeature.status === "Sangat Tinggi"
+                  ? "bg-red-500/20 text-red-400 border border-red-500/30"
+                  : hoveredFeature.status === "Tinggi"
+                    ? "bg-orange-500/20 text-orange-400 border border-orange-500/30"
+                    : hoveredFeature.status === "Sedang"
+                      ? "bg-amber-500/20 text-amber-400 border border-amber-500/30"
+                      : "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
+                }`}
             >
-              {/* Pulse ripple for selected or highly vulnerable markers */}
-              {(isSelected || marker.status === "Sangat Tinggi") && (
-                <span className={`absolute inline-flex h-6 w-6 rounded-full ${statusColor} opacity-40 animate-ping -left-1.5 -top-1.5`}></span>
-              )}
-
-              {/* Pin Point */}
-              <div
-                className={`w-3.5 h-3.5 rounded-full border border-white shadow-lg transition-all duration-300 ${statusColor} ${
-                  isSelected ? "scale-150 ring-4 ring-white/20" : "group-hover:scale-125"
-                }`}
-              ></div>
-
-              {/* Minimalist tooltip */}
-              <div
-                className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-slate-900 text-white border border-slate-700 px-2 py-1 rounded text-xxs font-sans whitespace-nowrap pointer-events-none transition-all duration-200 ${
-                  isSelected || isHovered ? "opacity-100 translate-y-0 visible" : "opacity-0 translate-y-1 invisible"
-                }`}
-              >
-                <div className="font-semibold text-white">{marker.kabupaten}</div>
-                <div className="text-slate-400 flex items-center gap-1.5 mt-0.5">
-                  <span>Indeks: {marker.indeks}</span>
-                  <span className="w-1 h-1 rounded-full bg-slate-500"></span>
-                  <span className={
-                    marker.status === "Sangat Tinggi" ? "text-accent-danger font-bold" :
-                    marker.status === "Tinggi" ? "text-accent-warning font-semibold" : "text-accent-secondary"
-                  }>
-                    {marker.status}
-                  </span>
-                </div>
-              </div>
-            </button>
-          );
-        })}
-      </div>
-
-      {/* Floating Info Overlay (Bottom-left/Right) */}
-      <div className="z-10 flex w-full justify-between items-end mt-auto pointer-events-none">
-        {/* Legend */}
-        <div className="bg-slate-900/80 backdrop-blur-xs px-3 py-2 rounded-lg border border-slate-800 text-xxs text-slate-400 flex flex-col gap-1 pointer-events-auto">
-          <span className="font-semibold text-white mb-0.5">Indeks Kerentanan</span>
-          <div className="flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-accent-secondary"></span>
-            <span>Rendah / Sedang</span>
+              {hoveredFeature.status}
+            </span>
           </div>
-          <div className="flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-accent-warning"></span>
-            <span>Tinggi</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-accent-danger"></span>
-            <span>Sangat Tinggi</span>
+
+          {!hoveredFeature.isWater && (
+            <div className="flex items-center gap-1.5 text-[11px] text-slate-300 font-sans border-l border-slate-750 pl-2">
+              <span className="text-slate-400">{hoveredFeature.provName}</span>
+              <span className="text-slate-500">•</span>
+              <span>Skor: <strong className="text-emerald-400">{hoveredFeature.indeks}</strong></span>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Bottom Info Overlay Layer (Legend & Detail Card) */}
+      <div className="z-10 flex w-full justify-between items-end gap-4 pointer-events-none mt-auto">
+        {/* Map Legend */}
+        <div className="bg-slate-900/90 backdrop-blur-md px-3.5 py-2.5 rounded-xl border border-slate-800/80 text-xs text-slate-300 flex flex-col gap-1.5 shadow-xl pointer-events-auto">
+          <span className="font-heading font-bold text-white text-[11px] uppercase tracking-wider">
+            Indeks Kerentanan
+          </span>
+          <div className="flex items-center gap-3 text-[11px]">
+            <div className="flex items-center gap-1.5">
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+              <span>Rendah</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <span className="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
+              <span>Sedang</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <span className="w-2.5 h-2.5 rounded-full bg-orange-500"></span>
+              <span>Tinggi</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <span className="w-2.5 h-2.5 rounded-full bg-red-500"></span>
+              <span>Sangat Tinggi</span>
+            </div>
           </div>
         </div>
 
-        {/* Selected Area Detail Quickview */}
+        {/* Selected Kabupaten Detail Card */}
         {selectedKabupaten && (
-          <div className="bg-slate-900/95 backdrop-blur-xs p-3 rounded-lg border border-accent-primary max-w-[240px] text-xs text-white shadow-xl pointer-events-auto">
+          <div className="bg-slate-900/95 backdrop-blur-md p-4 rounded-xl border border-emerald-500/40 w-full max-w-[260px] text-xs text-white shadow-2xl pointer-events-auto transition-all duration-300">
             {(() => {
-              const selectedData = dataKerentanan.find(d => d.kabupaten === selectedKabupaten);
+              const selectedData = dataKerentanan.find(
+                (d) => d.kabupaten === selectedKabupaten
+              );
               if (!selectedData) return null;
               return (
                 <div>
-                  <div className="flex justify-between items-center gap-2 border-b border-slate-800 pb-1.5 mb-1.5">
-                    <span className="font-heading font-bold text-white text-[11px] truncate">{selectedData.kabupaten}</span>
-                    <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-bold ${
-                      selectedData.status === "Sangat Tinggi" ? "bg-accent-danger/20 text-accent-danger" :
-                      selectedData.status === "Tinggi" ? "bg-accent-warning/20 text-accent-warning" : "bg-accent-secondary/20 text-accent-secondary"
-                    }`}>
+                  <div className="flex justify-between items-center gap-2 border-b border-slate-800 pb-2 mb-2">
+                    <div>
+                      <h6 className="font-heading font-bold text-white text-xs sm:text-sm">
+                        {selectedData.kabupaten}
+                      </h6>
+                      <p className="text-[10px] text-slate-400 font-sans">
+                        {selectedData.provinsi}
+                      </p>
+                    </div>
+                    <span
+                      className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${selectedData.status === "Sangat Tinggi"
+                        ? "bg-red-500/20 text-red-400 border border-red-500/40"
+                        : selectedData.status === "Tinggi"
+                          ? "bg-orange-500/20 text-orange-400 border border-orange-500/40"
+                          : selectedData.status === "Sedang"
+                            ? "bg-amber-500/20 text-amber-400 border border-amber-500/40"
+                            : "bg-emerald-500/20 text-emerald-400 border border-emerald-500/40"
+                        }`}
+                    >
                       {selectedData.status}
                     </span>
                   </div>
-                  <div className="grid grid-cols-2 gap-x-3 gap-y-1 font-sans text-slate-300 text-[10px]">
-                    <div>Banjir: <strong className="text-white">{selectedData.banjir}x</strong></div>
-                    <div>Longsor: <strong className="text-white">{selectedData.longsor}x</strong></div>
-                    <div>Miskin: <strong className="text-white">{selectedData.miskinPct}%</strong></div>
-                    <div>Faskes: <strong className="text-white">{selectedData.faskes} unit</strong></div>
+
+                  <div className="grid grid-cols-2 gap-2 text-[11px] text-slate-300 font-sans">
+                    <div className="bg-slate-800/50 p-1.5 rounded-lg border border-slate-750">
+                      <span className="text-slate-400 text-[10px] block">Kejadian Banjir</span>
+                      <strong className="text-white text-xs">{selectedData.banjir}x</strong>
+                    </div>
+                    <div className="bg-slate-800/50 p-1.5 rounded-lg border border-slate-750">
+                      <span className="text-slate-400 text-[10px] block">Kejadian Longsor</span>
+                      <strong className="text-white text-xs">{selectedData.longsor}x</strong>
+                    </div>
+                    <div className="bg-slate-800/50 p-1.5 rounded-lg border border-slate-750">
+                      <span className="text-slate-400 text-[10px] block">Angka Kemiskinan</span>
+                      <strong className="text-white text-xs">{selectedData.miskinPct}%</strong>
+                    </div>
+                    <div className="bg-slate-800/50 p-1.5 rounded-lg border border-slate-750">
+                      <span className="text-slate-400 text-[10px] block">Fasilitas Kesehatan</span>
+                      <strong className="text-white text-xs">{selectedData.faskes} unit</strong>
+                    </div>
                   </div>
-                  <div className="mt-2 text-[10px] text-accent-primary font-semibold text-center border-t border-slate-850 pt-1.5">
-                    Indeks: {selectedData.indeks}
+
+                  <div className="mt-2.5 flex items-center justify-between pt-2 border-t border-slate-800 text-[11px]">
+                    <span className="text-slate-400">Skor Indeks Total:</span>
+                    <span className="font-heading font-black text-emerald-400 text-xs">
+                      {selectedData.indeks}
+                    </span>
                   </div>
                 </div>
               );
