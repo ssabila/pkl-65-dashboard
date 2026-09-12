@@ -1,5 +1,6 @@
-// Sample data for Module 6 - Prioritas Penanganan
-// Based on CRS (Composite Risk Score) methodology
+// Real dataset for Module 6 - Prioritas Penanganan
+// Loaded directly from public/data/modul6_crs.json
+import rawCRSData from "../../../public/data/modul6_crs.json";
 
 export const PROVINSI_LIST = [
   { value: "all", label: "Semua Provinsi" },
@@ -8,551 +9,228 @@ export const PROVINSI_LIST = [
   { value: "sumbar", label: "Sumatera Barat" },
 ];
 
-// Komponen tab: Only specific provinces (no "all")
+// Komponen tab: Specific provinces (no "all")
 export const PROVINSI_LIST_KOMPONEN = [
   { value: "aceh", label: "Aceh" },
   { value: "sumut", label: "Sumatera Utara" },
   { value: "sumbar", label: "Sumatera Barat" },
 ];
 
-// Sample kabupaten/kota data with CRS values + sub-component details
-export const WILAYAH_DATA = [
-  // ============ ACEH ============
-  {
-    KDPKAB: "1101",
-    WADMKK: "Kabupaten Simeulue",
-    WADMPP: "Aceh",
-    provinsi_key: "aceh",
-    norm_crs: 0.82,
-    status_crs: "Tinggi",
-    indeks_hazard: 0.78,
-    indeks_exposure: 0.65,
-    indeks_kerentanan: 0.71,
-    hazard_components: { hujan_norm: 0.85, slope_norm: 0.42, elevasi_norm: 0.38, ndbi_norm: 0.55, ndvi_norm: 0.61, ndwi_norm: 0.73, soil_risk_norm: 0.48, soil_div_norm: 0.39 },
-    exposure_components: { norm_use: 0.72, norm_jumlah: 0.58, norm_ndbi: 0.55 },
-    vulnerability_components: { indeks_keterpaparan: 0.68, indeks_sensitivitas: 0.74, indeks_adaptasi: 0.45 },
-  },
-  {
-    KDPKAB: "1102",
-    WADMKK: "Kabupaten Aceh Singkil",
-    WADMPP: "Aceh",
-    provinsi_key: "aceh",
-    norm_crs: 0.74,
-    status_crs: "Tinggi",
-    indeks_hazard: 0.69,
-    indeks_exposure: 0.58,
-    indeks_kerentanan: 0.67,
-    hazard_components: { hujan_norm: 0.78, slope_norm: 0.35, elevasi_norm: 0.31, ndbi_norm: 0.48, ndvi_norm: 0.55, ndwi_norm: 0.66, soil_risk_norm: 0.41, soil_div_norm: 0.33 },
-    exposure_components: { norm_use: 0.63, norm_jumlah: 0.51, norm_ndbi: 0.48 },
-    vulnerability_components: { indeks_keterpaparan: 0.62, indeks_sensitivitas: 0.7, indeks_adaptasi: 0.42 },
-  },
-  {
-    KDPKAB: "1103",
-    WADMKK: "Kabupaten Aceh Selatan",
-    WADMPP: "Aceh",
-    provinsi_key: "aceh",
-    norm_crs: 0.68,
-    status_crs: "Sedang",
-    indeks_hazard: 0.62,
-    indeks_exposure: 0.55,
-    indeks_kerentanan: 0.6,
-    hazard_components: { hujan_norm: 0.71, slope_norm: 0.38, elevasi_norm: 0.34, ndbi_norm: 0.44, ndvi_norm: 0.52, ndwi_norm: 0.6, soil_risk_norm: 0.37, soil_div_norm: 0.3 },
-    exposure_components: { norm_use: 0.58, norm_jumlah: 0.48, norm_ndbi: 0.44 },
-    vulnerability_components: { indeks_keterpaparan: 0.55, indeks_sensitivitas: 0.63, indeks_adaptasi: 0.4 },
-  },
-  {
-    KDPKAB: "1104",
-    WADMKK: "Kabupaten Aceh Tenggara",
-    WADMPP: "Aceh",
-    provinsi_key: "aceh",
-    norm_crs: 0.55,
-    status_crs: "Sedang",
-    indeks_hazard: 0.5,
-    indeks_exposure: 0.45,
-    indeks_kerentanan: 0.52,
-    hazard_components: { hujan_norm: 0.58, slope_norm: 0.45, elevasi_norm: 0.42, ndbi_norm: 0.33, ndvi_norm: 0.48, ndwi_norm: 0.44, soil_risk_norm: 0.29, soil_div_norm: 0.35 },
-    exposure_components: { norm_use: 0.48, norm_jumlah: 0.39, norm_ndbi: 0.33 },
-    vulnerability_components: { indeks_keterpaparan: 0.49, indeks_sensitivitas: 0.55, indeks_adaptasi: 0.38 },
-  },
-  {
-    KDPKAB: "1105",
-    WADMKK: "Kabupaten Aceh Timur",
-    WADMPP: "Aceh",
-    provinsi_key: "aceh",
-    norm_crs: 0.91,
-    status_crs: "Sangat Tinggi",
-    indeks_hazard: 0.88,
-    indeks_exposure: 0.79,
-    indeks_kerentanan: 0.85,
-    hazard_components: { hujan_norm: 0.93, slope_norm: 0.32, elevasi_norm: 0.28, ndbi_norm: 0.67, ndvi_norm: 0.71, ndwi_norm: 0.82, soil_risk_norm: 0.58, soil_div_norm: 0.45 },
-    exposure_components: { norm_use: 0.84, norm_jumlah: 0.73, norm_ndbi: 0.67 },
-    vulnerability_components: { indeks_keterpaparan: 0.81, indeks_sensitivitas: 0.88, indeks_adaptasi: 0.35 },
-  },
-  {
-    KDPKAB: "1106",
-    WADMKK: "Kabupaten Aceh Tengah",
-    WADMPP: "Aceh",
-    provinsi_key: "aceh",
-    norm_crs: 0.42,
-    status_crs: "Rendah",
-    indeks_hazard: 0.38,
-    indeks_exposure: 0.35,
-    indeks_kerentanan: 0.4,
-    hazard_components: { hujan_norm: 0.44, slope_norm: 0.52, elevasi_norm: 0.55, ndbi_norm: 0.25, ndvi_norm: 0.38, ndwi_norm: 0.31, soil_risk_norm: 0.22, soil_div_norm: 0.28 },
-    exposure_components: { norm_use: 0.37, norm_jumlah: 0.3, norm_ndbi: 0.25 },
-    vulnerability_components: { indeks_keterpaparan: 0.38, indeks_sensitivitas: 0.42, indeks_adaptasi: 0.55 },
-  },
-  {
-    KDPKAB: "1107",
-    WADMKK: "Kabupaten Aceh Barat",
-    WADMPP: "Aceh",
-    provinsi_key: "aceh",
-    norm_crs: 0.63,
-    status_crs: "Sedang",
-    indeks_hazard: 0.58,
-    indeks_exposure: 0.52,
-    indeks_kerentanan: 0.57,
-    hazard_components: { hujan_norm: 0.65, slope_norm: 0.34, elevasi_norm: 0.3, ndbi_norm: 0.42, ndvi_norm: 0.49, ndwi_norm: 0.57, soil_risk_norm: 0.35, soil_div_norm: 0.29 },
-    exposure_components: { norm_use: 0.55, norm_jumlah: 0.45, norm_ndbi: 0.42 },
-    vulnerability_components: { indeks_keterpaparan: 0.53, indeks_sensitivitas: 0.6, indeks_adaptasi: 0.41 },
-  },
-  {
-    KDPKAB: "1108",
-    WADMKK: "Kabupaten Aceh Besar",
-    WADMPP: "Aceh",
-    provinsi_key: "aceh",
-    norm_crs: 0.77,
-    status_crs: "Tinggi",
-    indeks_hazard: 0.72,
-    indeks_exposure: 0.61,
-    indeks_kerentanan: 0.69,
-    hazard_components: { hujan_norm: 0.8, slope_norm: 0.4, elevasi_norm: 0.36, ndbi_norm: 0.52, ndvi_norm: 0.58, ndwi_norm: 0.7, soil_risk_norm: 0.44, soil_div_norm: 0.36 },
-    exposure_components: { norm_use: 0.66, norm_jumlah: 0.54, norm_ndbi: 0.52 },
-    vulnerability_components: { indeks_keterpaparan: 0.65, indeks_sensitivitas: 0.72, indeks_adaptasi: 0.43 },
-  },
-  {
-    KDPKAB: "1109",
-    WADMKK: "Kabupaten Pidie",
-    WADMPP: "Aceh",
-    provinsi_key: "aceh",
-    norm_crs: 0.48,
-    status_crs: "Rendah",
-    indeks_hazard: 0.44,
-    indeks_exposure: 0.4,
-    indeks_kerentanan: 0.46,
-    hazard_components: { hujan_norm: 0.51, slope_norm: 0.35, elevasi_norm: 0.32, ndbi_norm: 0.3, ndvi_norm: 0.42, ndwi_norm: 0.38, soil_risk_norm: 0.26, soil_div_norm: 0.3 },
-    exposure_components: { norm_use: 0.42, norm_jumlah: 0.35, norm_ndbi: 0.3 },
-    vulnerability_components: { indeks_keterpaparan: 0.44, indeks_sensitivitas: 0.48, indeks_adaptasi: 0.5 },
-  },
-  {
-    KDPKAB: "1110",
-    WADMKK: "Kota Banda Aceh",
-    WADMPP: "Aceh",
-    provinsi_key: "aceh",
-    norm_crs: 0.85,
-    status_crs: "Tinggi",
-    indeks_hazard: 0.8,
-    indeks_exposure: 0.72,
-    indeks_kerentanan: 0.75,
-    hazard_components: { hujan_norm: 0.88, slope_norm: 0.22, elevasi_norm: 0.18, ndbi_norm: 0.72, ndvi_norm: 0.65, ndwi_norm: 0.78, soil_risk_norm: 0.52, soil_div_norm: 0.4 },
-    exposure_components: { norm_use: 0.78, norm_jumlah: 0.68, norm_ndbi: 0.72 },
-    vulnerability_components: { indeks_keterpaparan: 0.72, indeks_sensitivitas: 0.78, indeks_adaptasi: 0.38 },
-  },
+// Real geographic coordinates for all 75 kabupaten/kota across Aceh, Sumut, and Sumbar
+export const KABUPATEN_COORDINATES = {
+  // Aceh (23 kab/kota)
+  "1101": { lat: 3.1667, lng: 97.4167 }, // Kabupaten Aceh Selatan
+  "1102": { lat: 3.3667, lng: 97.7000 }, // Kabupaten Aceh Tenggara
+  "1103": { lat: 4.6333, lng: 97.6333 }, // Kabupaten Aceh Timur
+  "1104": { lat: 4.5333, lng: 96.8500 }, // Kabupaten Aceh Tengah
+  "1105": { lat: 4.4500, lng: 96.1667 }, // Kabupaten Aceh Barat
+  "1106": { lat: 5.3833, lng: 95.5167 }, // Kabupaten Aceh Besar
+  "1107": { lat: 5.1167, lng: 95.9667 }, // Kabupaten Pidie
+  "1108": { lat: 4.9833, lng: 97.1500 }, // Kabupaten Aceh Utara
+  "1109": { lat: 2.6167, lng: 96.0833 }, // Kabupaten Simeulue
+  "1110": { lat: 2.3333, lng: 97.8333 }, // Kabupaten Aceh Singkil
+  "1111": { lat: 5.1000, lng: 96.6000 }, // Kabupaten Bireuen
+  "1112": { lat: 3.7333, lng: 96.8333 }, // Kabupaten Aceh Barat Daya
+  "1113": { lat: 3.9667, lng: 97.3500 }, // Kabupaten Gayo Lues
+  "1114": { lat: 4.7200, lng: 95.6400 }, // Kabupaten Aceh Jaya
+  "1115": { lat: 4.1667, lng: 96.3500 }, // Kabupaten Nagan Raya
+  "1116": { lat: 4.2500, lng: 98.0500 }, // Kabupaten Aceh Tamiang
+  "1117": { lat: 4.7333, lng: 96.8667 }, // Kabupaten Bener Meriah
+  "1118": { lat: 5.1500, lng: 96.2167 }, // Kabupaten Pidie Jaya
+  "1171": { lat: 5.5483, lng: 95.3238 }, // Kota Banda Aceh
+  "1172": { lat: 5.8942, lng: 95.3242 }, // Kota Sabang
+  "1173": { lat: 5.1804, lng: 97.1407 }, // Kota Lhokseumawe
+  "1174": { lat: 4.4720, lng: 97.9654 }, // Kota Langsa
+  "1175": { lat: 2.6417, lng: 98.0044 }, // Kota Subulussalam
 
-  // ============ SUMATERA UTARA ============
-  {
-    KDPKAB: "1201",
-    WADMKK: "Kabupaten Nias",
-    WADMPP: "Sumatera Utara",
-    provinsi_key: "sumut",
-    norm_crs: 0.79,
-    status_crs: "Tinggi",
-    indeks_hazard: 0.73,
-    indeks_exposure: 0.64,
-    indeks_kerentanan: 0.72,
-    hazard_components: { hujan_norm: 0.81, slope_norm: 0.45, elevasi_norm: 0.4, ndbi_norm: 0.5, ndvi_norm: 0.58, ndwi_norm: 0.68, soil_risk_norm: 0.46, soil_div_norm: 0.38 },
-    exposure_components: { norm_use: 0.69, norm_jumlah: 0.56, norm_ndbi: 0.5 },
-    vulnerability_components: { indeks_keterpaparan: 0.68, indeks_sensitivitas: 0.75, indeks_adaptasi: 0.4 },
-  },
-  {
-    KDPKAB: "1202",
-    WADMKK: "Kabupaten Mandailing Natal",
-    WADMPP: "Sumatera Utara",
-    provinsi_key: "sumut",
-    norm_crs: 0.86,
-    status_crs: "Sangat Tinggi",
-    indeks_hazard: 0.82,
-    indeks_exposure: 0.71,
-    indeks_kerentanan: 0.78,
-    hazard_components: { hujan_norm: 0.89, slope_norm: 0.62, elevasi_norm: 0.55, ndbi_norm: 0.48, ndvi_norm: 0.64, ndwi_norm: 0.76, soil_risk_norm: 0.55, soil_div_norm: 0.48 },
-    exposure_components: { norm_use: 0.75, norm_jumlah: 0.62, norm_ndbi: 0.48 },
-    vulnerability_components: { indeks_keterpaparan: 0.74, indeks_sensitivitas: 0.82, indeks_adaptasi: 0.32 },
-  },
-  {
-    KDPKAB: "1203",
-    WADMKK: "Kabupaten Tapanuli Selatan",
-    WADMPP: "Sumatera Utara",
-    provinsi_key: "sumut",
-    norm_crs: 0.61,
-    status_crs: "Sedang",
-    indeks_hazard: 0.56,
-    indeks_exposure: 0.49,
-    indeks_kerentanan: 0.55,
-    hazard_components: { hujan_norm: 0.62, slope_norm: 0.48, elevasi_norm: 0.44, ndbi_norm: 0.38, ndvi_norm: 0.5, ndwi_norm: 0.52, soil_risk_norm: 0.34, soil_div_norm: 0.36 },
-    exposure_components: { norm_use: 0.52, norm_jumlah: 0.43, norm_ndbi: 0.38 },
-    vulnerability_components: { indeks_keterpaparan: 0.52, indeks_sensitivitas: 0.58, indeks_adaptasi: 0.42 },
-  },
-  {
-    KDPKAB: "1204",
-    WADMKK: "Kabupaten Tapanuli Tengah",
-    WADMPP: "Sumatera Utara",
-    provinsi_key: "sumut",
-    norm_crs: 0.53,
-    status_crs: "Sedang",
-    indeks_hazard: 0.48,
-    indeks_exposure: 0.43,
-    indeks_kerentanan: 0.5,
-    hazard_components: { hujan_norm: 0.55, slope_norm: 0.42, elevasi_norm: 0.38, ndbi_norm: 0.34, ndvi_norm: 0.45, ndwi_norm: 0.46, soil_risk_norm: 0.3, soil_div_norm: 0.32 },
-    exposure_components: { norm_use: 0.46, norm_jumlah: 0.38, norm_ndbi: 0.34 },
-    vulnerability_components: { indeks_keterpaparan: 0.47, indeks_sensitivitas: 0.53, indeks_adaptasi: 0.44 },
-  },
-  {
-    KDPKAB: "1205",
-    WADMKK: "Kabupaten Tapanuli Utara",
-    WADMPP: "Sumatera Utara",
-    provinsi_key: "sumut",
-    norm_crs: 0.45,
-    status_crs: "Rendah",
-    indeks_hazard: 0.41,
-    indeks_exposure: 0.37,
-    indeks_kerentanan: 0.43,
-    hazard_components: { hujan_norm: 0.48, slope_norm: 0.5, elevasi_norm: 0.46, ndbi_norm: 0.28, ndvi_norm: 0.4, ndwi_norm: 0.35, soil_risk_norm: 0.24, soil_div_norm: 0.3 },
-    exposure_components: { norm_use: 0.4, norm_jumlah: 0.32, norm_ndbi: 0.28 },
-    vulnerability_components: { indeks_keterpaparan: 0.41, indeks_sensitivitas: 0.45, indeks_adaptasi: 0.52 },
-  },
-  {
-    KDPKAB: "1206",
-    WADMKK: "Kabupaten Toba Samosir",
-    WADMPP: "Sumatera Utara",
-    provinsi_key: "sumut",
-    norm_crs: 0.38,
-    status_crs: "Rendah",
-    indeks_hazard: 0.34,
-    indeks_exposure: 0.3,
-    indeks_kerentanan: 0.36,
-    hazard_components: { hujan_norm: 0.4, slope_norm: 0.42, elevasi_norm: 0.48, ndbi_norm: 0.22, ndvi_norm: 0.34, ndwi_norm: 0.28, soil_risk_norm: 0.2, soil_div_norm: 0.25 },
-    exposure_components: { norm_use: 0.32, norm_jumlah: 0.26, norm_ndbi: 0.22 },
-    vulnerability_components: { indeks_keterpaparan: 0.34, indeks_sensitivitas: 0.38, indeks_adaptasi: 0.58 },
-  },
-  {
-    KDPKAB: "1207",
-    WADMKK: "Kabupaten Labuhan Batu",
-    WADMPP: "Sumatera Utara",
-    provinsi_key: "sumut",
-    norm_crs: 0.72,
-    status_crs: "Tinggi",
-    indeks_hazard: 0.67,
-    indeks_exposure: 0.58,
-    indeks_kerentanan: 0.65,
-    hazard_components: { hujan_norm: 0.74, slope_norm: 0.3, elevasi_norm: 0.26, ndbi_norm: 0.52, ndvi_norm: 0.55, ndwi_norm: 0.64, soil_risk_norm: 0.42, soil_div_norm: 0.34 },
-    exposure_components: { norm_use: 0.62, norm_jumlah: 0.5, norm_ndbi: 0.52 },
-    vulnerability_components: { indeks_keterpaparan: 0.61, indeks_sensitivitas: 0.68, indeks_adaptasi: 0.39 },
-  },
-  {
-    KDPKAB: "1208",
-    WADMKK: "Kabupaten Asahan",
-    WADMPP: "Sumatera Utara",
-    provinsi_key: "sumut",
-    norm_crs: 0.66,
-    status_crs: "Sedang",
-    indeks_hazard: 0.61,
-    indeks_exposure: 0.53,
-    indeks_kerentanan: 0.59,
-    hazard_components: { hujan_norm: 0.68, slope_norm: 0.28, elevasi_norm: 0.24, ndbi_norm: 0.48, ndvi_norm: 0.51, ndwi_norm: 0.58, soil_risk_norm: 0.38, soil_div_norm: 0.31 },
-    exposure_components: { norm_use: 0.56, norm_jumlah: 0.46, norm_ndbi: 0.48 },
-    vulnerability_components: { indeks_keterpaparan: 0.56, indeks_sensitivitas: 0.62, indeks_adaptasi: 0.41 },
-  },
-  {
-    KDPKAB: "1209",
-    WADMKK: "Kabupaten Simalungun",
-    WADMPP: "Sumatera Utara",
-    provinsi_key: "sumut",
-    norm_crs: 0.57,
-    status_crs: "Sedang",
-    indeks_hazard: 0.52,
-    indeks_exposure: 0.46,
-    indeks_kerentanan: 0.53,
-    hazard_components: { hujan_norm: 0.58, slope_norm: 0.44, elevasi_norm: 0.4, ndbi_norm: 0.36, ndvi_norm: 0.47, ndwi_norm: 0.48, soil_risk_norm: 0.32, soil_div_norm: 0.34 },
-    exposure_components: { norm_use: 0.49, norm_jumlah: 0.4, norm_ndbi: 0.36 },
-    vulnerability_components: { indeks_keterpaparan: 0.5, indeks_sensitivitas: 0.56, indeks_adaptasi: 0.43 },
-  },
-  {
-    KDPKAB: "1210",
-    WADMKK: "Kabupaten Dairi",
-    WADMPP: "Sumatera Utara",
-    provinsi_key: "sumut",
-    norm_crs: 0.49,
-    status_crs: "Rendah",
-    indeks_hazard: 0.45,
-    indeks_exposure: 0.39,
-    indeks_kerentanan: 0.47,
-    hazard_components: { hujan_norm: 0.52, slope_norm: 0.55, elevasi_norm: 0.5, ndbi_norm: 0.26, ndvi_norm: 0.42, ndwi_norm: 0.38, soil_risk_norm: 0.25, soil_div_norm: 0.32 },
-    exposure_components: { norm_use: 0.42, norm_jumlah: 0.33, norm_ndbi: 0.26 },
-    vulnerability_components: { indeks_keterpaparan: 0.44, indeks_sensitivitas: 0.5, indeks_adaptasi: 0.49 },
-  },
-  {
-    KDPKAB: "1211",
-    WADMKK: "Kabupaten Karo",
-    WADMPP: "Sumatera Utara",
-    provinsi_key: "sumut",
-    norm_crs: 0.71,
-    status_crs: "Tinggi",
-    indeks_hazard: 0.66,
-    indeks_exposure: 0.57,
-    indeks_kerentanan: 0.64,
-    hazard_components: { hujan_norm: 0.72, slope_norm: 0.58, elevasi_norm: 0.52, ndbi_norm: 0.44, ndvi_norm: 0.54, ndwi_norm: 0.6, soil_risk_norm: 0.4, soil_div_norm: 0.38 },
-    exposure_components: { norm_use: 0.6, norm_jumlah: 0.5, norm_ndbi: 0.44 },
-    vulnerability_components: { indeks_keterpaparan: 0.6, indeks_sensitivitas: 0.67, indeks_adaptasi: 0.38 },
-  },
-  {
-    KDPKAB: "1212",
-    WADMKK: "Kabupaten Deli Serdang",
-    WADMPP: "Sumatera Utara",
-    provinsi_key: "sumut",
-    norm_crs: 0.83,
-    status_crs: "Tinggi",
-    indeks_hazard: 0.78,
-    indeks_exposure: 0.69,
-    indeks_kerentanan: 0.74,
-    hazard_components: { hujan_norm: 0.84, slope_norm: 0.28, elevasi_norm: 0.22, ndbi_norm: 0.65, ndvi_norm: 0.62, ndwi_norm: 0.74, soil_risk_norm: 0.5, soil_div_norm: 0.38 },
-    exposure_components: { norm_use: 0.74, norm_jumlah: 0.62, norm_ndbi: 0.65 },
-    vulnerability_components: { indeks_keterpaparan: 0.7, indeks_sensitivitas: 0.77, indeks_adaptasi: 0.36 },
-  },
-  {
-    KDPKAB: "1213",
-    WADMKK: "Kabupaten Langkat",
-    WADMPP: "Sumatera Utara",
-    provinsi_key: "sumut",
-    norm_crs: 0.76,
-    status_crs: "Tinggi",
-    indeks_hazard: 0.71,
-    indeks_exposure: 0.62,
-    indeks_kerentanan: 0.68,
-    hazard_components: { hujan_norm: 0.78, slope_norm: 0.35, elevasi_norm: 0.3, ndbi_norm: 0.52, ndvi_norm: 0.56, ndwi_norm: 0.66, soil_risk_norm: 0.44, soil_div_norm: 0.36 },
-    exposure_components: { norm_use: 0.66, norm_jumlah: 0.54, norm_ndbi: 0.52 },
-    vulnerability_components: { indeks_keterpaparan: 0.64, indeks_sensitivitas: 0.71, indeks_adaptasi: 0.37 },
-  },
-  {
-    KDPKAB: "1275",
-    WADMKK: "Kota Medan",
-    WADMPP: "Sumatera Utara",
-    provinsi_key: "sumut",
-    norm_crs: 0.89,
-    status_crs: "Sangat Tinggi",
-    indeks_hazard: 0.84,
-    indeks_exposure: 0.82,
-    indeks_kerentanan: 0.8,
-    hazard_components: { hujan_norm: 0.9, slope_norm: 0.18, elevasi_norm: 0.15, ndbi_norm: 0.78, ndvi_norm: 0.68, ndwi_norm: 0.82, soil_risk_norm: 0.55, soil_div_norm: 0.42 },
-    exposure_components: { norm_use: 0.88, norm_jumlah: 0.79, norm_ndbi: 0.78 },
-    vulnerability_components: { indeks_keterpaparan: 0.78, indeks_sensitivitas: 0.83, indeks_adaptasi: 0.3 },
-  },
+  // Sumatera Utara (33 kab/kota)
+  "1201": { lat: 1.8667, lng: 98.6667 }, // Kabupaten Tapanuli Tengah
+  "1202": { lat: 2.0167, lng: 99.0667 }, // Kabupaten Tapanuli Utara
+  "1203": { lat: 1.5167, lng: 99.2500 }, // Kabupaten Tapanuli Selatan
+  "1204": { lat: 1.1333, lng: 97.6000 }, // Kabupaten Nias
+  "1205": { lat: 3.7333, lng: 98.2167 }, // Kabupaten Langkat
+  "1206": { lat: 3.1167, lng: 98.5000 }, // Kabupaten Karo
+  "1207": { lat: 3.5167, lng: 98.7167 }, // Kabupaten Deli Serdang
+  "1208": { lat: 2.9667, lng: 99.0667 }, // Kabupaten Simalungun
+  "1209": { lat: 2.9833, lng: 99.6333 }, // Kabupaten Asahan
+  "1210": { lat: 2.2500, lng: 100.1000 }, // Kabupaten Labuhanbatu
+  "1211": { lat: 2.8667, lng: 98.3000 }, // Kabupaten Dairi
+  "1212": { lat: 2.3833, lng: 99.2167 }, // Kabupaten Toba
+  "1213": { lat: 0.8667, lng: 99.5500 }, // Kabupaten Mandailing Natal
+  "1214": { lat: 0.5500, lng: 97.8500 }, // Kabupaten Nias Selatan
+  "1215": { lat: 2.5667, lng: 98.2833 }, // Kabupaten Pakpak Bharat
+  "1216": { lat: 2.2667, lng: 98.7000 }, // Kabupaten Humbang Hasundutan
+  "1217": { lat: 2.6333, lng: 98.7167 }, // Kabupaten Samosir
+  "1218": { lat: 3.3667, lng: 99.1500 }, // Kabupaten Serdang Bedagai
+  "1219": { lat: 3.1667, lng: 99.5333 }, // Kabupaten Batu Bara
+  "1220": { lat: 1.4667, lng: 99.6667 }, // Kabupaten Padang Lawas Utara
+  "1221": { lat: 1.1500, lng: 99.8833 }, // Kabupaten Padang Lawas
+  "1222": { lat: 1.8833, lng: 100.0833 }, // Kabupaten Labuhanbatu Selatan
+  "1223": { lat: 2.3333, lng: 99.6500 }, // Kabupaten Labuhanbatu Utara
+  "1224": { lat: 1.3333, lng: 97.3167 }, // Kabupaten Nias Utara
+  "1225": { lat: 1.0500, lng: 97.4500 }, // Kabupaten Nias Barat
+  "1271": { lat: 3.5952, lng: 98.6722 }, // Kota Medan
+  "1272": { lat: 2.9600, lng: 99.0600 }, // Kota Pematangsiantar
+  "1273": { lat: 1.7426, lng: 98.7792 }, // Kota Sibolga
+  "1274": { lat: 2.9667, lng: 99.8000 }, // Kota Tanjung Balai
+  "1275": { lat: 3.6000, lng: 98.4833 }, // Kota Binjai
+  "1276": { lat: 3.3285, lng: 99.1625 }, // Kota Tebing Tinggi
+  "1277": { lat: 1.3733, lng: 99.2736 }, // Kota Padang Sidempuan
+  "1278": { lat: 1.2833, lng: 97.6167 }, // Kota Gunungsitoli
 
-  // ============ SUMATERA BARAT ============
-  {
-    KDPKAB: "1301",
-    WADMKK: "Kabupaten Pesisir Selatan",
-    WADMPP: "Sumatera Barat",
-    provinsi_key: "sumbar",
-    norm_crs: 0.88,
-    status_crs: "Sangat Tinggi",
-    indeks_hazard: 0.84,
-    indeks_exposure: 0.73,
-    indeks_kerentanan: 0.79,
-    hazard_components: { hujan_norm: 0.91, slope_norm: 0.55, elevasi_norm: 0.48, ndbi_norm: 0.52, ndvi_norm: 0.66, ndwi_norm: 0.79, soil_risk_norm: 0.54, soil_div_norm: 0.44 },
-    exposure_components: { norm_use: 0.78, norm_jumlah: 0.64, norm_ndbi: 0.52 },
-    vulnerability_components: { indeks_keterpaparan: 0.75, indeks_sensitivitas: 0.82, indeks_adaptasi: 0.34 },
+  // Sumatera Barat (19 kab/kota)
+  "1301": { lat: -1.3500, lng: 100.5833 }, // Kabupaten Pesisir Selatan
+  "1302": { lat: -0.9667, lng: 100.6500 }, // Kabupaten Solok
+  "1303": { lat: -0.6833, lng: 101.3000 }, // Kabupaten Sijunjung
+  "1304": { lat: -0.4667, lng: 100.5833 }, // Kabupaten Tanah Datar
+  "1305": { lat: -0.6167, lng: 100.2833 }, // Kabupaten Padang Pariaman
+  "1306": { lat: -0.2500, lng: 100.1667 }, // Kabupaten Agam
+  "1307": { lat: -0.0167, lng: 100.6333 }, // Kabupaten Lima Puluh Kota
+  "1308": { lat: 0.3500, lng: 100.0833 }, // Kabupaten Pasaman
+  "1309": { lat: -2.1333, lng: 99.5833 }, // Kabupaten Kepulauan Mentawai
+  "1310": { lat: -1.0500, lng: 101.6167 }, // Kabupaten Dharmasraya
+  "1311": { lat: -1.4833, lng: 101.2500 }, // Kabupaten Solok Selatan
+  "1312": { lat: 0.1833, lng: 99.8167 }, // Kabupaten Pasaman Barat
+  "1371": { lat: -0.9471, lng: 100.4172 }, // Kota Padang
+  "1372": { lat: -0.7989, lng: 100.6588 }, // Kota Solok
+  "1373": { lat: -0.6811, lng: 100.7767 }, // Kota Sawahlunto
+  "1374": { lat: -0.4647, lng: 100.4003 }, // Kota Padang Panjang
+  "1375": { lat: -0.3056, lng: 100.3692 }, // Kota Bukittinggi
+  "1376": { lat: -0.2244, lng: 100.6300 }, // Kota Payakumbuh
+  "1377": { lat: -0.6264, lng: 100.1208 }, // Kota Pariaman
+};
+
+// Province bounding boxes & centers for Leaflet map navigation
+export const PROVINSI_BOUNDS = {
+  all: {
+    center: [2.5, 98.8],
+    zoom: 6,
+    bounds: [
+      [-2.5, 95.0],
+      [6.2, 102.5],
+    ],
   },
-  {
-    KDPKAB: "1302",
-    WADMKK: "Kabupaten Solok",
-    WADMPP: "Sumatera Barat",
-    provinsi_key: "sumbar",
-    norm_crs: 0.65,
-    status_crs: "Sedang",
-    indeks_hazard: 0.6,
-    indeks_exposure: 0.52,
-    indeks_kerentanan: 0.58,
-    hazard_components: { hujan_norm: 0.66, slope_norm: 0.58, elevasi_norm: 0.52, ndbi_norm: 0.35, ndvi_norm: 0.52, ndwi_norm: 0.55, soil_risk_norm: 0.36, soil_div_norm: 0.38 },
-    exposure_components: { norm_use: 0.55, norm_jumlah: 0.45, norm_ndbi: 0.35 },
-    vulnerability_components: { indeks_keterpaparan: 0.55, indeks_sensitivitas: 0.61, indeks_adaptasi: 0.42 },
+  aceh: {
+    center: [4.2, 96.8],
+    zoom: 7,
+    bounds: [
+      [2.0, 95.0],
+      [6.0, 98.5],
+    ],
   },
-  {
-    KDPKAB: "1303",
-    WADMKK: "Kabupaten Sijunjung",
-    WADMPP: "Sumatera Barat",
-    provinsi_key: "sumbar",
-    norm_crs: 0.52,
-    status_crs: "Sedang",
-    indeks_hazard: 0.47,
-    indeks_exposure: 0.42,
-    indeks_kerentanan: 0.49,
-    hazard_components: { hujan_norm: 0.53, slope_norm: 0.48, elevasi_norm: 0.44, ndbi_norm: 0.3, ndvi_norm: 0.44, ndwi_norm: 0.42, soil_risk_norm: 0.28, soil_div_norm: 0.32 },
-    exposure_components: { norm_use: 0.44, norm_jumlah: 0.37, norm_ndbi: 0.3 },
-    vulnerability_components: { indeks_keterpaparan: 0.46, indeks_sensitivitas: 0.52, indeks_adaptasi: 0.45 },
+  sumut: {
+    center: [2.5, 99.0],
+    zoom: 7,
+    bounds: [
+      [0.5, 97.0],
+      [4.2, 100.8],
+    ],
   },
-  {
-    KDPKAB: "1304",
-    WADMKK: "Kabupaten Tanah Datar",
-    WADMPP: "Sumatera Barat",
-    provinsi_key: "sumbar",
-    norm_crs: 0.73,
-    status_crs: "Tinggi",
-    indeks_hazard: 0.68,
-    indeks_exposure: 0.59,
-    indeks_kerentanan: 0.66,
-    hazard_components: { hujan_norm: 0.74, slope_norm: 0.56, elevasi_norm: 0.5, ndbi_norm: 0.44, ndvi_norm: 0.56, ndwi_norm: 0.62, soil_risk_norm: 0.42, soil_div_norm: 0.38 },
-    exposure_components: { norm_use: 0.63, norm_jumlah: 0.52, norm_ndbi: 0.44 },
-    vulnerability_components: { indeks_keterpaparan: 0.62, indeks_sensitivitas: 0.69, indeks_adaptasi: 0.38 },
+  sumbar: {
+    center: [-0.65, 100.8],
+    zoom: 8,
+    bounds: [
+      [-2.3, 99.5],
+      [0.6, 102.0],
+    ],
   },
-  {
-    KDPKAB: "1305",
-    WADMKK: "Kabupaten Padang Pariaman",
-    WADMPP: "Sumatera Barat",
-    provinsi_key: "sumbar",
-    norm_crs: 0.81,
-    status_crs: "Tinggi",
-    indeks_hazard: 0.76,
-    indeks_exposure: 0.66,
-    indeks_kerentanan: 0.73,
-    hazard_components: { hujan_norm: 0.83, slope_norm: 0.42, elevasi_norm: 0.36, ndbi_norm: 0.55, ndvi_norm: 0.6, ndwi_norm: 0.72, soil_risk_norm: 0.48, soil_div_norm: 0.4 },
-    exposure_components: { norm_use: 0.7, norm_jumlah: 0.58, norm_ndbi: 0.55 },
-    vulnerability_components: { indeks_keterpaparan: 0.69, indeks_sensitivitas: 0.76, indeks_adaptasi: 0.36 },
-  },
-  {
-    KDPKAB: "1306",
-    WADMKK: "Kabupaten Agam",
-    WADMPP: "Sumatera Barat",
-    provinsi_key: "sumbar",
-    norm_crs: 0.7,
-    status_crs: "Tinggi",
-    indeks_hazard: 0.65,
-    indeks_exposure: 0.56,
-    indeks_kerentanan: 0.63,
-    hazard_components: { hujan_norm: 0.71, slope_norm: 0.52, elevasi_norm: 0.46, ndbi_norm: 0.42, ndvi_norm: 0.54, ndwi_norm: 0.6, soil_risk_norm: 0.4, soil_div_norm: 0.36 },
-    exposure_components: { norm_use: 0.59, norm_jumlah: 0.49, norm_ndbi: 0.42 },
-    vulnerability_components: { indeks_keterpaparan: 0.59, indeks_sensitivitas: 0.66, indeks_adaptasi: 0.39 },
-  },
-  {
-    KDPKAB: "1307",
-    WADMKK: "Kabupaten Lima Puluh Kota",
-    WADMPP: "Sumatera Barat",
-    provinsi_key: "sumbar",
-    norm_crs: 0.58,
-    status_crs: "Sedang",
-    indeks_hazard: 0.53,
-    indeks_exposure: 0.47,
-    indeks_kerentanan: 0.54,
-    hazard_components: { hujan_norm: 0.6, slope_norm: 0.5, elevasi_norm: 0.46, ndbi_norm: 0.35, ndvi_norm: 0.48, ndwi_norm: 0.49, soil_risk_norm: 0.32, soil_div_norm: 0.35 },
-    exposure_components: { norm_use: 0.5, norm_jumlah: 0.41, norm_ndbi: 0.35 },
-    vulnerability_components: { indeks_keterpaparan: 0.51, indeks_sensitivitas: 0.57, indeks_adaptasi: 0.43 },
-  },
-  {
-    KDPKAB: "1308",
-    WADMKK: "Kabupaten Pasaman",
-    WADMPP: "Sumatera Barat",
-    provinsi_key: "sumbar",
-    norm_crs: 0.62,
-    status_crs: "Sedang",
-    indeks_hazard: 0.57,
-    indeks_exposure: 0.5,
-    indeks_kerentanan: 0.56,
-    hazard_components: { hujan_norm: 0.64, slope_norm: 0.52, elevasi_norm: 0.48, ndbi_norm: 0.38, ndvi_norm: 0.5, ndwi_norm: 0.53, soil_risk_norm: 0.35, soil_div_norm: 0.36 },
-    exposure_components: { norm_use: 0.53, norm_jumlah: 0.44, norm_ndbi: 0.38 },
-    vulnerability_components: { indeks_keterpaparan: 0.53, indeks_sensitivitas: 0.59, indeks_adaptasi: 0.41 },
-  },
-  {
-    KDPKAB: "1309",
-    WADMKK: "Kabupaten Solok Selatan",
-    WADMPP: "Sumatera Barat",
-    provinsi_key: "sumbar",
-    norm_crs: 0.44,
-    status_crs: "Rendah",
-    indeks_hazard: 0.4,
-    indeks_exposure: 0.36,
-    indeks_kerentanan: 0.42,
-    hazard_components: { hujan_norm: 0.48, slope_norm: 0.55, elevasi_norm: 0.5, ndbi_norm: 0.24, ndvi_norm: 0.38, ndwi_norm: 0.34, soil_risk_norm: 0.22, soil_div_norm: 0.28 },
-    exposure_components: { norm_use: 0.38, norm_jumlah: 0.31, norm_ndbi: 0.24 },
-    vulnerability_components: { indeks_keterpaparan: 0.4, indeks_sensitivitas: 0.44, indeks_adaptasi: 0.52 },
-  },
-  {
-    KDPKAB: "1310",
-    WADMKK: "Kabupaten Dharmasraya",
-    WADMPP: "Sumatera Barat",
-    provinsi_key: "sumbar",
-    norm_crs: 0.47,
-    status_crs: "Rendah",
-    indeks_hazard: 0.43,
-    indeks_exposure: 0.38,
-    indeks_kerentanan: 0.45,
-    hazard_components: { hujan_norm: 0.51, slope_norm: 0.38, elevasi_norm: 0.34, ndbi_norm: 0.28, ndvi_norm: 0.4, ndwi_norm: 0.38, soil_risk_norm: 0.25, soil_div_norm: 0.3 },
-    exposure_components: { norm_use: 0.4, norm_jumlah: 0.33, norm_ndbi: 0.28 },
-    vulnerability_components: { indeks_keterpaparan: 0.42, indeks_sensitivitas: 0.48, indeks_adaptasi: 0.5 },
-  },
-  {
-    KDPKAB: "1375",
-    WADMKK: "Kota Padang",
-    WADMPP: "Sumatera Barat",
-    provinsi_key: "sumbar",
-    norm_crs: 0.93,
-    status_crs: "Sangat Tinggi",
-    indeks_hazard: 0.89,
-    indeks_exposure: 0.85,
-    indeks_kerentanan: 0.83,
-    hazard_components: { hujan_norm: 0.94, slope_norm: 0.35, elevasi_norm: 0.28, ndbi_norm: 0.72, ndvi_norm: 0.7, ndwi_norm: 0.85, soil_risk_norm: 0.6, soil_div_norm: 0.48 },
-    exposure_components: { norm_use: 0.9, norm_jumlah: 0.82, norm_ndbi: 0.72 },
-    vulnerability_components: { indeks_keterpaparan: 0.8, indeks_sensitivitas: 0.86, indeks_adaptasi: 0.28 },
-  },
-  {
-    KDPKAB: "1376",
-    WADMKK: "Kota Bukittinggi",
-    WADMPP: "Sumatera Barat",
-    provinsi_key: "sumbar",
-    norm_crs: 0.56,
-    status_crs: "Sedang",
-    indeks_hazard: 0.51,
-    indeks_exposure: 0.45,
-    indeks_kerentanan: 0.52,
-    hazard_components: { hujan_norm: 0.57, slope_norm: 0.48, elevasi_norm: 0.55, ndbi_norm: 0.38, ndvi_norm: 0.46, ndwi_norm: 0.44, soil_risk_norm: 0.3, soil_div_norm: 0.34 },
-    exposure_components: { norm_use: 0.48, norm_jumlah: 0.4, norm_ndbi: 0.38 },
-    vulnerability_components: { indeks_keterpaparan: 0.49, indeks_sensitivitas: 0.55, indeks_adaptasi: 0.46 },
-  },
-];
+};
+
+// Helper to determine province key
+function getProvinsiKey(kd_prov, provinsiName) {
+  if (kd_prov === "11" || (provinsiName && provinsiName.toLowerCase().includes("aceh"))) {
+    return "aceh";
+  }
+  if (kd_prov === "12" || (provinsiName && provinsiName.toLowerCase().includes("utara"))) {
+    return "sumut";
+  }
+  if (kd_prov === "13" || (provinsiName && provinsiName.toLowerCase().includes("barat"))) {
+    return "sumbar";
+  }
+  return "all";
+}
+
+// Format full official name (e.g. Kabupaten Aceh Selatan or Kota Banda Aceh)
+function formatWADMKK(nm) {
+  if (!nm) return "";
+  if (nm.startsWith("Kota ") || nm.startsWith("Kabupaten ")) {
+    return nm;
+  }
+  return `Kabupaten ${nm}`;
+}
+
+// Process and enrich real data from modul6_crs.json
+export const WILAYAH_DATA = (rawCRSData || []).map((item) => {
+  const provKey = getProvinsiKey(item.kd_prov, item.provinsi);
+  const wadmkk = formatWADMKK(item.nm_kabupaten);
+  const coords = KABUPATEN_COORDINATES[item.id_kab] || { lat: 0, lng: 0 };
+
+  return {
+    ...item,
+    KDPKAB: item.id_kab,
+    WADMKK: wadmkk,
+    WADMPP: item.provinsi,
+    provinsi_key: provKey,
+    norm_crs: Number(item.crs?.norm_crs ?? 0),
+    indeks_crs: Number(item.crs?.indeks_crs ?? 0),
+    status_crs: item.crs?.status || "Sedang",
+    indeks_hazard: Number(item.hazard?.indeks_hazard ?? 0),
+    indeks_hazard_raw: Number(item.hazard?.indeks_hazard_raw ?? 0),
+    status_hazard: item.hazard?.status || "Sedang",
+    indeks_exposure: Number(item.exposure?.indeks_exposure ?? 0),
+    indeks_exposure_raw: Number(item.exposure?.indeks_exposure_raw ?? 0),
+    status_exposure: item.exposure?.status || "Sedang",
+    indeks_kerentanan: Number(item.vulnerability?.indeks_kerentanan ?? 0),
+    indeks_kerentanan_raw: Number(item.vulnerability?.indeks_kerentanan_raw ?? 0),
+    status_vulnerability: item.vulnerability?.status || "Sedang",
+    latitude: coords.lat,
+    longitude: coords.lng,
+    lat: coords.lat,
+    lng: coords.lng,
+    // Real sub-component breakdown from methodology
+    hazard_components: {
+      banjir: Number(item.hazard?.skor_banjir ?? 0),
+      longsor: Number(item.hazard?.skor_longsor ?? 0),
+    },
+    exposure_components: {
+      landuse: Number(item.exposure?.norm_landuse ?? 0),
+      penduduk: Number(item.exposure?.norm_penduduk ?? 0),
+      ndbi: Number(item.exposure?.norm_ndbi ?? 0),
+    },
+    vulnerability_components: {
+      keterpaparan: Number(item.vulnerability?.indeks_keterpaparan ?? 0),
+      sensitivitas: Number(item.vulnerability?.indeks_sensitivitas ?? 0),
+      adaptasi: Number(item.vulnerability?.indeks_adaptasi ?? 0),
+    },
+  };
+});
 
 // Helper functions
 export function getFilteredData(provinsiKey) {
-  if (provinsiKey === "all") return WILAYAH_DATA;
+  if (!provinsiKey || provinsiKey === "all") return WILAYAH_DATA;
   return WILAYAH_DATA.filter((d) => d.provinsi_key === provinsiKey);
 }
 
 export function getStats(data) {
   const total = data.length;
+  const sangatTinggi = data.filter((d) => d.status_crs === "Sangat Tinggi").length;
   const tinggi = data.filter(
     (d) => d.status_crs === "Tinggi" || d.status_crs === "Sangat Tinggi"
   ).length;
   const sedang = data.filter((d) => d.status_crs === "Sedang").length;
   const rendah = data.filter((d) => d.status_crs === "Rendah").length;
-  return { total, tinggi, sedang, rendah };
+  return { total, sangatTinggi, tinggi, sedang, rendah };
 }
 
-export function getTopCRS(data, limit = 5) {
+export function getTopCRS(data, limit = 10) {
   return [...data].sort((a, b) => b.norm_crs - a.norm_crs).slice(0, limit);
 }
 
 export function getKabupatenList(provinsiKey) {
   if (!provinsiKey) return [];
-  return WILAYAH_DATA.filter((d) => d.provinsi_key === provinsiKey).map(
-    (d) => ({ value: d.KDPKAB, label: d.WADMKK })
-  );
+  return WILAYAH_DATA.filter((d) => d.provinsi_key === provinsiKey)
+    .map((d) => ({ value: d.KDPKAB, label: d.WADMKK }))
+    .sort((a, b) => a.label.localeCompare(b.label));
 }
 
 export function getWilayahByKDPKAB(kdpkab) {
