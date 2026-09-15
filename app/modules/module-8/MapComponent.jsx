@@ -878,15 +878,7 @@ export default function MapComponent({
 
   return (
     <div className="w-full h-full relative text-slate-800">
-      {/* Mode 9 (Intensitas Cahaya Malam) memakai basemap versi gelap agar sesuai
-          tema NTL. Peredupan diterapkan sebagai filter CSS pada TILE PANE saja,
-          bukan overlay di atas peta, supaya warna poligon recovery tetap utuh. */}
-      <style>{`
-        .mod8-night-map .leaflet-tile-pane {
-          filter: brightness(0.32) saturate(0.55) contrast(1.05);
-        }
-      `}</style>
-      <div ref={mapContainerRef} className={`w-full h-full z-0 ${currentMode === 9 ? 'mod8-night-map' : ''}`} />
+      <div ref={mapContainerRef} className="w-full h-full z-0" />
 
       <div className="absolute top-4 left-4 z-[400] bg-white/95 backdrop-blur-md border border-slate-200 px-3 py-1.5 rounded-xl shadow-sm">
         <span className="text-[11px] uppercase tracking-wider font-semibold text-slate-700">{getTitleLabel(currentMode)}</span>
