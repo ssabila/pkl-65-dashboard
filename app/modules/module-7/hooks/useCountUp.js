@@ -1,30 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-
-export function useReveal(threshold = 0.35) {
-  const ref = useRef(null);
-  const [inView, setInView] = useState(false);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setInView(true);
-        }
-      },
-      { threshold }
-    );
-
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, [threshold]);
-
-  return [ref, inView];
-}
+import { useEffect, useState } from "react";
 
 export function useCountUp(target, inView, duration = 1000) {
   const [value, setValue] = useState(0);

@@ -27,12 +27,7 @@ export default function Scene08SurutBertahap({ isActive, sceneIndex, goToScene }
     <div className="relative w-full h-full">
       <SectionLabel>Data Output Luas Banjir (Fase 3)</SectionLabel>
 
-      <FloodExtentSection
-        boundaryFiles={["/map/aceh.json", "/map/sumut.json", "/map/sumbar.json"]}
-        center={[2.2, 99]}
-        zoom={6}
-        fase={FASE}
-      />
+      <FloodExtentSection center={[2.2, 99]} zoom={6} fase={FASE} />
 
       <LuasBadge value={totalPerFase[FASE]} />
 

@@ -1,7 +1,9 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { motion, MotionConfig } from "framer-motion";
 import StorySidebar from "./StorySidebar";
+import ScrollProgress from "./ScrollProgress";
 import "../story.css";
 
 import Scene01Pembuka from "../scenes/Scene01Pembuka";
@@ -24,6 +26,11 @@ const scenes = [
   { Component: Scene09Pemulihan, label: "Pemulihan" },
 ];
 
+const focusVariants = {
+  active: { opacity: 1, scale: 1 },
+  inactive: { opacity: 0.6, scale: 0.99 },
+};
+
 export default function StoryLayout() {
   const [currentScene, setCurrentScene] = useState(0);
   const containerRef = useRef(null);
@@ -35,16 +42,18 @@ export default function StoryLayout() {
     const container = containerRef.current;
     if (!container) return;
 
+    // Section aktif = section yang sedang melintasi garis tengah viewport,
+    // supaya deteksi tetap akurat walau tiap section lebih tinggi dari 100vh (untuk efek sticky).
     const observer = new IntersectionObserver(
       (entries) => {
         if (isProgrammaticScroll.current) return;
         entries.forEach((entry) => {
-          if (entry.isIntersecting && entry.intersectionRatio >= 0.55) {
+          if (entry.isIntersecting) {
             setCurrentScene(Number(entry.target.dataset.index));
           }
         });
       },
-      { root: container, threshold: [0.55] }
+      { root: container, rootMargin: "-50% 0px -50% 0px", threshold: 0 }
     );
 
     sectionRefs.current.forEach((el) => el && observer.observe(el));
@@ -60,7 +69,7 @@ export default function StoryLayout() {
     clearTimeout(unlockTimeout.current);
     unlockTimeout.current = setTimeout(() => {
       isProgrammaticScroll.current = false;
-    }, 700);
+    }, 900);
   };
 
   useEffect(() => {
@@ -78,33 +87,44 @@ export default function StoryLayout() {
   }, [currentScene]);
 
   return (
-    <div className="relative w-screen h-screen overflow-hidden bg-slate-100">
-      <div
-        ref={containerRef}
-        className="story-scroll w-full h-full overflow-y-scroll snap-y snap-mandatory"
-      >
-        {scenes.map(({ Component }, index) => (
-          <section
-            key={index}
-            ref={(el) => (sectionRefs.current[index] = el)}
-            data-index={index}
-            className="w-full h-screen snap-start snap-always relative overflow-hidden"
-          >
-            <Component
-              isActive={currentScene === index}
-              sceneIndex={index}
-              goToScene={goToScene}
-              onNext={() => goToScene(index + 1)}
-            />
-          </section>
-        ))}
-      </div>
+    <MotionConfig reducedMotion="user">
+      <div className="relative w-screen h-screen overflow-hidden bg-slate-100">
+        <ScrollProgress progress={currentScene / (scenes.length - 1)} />
 
-      <StorySidebar
-        scenes={scenes}
-        currentScene={currentScene}
-        onSelect={goToScene}
-      />
-    </div>
+        <div
+          ref={containerRef}
+          className="story-scroll w-full h-full overflow-y-auto"
+        >
+          {scenes.map(({ Component }, index) => (
+            <section
+              key={index}
+              ref={(el) => (sectionRefs.current[index] = el)}
+              data-index={index}
+              className="relative w-full h-[130vh]"
+            >
+              <motion.div
+                className="sticky top-0 w-full h-screen overflow-hidden"
+                variants={focusVariants}
+                animate={currentScene === index ? "active" : "inactive"}
+                transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+              >
+                <Component
+                  isActive={currentScene === index}
+                  sceneIndex={index}
+                  goToScene={goToScene}
+                  onNext={() => goToScene(index + 1)}
+                />
+              </motion.div>
+            </section>
+          ))}
+        </div>
+
+        <StorySidebar
+          scenes={scenes}
+          currentScene={currentScene}
+          onSelect={goToScene}
+        />
+      </div>
+    </MotionConfig>
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { motion } from "framer-motion";
 
 export default function DateScrubber({ dates, index, setIndex, formatLabel }) {
   const [playing, setPlaying] = useState(false);
@@ -19,29 +20,35 @@ export default function DateScrubber({ dates, index, setIndex, formatLabel }) {
 
   return (
     <div className="absolute bottom-8 left-8 right-8 z-30 bg-white/95 rounded-2xl shadow-lg px-6 py-4 flex items-center gap-4">
-      <button
+      <motion.button
         onClick={() => setIndex((i) => Math.max(0, i - 1))}
+        whileHover={{ scale: 1.08 }}
+        whileTap={{ scale: 0.92 }}
         className="w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-700"
         aria-label="Hari sebelumnya"
       >
         ‹
-      </button>
+      </motion.button>
 
-      <button
+      <motion.button
         onClick={() => setPlaying((p) => !p)}
+        whileHover={{ scale: 1.08 }}
+        whileTap={{ scale: 0.92 }}
         className="w-9 h-9 rounded-full bg-sky-500 hover:bg-sky-600 text-white flex items-center justify-center"
         aria-label={playing ? "Jeda" : "Putar"}
       >
         {playing ? "❚❚" : "▶"}
-      </button>
+      </motion.button>
 
-      <button
+      <motion.button
         onClick={() => setIndex((i) => Math.min(dates.length - 1, i + 1))}
+        whileHover={{ scale: 1.08 }}
+        whileTap={{ scale: 0.92 }}
         className="w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-700"
         aria-label="Hari berikutnya"
       >
         ›
-      </button>
+      </motion.button>
 
       <input
         type="range"

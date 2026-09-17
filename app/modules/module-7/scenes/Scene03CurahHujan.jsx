@@ -22,7 +22,6 @@ export default function Scene03CurahHujan() {
 
       <RainfallGridSection
         url="/map/curah-hujan-grid.geojson"
-        boundaryFiles={["/map/aceh.json", "/map/sumut.json", "/map/sumbar.json"]}
         center={[2.5, 99]}
         zoom={6}
         periode={periode}
@@ -33,13 +32,13 @@ export default function Scene03CurahHujan() {
           Curah hujan tinggi melanda{" "}
           <span className="text-blue-500 font-semibold">Utara Sumatera</span>,
           dengan sejumlah wilayah mencatat intensitas hingga kategori{" "}
-          <span className="text-blue-500 font-semibold">Sangat Tinggi</span>{" "}
-          (&gt;100 mm). Kondisi ini meningkatkan risiko banjir, terutama di
+          <span className="text-blue-500 font-semibold">Sangat Ekstrem</span>{" "}
+          (&gt;250 mm). Kondisi ini meningkatkan risiko banjir, terutama di
           daerah dengan daya serap tanah yang sudah menurun.
         </p>
       </StoryCard>
 
-      <Legend items={RAIN_LEGEND} className="right-8 bottom-24" />
+      <Legend title="Curah Hujan" items={RAIN_LEGEND} className="right-8 bottom-24" />
 
       <DateScrubber dates={PERIODS} index={index} setIndex={setIndex} formatLabel={formatPeriode} />
     </div>

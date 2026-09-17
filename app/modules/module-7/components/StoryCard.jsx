@@ -1,16 +1,21 @@
 "use client";
 
-import { useReveal } from "../hooks/useReveal";
+import { motion } from "framer-motion";
+
+const variants = {
+  hidden: { opacity: 0, y: 28 },
+  visible: { opacity: 1, y: 0 },
+};
 
 export default function StoryCard({ title, children, className = "", delay = 0 }) {
-  const [ref, inView] = useReveal(0.4);
-
   return (
-    <div
-      ref={ref}
-      style={{ transitionDelay: inView ? `${delay}ms` : "0ms" }}
+    <motion.div
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.4 }}
+      variants={variants}
+      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1], delay: delay / 1000 }}
       className={`
-        reveal ${inView ? "is-visible" : ""}
         absolute z-30
         bg-white/95 backdrop-blur-sm
         rounded-3xl shadow-xl border border-slate-200/60
@@ -21,6 +26,6 @@ export default function StoryCard({ title, children, className = "", delay = 0 }
     >
       {title && <h2 className="text-2xl font-bold mb-3 text-slate-900">{title}</h2>}
       {children}
-    </div>
+    </motion.div>
   );
 }

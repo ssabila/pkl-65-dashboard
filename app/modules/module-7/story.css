@@ -6,21 +6,6 @@
   .story-scroll {
     scroll-behavior: auto;
   }
-  .reveal {
-    transition: none !important;
-    opacity: 1 !important;
-    transform: none !important;
-  }
-}
-
-.reveal {
-  opacity: 0;
-  transform: translateY(28px);
-  transition: opacity 0.7s ease, transform 0.7s ease;
-}
-.reveal.is-visible {
-  opacity: 1;
-  transform: translateY(0);
 }
 
 @keyframes bounce-y {
@@ -35,4 +20,50 @@
   background-image: radial-gradient(circle, rgba(15, 23, 42, 0.55) 1px, transparent 1px);
   background-size: 6px 6px;
   mix-blend-mode: multiply;
+}
+
+/* --- Peta Leaflet: kontrol zoom & raster yang lebih jelas dan nyaman dipakai --- */
+.map-canvas {
+  background: #eef2f7;
+}
+
+.map-canvas .leaflet-control-zoom {
+  border: none;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px -2px rgba(15, 23, 42, 0.2), 0 2px 4px -2px rgba(15, 23, 42, 0.12);
+}
+
+.map-canvas .leaflet-control-zoom a {
+  width: 28px;
+  height: 28px;
+  line-height: 26px;
+  font-size: 15px;
+  color: #0f172a;
+  background: rgba(255, 255, 255, 0.95);
+  border: none;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.map-canvas .leaflet-control-zoom a:first-child {
+  border-radius: 8px 8px 0 0;
+}
+
+.map-canvas .leaflet-control-zoom a:last-child {
+  border-radius: 0 0 8px 8px;
+  border-top: 1px solid rgba(15, 23, 42, 0.1);
+}
+
+.map-canvas .leaflet-control-zoom a:hover {
+  background: #f1f5f9;
+  color: #0ea5e9;
+}
+
+.map-canvas .leaflet-control-zoom a.leaflet-disabled {
+  color: #cbd5e1;
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.map-canvas .leaflet-image-layer {
+  transition: opacity 0.3s ease;
 }

@@ -1,5 +1,7 @@
 "use client";
 
+import { motion } from "framer-motion";
+
 export default function EventTimeline({ dates, activeIndex, onSelect, formatLabel }) {
   return (
     <div className="absolute bottom-6 left-6 right-44 z-30 bg-white/90 rounded-2xl shadow-lg px-4 py-3 overflow-x-auto">
@@ -11,12 +13,15 @@ export default function EventTimeline({ dates, activeIndex, onSelect, formatLabe
             onClick={() => onSelect(i)}
             className="relative z-10 flex flex-col items-center gap-1 px-1"
           >
-            <span
+            <motion.span
+              animate={{ scale: i === activeIndex ? 1.25 : 1 }}
+              whileHover={{ scale: i === activeIndex ? 1.25 : 1.15 }}
+              transition={{ duration: 0.25 }}
               className={`
-                w-4 h-4 rounded-full border-2 transition-all duration-300
+                w-4 h-4 rounded-full border-2
                 ${
                   i === activeIndex
-                    ? "bg-sky-500 border-sky-900 scale-125"
+                    ? "bg-sky-500 border-sky-900"
                     : "bg-white border-slate-400 hover:border-slate-600"
                 }
               `}

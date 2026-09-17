@@ -5,8 +5,10 @@ import { useCsvMultiple } from "../hooks/useCsv";
 import {
   getUniqueDates,
   getStatsForDate,
-  getAffectedKabupaten,
+  getAffectedKecamatan,
+  kecamatanKey,
   KEJADIAN_COLOR,
+  KEJADIAN_LABEL,
   formatShortDate,
   formatLongDate,
 } from "../lib/timeline";
@@ -16,15 +18,7 @@ import StoryCard from "../components/StoryCard";
 import StatBadge, { StatBadgeGroup } from "../components/StatBadge";
 import Legend from "../components/Legend";
 import EventTimeline from "../components/EventTimeline";
-import { resolveKabupatenName } from "../lib/kabupatenMapping";
-
-const PROVINSI_FILES = [
-  { key: "aceh", url: "/map/aceh.json" },
-  { key: "sumut", url: "/map/sumut.json" },
-  { key: "sumbar", url: "/map/sumbar.json" },
-];
-
-const KABUPATEN_PROPERTY = "WADMKK"; // GANTI sesuai properti nama kabupaten di geojson-mu
+import { KECAMATAN_FILE_LIST, KABUPATEN_FILE_LIST } from "../lib/adminBoundaries";
 
 export default function Scene04KronologiBencana() {
   const { data, loading } = useCsvMultiple([
@@ -45,25 +39,25 @@ export default function Scene04KronologiBencana() {
     agregatRows,
     activeDate
   );
-  const affected = getAffectedKabupaten(kecamatanRows, activeDate);
+  const affected = getAffectedKecamatan(kecamatanRows, activeDate);
   const narasi = KRONOLOGI_NARASI[activeDate];
 
-  const getFeatureStyle = (feature, provinsiKey) => {
-  const nama = resolveKabupatenName(feature, provinsiKey);
-  const type = nama ? affected.get(nama) : null;
-  return {
-    fillColor: type ? KEJADIAN_COLOR[type] : "#f8fafc",
-    color: "#0f172a",
-    weight: 1,
-    fillOpacity: 1,
+  const getFeatureStyle = (feature) => {
+    const key = kecamatanKey(feature?.properties?.nmkab, feature?.properties?.nmkec);
+    const type = affected.get(key);
+    return {
+      fillColor: type ? KEJADIAN_COLOR[type] : "#f8fafc",
+      color: "#0f172a",
+      weight: 0.4,
+      fillOpacity: 1,
+    };
   };
-};
 
   return (
     <div className="relative w-full h-full">
       <MapSection
-        geojsonFiles={["/map/aceh.json", "/map/sumut.json", "/map/sumbar.json"]}
-        fileKeys={["aceh", "sumut", "sumbar"]}
+        geojsonFiles={KECAMATAN_FILE_LIST}
+        outlineFiles={KABUPATEN_FILE_LIST}
         center={[3.2, 98]}
         zoom={7}
         getFeatureStyle={getFeatureStyle}
@@ -89,10 +83,9 @@ export default function Scene04KronologiBencana() {
 
       <Legend
         items={[
-          { color: KEJADIAN_COLOR.banjir, label: "Banjir" },
-          { color: KEJADIAN_COLOR.longsor, label: "Longsor" },
-          { color: KEJADIAN_COLOR.gempa, label: "Gempa" },
-          { color: KEJADIAN_COLOR.kombinasi, label: "Kombinasi" },
+          { color: KEJADIAN_COLOR.banjir, label: KEJADIAN_LABEL.banjir },
+          { color: KEJADIAN_COLOR.gempaLongsor, label: KEJADIAN_LABEL.gempaLongsor },
+          { color: KEJADIAN_COLOR.kombinasi, label: KEJADIAN_LABEL.kombinasi },
         ]}
         className="right-8 bottom-28"
       />
