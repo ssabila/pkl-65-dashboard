@@ -7,8 +7,7 @@ import "../story.css";
 import Scene01Pembuka from "../scenes/Scene01Pembuka";
 import Scene02Siklon from "../scenes/Scene02Siklon";
 import Scene03CurahHujan from "../scenes/Scene03CurahHujan";
-import Scene04KronologiBencana1 from "../scenes/Scene04KronologiBencana1";
-import Scene05KronologiBencana2 from "../scenes/Scene05KronologiBencana2";
+import Scene04KronologiBencana from "../scenes/Scene04KronologiBencana";
 import Scene06AwalBanjir from "../scenes/Scene06AwalBanjir";
 import Scene07PuncakBanjir from "../scenes/Scene07PuncakBanjir";
 import Scene08SurutBertahap from "../scenes/Scene08SurutBertahap";
@@ -18,8 +17,7 @@ const scenes = [
   { Component: Scene01Pembuka, label: "Pembuka" },
   { Component: Scene02Siklon, label: "Siklon" },
   { Component: Scene03CurahHujan, label: "Curah Hujan" },
-  { Component: Scene04KronologiBencana1, label: "Kronologi I" },
-  { Component: Scene05KronologiBencana2, label: "Kronologi II" },
+  { Component: Scene04KronologiBencana, label: "Kronologi Bencana" },
   { Component: Scene06AwalBanjir, label: "Awal Banjir" },
   { Component: Scene07PuncakBanjir, label: "Puncak Banjir" },
   { Component: Scene08SurutBertahap, label: "Surut Bertahap" },
@@ -90,10 +88,12 @@ export default function StoryLayout() {
             key={index}
             ref={(el) => (sectionRefs.current[index] = el)}
             data-index={index}
-            className="w-full h-screen snap-start snap-always relative"
+            className="w-full h-screen snap-start snap-always relative overflow-hidden"
           >
             <Component
               isActive={currentScene === index}
+              sceneIndex={index}
+              goToScene={goToScene}
               onNext={() => goToScene(index + 1)}
             />
           </section>

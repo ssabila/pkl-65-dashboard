@@ -12,9 +12,10 @@ export default function StoryCard({ title, children, className = "", delay = 0 }
       className={`
         reveal ${inView ? "is-visible" : ""}
         absolute z-30
-        bg-white/90 backdrop-blur-sm
+        bg-white/95 backdrop-blur-sm
         rounded-3xl shadow-xl border border-slate-200/60
         p-6 w-[460px] max-w-[85vw]
+        max-h-[calc(100vh-220px)] overflow-y-auto
         ${className}
       `}
     >

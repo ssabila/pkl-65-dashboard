@@ -1,0 +1,532 @@
+tanggal,kejadian,kode_kecamatan,kecamatan,kabupaten,provinsi
+2025-11-22,BANJIR,11.08.14,Tanah Jambo Aye,Aceh Utara,Aceh
+2025-11-22,BANJIR,11.08.09,Seunuddon,Aceh Utara,Aceh
+2025-11-22,BANJIR,11.08.01,Baktya,Aceh Utara,Aceh
+2025-11-22,BANJIR,11.08.06,Muara Batu,Aceh Utara,Aceh
+2025-11-22,BANJIR,11.08.18,Langkahan,Aceh Utara,Aceh
+2025-11-22,BANJIR,11.08.10,Syamtalira Aron,Aceh Utara,Aceh
+2025-11-22,BANJIR,11.08.08,Samudera,Aceh Utara,Aceh
+2025-11-22,BANJIR,11.08.19,Baktya Barat,Aceh Utara,Aceh
+2025-11-22,BANJIR,11.08.23,Lapang,Aceh Utara,Aceh
+2025-11-22,BANJIR,11.08.02,Dewantara,Aceh Utara,Aceh
+2025-11-22,BANJIR,11.08.05,Matangkuli,Aceh Utara,Aceh
+2025-11-22,BANJIR,11.08.26,Banda Baro,Aceh Utara,Aceh
+2025-11-22,BANJIR,11.08.04,Lhoksukon,Aceh Utara,Aceh
+2025-11-22,BANJIR,11.08.24,Pirak Timur,Aceh Utara,Aceh
+2025-11-22,BANJIR,11.08.15,Sawang,Aceh Utara,Aceh
+2025-11-22,BANJIR,11.08.07,Merah Mulia,Aceh Utara,Aceh
+2025-11-22,BANJIR,11.08.03,Kutamakmur,Aceh Utara,Aceh
+2025-11-22,BANJIR,11.08.21,Nibong,Aceh Utara,Aceh
+2025-11-22,BANJIR,11.08.17,Cot Girek,Aceh Utara,Aceh
+2025-11-22,BANJIR,11.08.25,Geureudong Pase,Aceh Utara,Aceh
+2025-11-22,BANJIR,11.08.16,Nisam,Aceh Utara,Aceh
+2025-11-22,BANJIR,11.08.27,Nisam Antara,Aceh Utara,Aceh
+2025-11-22,BANJIR,11.08.20,Paya Bakong,Aceh Utara,Aceh
+2025-11-22,BANJIR,11.08.22,Simpang Keuramat,Aceh Utara,Aceh
+2025-11-22,BANJIR,11.08.11,Syamtalira Bayu,Aceh Utara,Aceh
+2025-11-22,BANJIR,11.08.12,Tanah Luas,Aceh Utara,Aceh
+2025-11-22,BANJIR,11.08.13,Tanah Pasir.,Aceh Utara,Aceh
+2025-11-22,BANJIR,11.03.09,Simpang Ulim,Aceh Timur,Aceh
+2025-11-22,BANJIR,11.03.06,Nurussalam,Aceh Timur,Aceh
+2025-11-22,BANJIR,11.03.12,Madat,Aceh Timur,Aceh
+2025-11-22,BANJIR,11.03.11,Pante Bidari,Aceh Timur,Aceh
+2025-11-22,BANJIR,11.03.02,Julok,Aceh Timur,Aceh
+2025-11-22,BANJIR,11.03.21,Darul Ihsan,Aceh Timur,Aceh
+2025-11-22,BANJIR,11.03.13,Indra Makmur,Aceh Timur,Aceh
+2025-11-22,BANJIR,11.03.10,Ranto Peureulak,Aceh Timur,Aceh
+2025-11-22,BANJIR,11.03.04,Birem Bayeun,Aceh Timur,Aceh
+2025-11-22,BANJIR,11.03.23,Idi Timur,Aceh Timur,Aceh
+2025-11-22,BANJIR,11.03.15,Banda Alam,Aceh Timur,Aceh
+2025-11-22,BANJIR,11.03.16,Peudawa,Aceh Timur,Aceh
+2025-11-22,BANJIR,11.03.18,Peureulak Barat,Aceh Timur,Aceh
+2025-11-22,BANJIR,11.03.18,Bayeuen,Aceh Timur,Aceh
+2025-11-22,BANJIR,11.03.17,Peureulak Timur,Aceh Timur,Aceh
+2025-11-22,BANJIR,11.03.16,Sungai Raya,Aceh Timur,Aceh
+2025-11-22,BANJIR,11.03.05,Serbajadi,Aceh Timur,Aceh
+2025-11-22,BANJIR,11.03.20,Simpang Jernih,Aceh Timur,Aceh
+2025-11-22,BANJIR,,Bidadari,Aceh Timur,Aceh
+2025-11-22,BANJIR,13.05.01,Lubuk Alung,Padang Pariaman,Sumatera Barat
+2025-11-22,BANJIR,13.05.02,Batang Anai,Padang Pariaman,Sumatera Barat
+2025-11-22,BANJIR,13.05.11,Sintuk Toboh Gadang,Padang Pariaman,Sumatera Barat
+2025-11-22,BANJIR,13.05.10,Ulakan Tapakih,Padang Pariaman,Sumatera Barat
+2025-11-22,BANJIR,13.05.04,2x11 Anam Lingkuang,Padang Pariaman,Sumatera Barat
+2025-11-22,BANJIR,13.05.17,Anam Lingkuang,Padang Pariaman,Sumatera Barat
+2025-11-22,BANJIR,13.05.03,Nan Sabaris,Padang Pariaman,Sumatera Barat
+2025-11-22,BANJIR,13.05.06,V Koto Kampung Dalam,Padang Pariaman,Sumatera Barat
+2025-11-22,BANJIR,13.05.13,Batang Gasan,Padang Pariaman,Sumatera Barat
+2025-11-22,BANJIR,13.05.05,VII Koto,Padang Pariaman,Sumatera Barat
+2025-11-22,BANJIR,13.05.15,2x11 Kayu Tanam,Padang Pariaman,Sumatera Barat
+2025-11-22,BANJIR,13.05.07,Sungai Geringging,Padang Pariaman,Sumatera Barat
+2025-11-22,BANJIR,13.05.09,IV Koto Aia Malintang,Padang Pariaman,Sumatera Barat
+2025-11-22,BANJIR,13.05.16,Patamuan,Padang Pariaman,Sumatera Barat
+2025-11-22,BANJIR,13.05.08,Sungai Limau,Padang Pariaman,Sumatera Barat
+2025-11-22,BANJIR,13.05.14,V Koto Timur,Padang Pariaman,Sumatera Barat
+2025-11-22,BANJIR,13.05.12,VII Koto Padang Sago,Padang Pariaman,Sumatera Barat
+2025-11-22,BANJIR,12.13.19,Hutabargot,Mandailing Natal,Sumatera Utara
+2025-11-22,BANJIR,12.13.17,Muara Batang Gadis,Mandailing Natal,Sumatera Utara
+2025-11-22,BANJIR,12.13.06,Siabu,Mandailing Natal,Sumatera Utara
+2025-11-22,BANJIR,12.13.05,Panyabungan Barat,Mandailing Natal,Sumatera Utara
+2025-11-22,BANJIR,12.13.04,Panyabungan Selatan,Mandailing Natal,Sumatera Utara
+2025-11-22,BANJIR,12.13.18,Ranto Baek,Mandailing Natal,Sumatera Utara
+2025-11-22,BANJIR,12.13.15,Batahan,Mandailing Natal,Sumatera Utara
+2025-11-22,BANJIR,12.13.16,Natal,Mandailing Natal,Sumatera Utara
+2025-11-22,BANJIR,12.13.13,Batang Natal,Mandailing Natal,Sumatera Utara
+2025-11-22,BANJIR,12.13.20,Puncak Sorik Marapi,Mandailing Natal,Sumatera Utara
+2025-11-22,BANJIR,12.13.09,Lembah Sorik Marapi,Mandailing Natal,Sumatera Utara
+2025-11-22,BANJIR,12.13.12,Muara Sipongi,Mandailing Natal,Sumatera Utara
+2025-11-22,BANJIR,12.13.08,Kotanopan,Mandailing Natal,Sumatera Utara
+2025-11-22,BANJIR,12.13.23,Naga Juang,Mandailing Natal,Sumatera Utara
+2025-11-22,BANJIR,12.13.07,Bukit Malintang,Mandailing Natal,Sumatera Utara
+2025-11-22,BANJIR,12.13.10,Tambangan,Mandailing Natal,Sumatera Utara
+2025-11-22,BANJIR,12.13.11,Ulu Pungkut,Mandailing Natal,Sumatera Utara
+2025-11-22,BANJIR,12.13.01,Panyabungan,Mandailing Natal,Sumatera Utara
+2025-11-23,BANJIR,11.11.06,Makmur,Bireuen,Aceh
+2025-11-23,BANJIR,11.11.03,Peudada,Bireuen,Aceh
+2025-11-23,BANJIR,11.11.09,Juli,Bireuen,Aceh
+2025-11-23,BANJIR,11.11.10,Jangka,Bireuen,Aceh
+2025-11-23,BANJIR,11.11.13,Kota Juang,Bireuen,Aceh
+2025-11-23,BANJIR,11.11.05,Peusangan,Bireuen,Aceh
+2025-11-23,BANJIR,11.11.01,Samalanga,Bireuen,Aceh
+2025-11-23,BANJIR,11.11.02,Jeunieb,Bireuen,Aceh
+2025-11-23,BANJIR,11.12.08,Jeumpa,Bireuen,Aceh
+2025-11-23,BANJIR,11.11.07,Gandapura,Bireuen,Aceh
+2025-11-23,BANJIR,11.11.16,Peusangan Selatan,Bireuen,Aceh
+2025-11-23,BANJIR,11.11.15,Peusangan Siblah Krueng,Bireuen,Aceh
+2025-11-23,BANJIR,12.05.03,Kuala,Bireuen,Aceh
+2025-11-23,BANJIR,11.11.12,Peulimbang,Bireuen,Aceh
+2025-11-23,BANJIR,11.11.17,Kuta Blang,Bireuen,Aceh
+2025-11-23,BANJIR,11.11.11,Simpang Mamplam,Bireuen,Aceh
+2025-11-23,BANJIR,11.11.08,Pandrah,Bireuen,Aceh
+2025-11-23,BANJIR,13.04.01,X Koto,Tanah Datar,Sumatera Barat
+2025-11-23,BANJIR,13.04.02,Batipuh,Tanah Datar,Sumatera Barat
+2025-11-23,BANJIR,13.04.14,Batipuh Selatan,Tanah Datar,Sumatera Barat
+2025-11-23,BANJIR,13.04.09,Pariangan,Tanah Datar,Sumatera Barat
+2025-11-23,BANJIR,13.04.04,Lima Kaum,Tanah Datar,Sumatera Barat
+2025-11-23,BANJIR,13.04.03,Rambatan,Tanah Datar,Sumatera Barat
+2025-11-23,BANJIR,13.04.08,Sungai Tarab,Tanah Datar,Sumatera Barat
+2025-11-23,BANJIR,13.04.13,Lintau Buo Utara,Tanah Datar,Sumatera Barat
+2025-11-23,BANJIR,13.04.05,Tanjung Emas,Tanah Datar,Sumatera Barat
+2025-11-23,BANJIR,13.04.11,Padang Ganting,Tanah Datar,Sumatera Barat
+2025-11-23,BANJIR,13.04.07,Sungayang,Tanah Datar,Sumatera Barat
+2025-11-23,BANJIR,13.04.06,Lintau Buo,Tanah Datar,Sumatera Barat
+2025-11-23,BANJIR,13.06.11,Palembayan,Agam,Sumatera Barat
+2025-11-23,BANJIR,13.06.13,Ampek Nagari,Agam,Sumatera Barat
+2025-11-23,BANJIR,13.06.10,Palupuh,Agam,Sumatera Barat
+2025-11-23,BANJIR,13.06.16,Malalak,Agam,Sumatera Barat
+2025-11-23,BANJIR,13.06.04,Matur,Agam,Sumatera Barat
+2025-11-23,BANJIR,13.06.03,Tanjung Raya,Agam,Sumatera Barat
+2025-11-23,BANJIR,13.06.06,Banuhampu,Agam,Sumatera Barat
+2025-11-23,BANJIR,13.06.05,IV Koto,Agam,Sumatera Barat
+2025-11-23,BANJIR,13.06.02,Lubuk Basung,Agam,Sumatera Barat
+2025-11-23,BANJIR,13.06.15,Kamang Magek,Agam,Sumatera Barat
+2025-11-23,BANJIR,13.06.09,Tilatang Kamang,Agam,Sumatera Barat
+2025-11-23,BANJIR,13.06.12,Sungai Pua,Agam,Sumatera Barat
+2025-11-23,BANJIR,13.06.08,Baso,Agam,Sumatera Barat
+2025-11-23,BANJIR,13.06.07,Ampek Angkek,Agam,Sumatera Barat
+2025-11-23,BANJIR,13.06.14,Canduang,Agam,Sumatera Barat
+2025-11-23,BANJIR,13.06.01,Tanjung Mutiara,Agam,Sumatera Barat
+2025-11-23,BANJIR,12.01.03,Pandan,Tapanuli Tengah,Sumatera Utara
+2025-11-23,BANJIR,12.01.20,Sarudik,Tapanuli Tengah,Sumatera Utara
+2025-11-23,BANJIR,12.01.15,Badiri,Tapanuli Tengah,Sumatera Utara
+2025-11-23,BANJIR,12.01.06,Kolang,Tapanuli Tengah,Sumatera Utara
+2025-11-23,BANJIR,12.01.19,Lumut,Tapanuli Tengah,Sumatera Utara
+2025-11-23,BANJIR,12.01.01,Barus,Tapanuli Tengah,Sumatera Utara
+2025-11-23,BANJIR,12.01.02,Sorkam,Tapanuli Tengah,Sumatera Utara
+2025-11-23,BANJIR,12.01.04,Pinangsori,Tapanuli Tengah,Sumatera Utara
+2025-11-23,BANJIR,12.01.08,Sibangun,Tapanuli Tengah,Sumatera Utara
+2025-11-23,BANJIR,12.01.07,Tapian Nauli,Tapanuli Tengah,Sumatera Utara
+2025-11-24,BANJIR,11.01.05,Meukek,Aceh Selatan,Aceh
+2025-11-24,BANJIR,11.01.17,Kota Bahagia,Aceh Selatan,Aceh
+2025-11-24,BANJIR,11.01.01,Bakongan,Aceh Selatan,Aceh
+2025-11-24,BANJIR,11.01.06,Samadua,Aceh Selatan,Aceh
+2025-11-24,BANJIR,11.01.18,Trumon Tengah,Aceh Selatan,Aceh
+2025-11-24,BANJIR,11.01.09,Trumon,Aceh Selatan,Aceh
+2025-11-24,BANJIR,11.01.03,Kluet Selatan,Aceh Selatan,Aceh
+2025-11-24,BANJIR,11.01.16,Trumon Timur,Aceh Selatan,Aceh
+2025-11-24,BANJIR,11.01.07,Sawan,Aceh Selatan,Aceh
+2025-11-24,BANJIR,13.77.01,Pariaman Tengah,Kota Pariaman,Sumatera Barat
+2025-11-24,BANJIR,13.77.03,Pariaman Selatan,Kota Pariaman,Sumatera Barat
+2025-11-24,BANJIR,13.77.04,Pariaman Timur,Kota Pariaman,Sumatera Barat
+2025-11-24,BANJIR,13.77.02,Pariaman Utara,Kota Pariaman,Sumatera Barat
+2025-11-24,BANJIR,13.01.07,Koto XI Tarusan,Pesisir Selatan,Sumatera Barat
+2025-11-24,BANJIR,13.01.06,Bayang,Pesisir Selatan,Sumatera Barat
+2025-11-24,BANJIR,13.01.12,IV Nagari Bayang Utara,Pesisir Selatan,Sumatera Barat
+2025-11-24,BANJIR,13.01.05,IV Jurai,Pesisir Selatan,Sumatera Barat
+2025-11-24,BANJIR,13.01.04,Batang Kapas,Pesisir Selatan,Sumatera Barat
+2025-11-24,BANJIR,13.01.08,Sutera,Pesisir Selatan,Sumatera Barat
+2025-11-24,BANJIR,13.01.03,Lengayang,Pesisir Selatan,Sumatera Barat
+2025-11-24,BANJIR,13.01.01,Pancung Soal,Pesisir Selatan,Sumatera Barat
+2025-11-24,BANJIR,13.01.13,Air Pura,Pesisir Selatan,Sumatera Barat
+2025-11-24,BANJIR,13.01.02,Ranah Pesisir,Pesisir Selatan,Sumatera Barat
+2025-11-24,BANJIR,13.01.09,Linggo Sari Baganti,Pesisir Selatan,Sumatera Barat
+2025-11-24,BANJIR,13.71.11,Koto Tengah,Kota Padang,Sumatera Barat
+2025-11-24,BANJIR,13.71.08,Pauh,Kota Padang,Sumatera Barat
+2025-11-24,BANJIR,13.71.07,Lubuk Kilangan,Kota Padang,Sumatera Barat
+2025-11-24,BANJIR,13.71.04,Padang Utara,Kota Padang,Sumatera Barat
+2025-11-24,BANJIR,13.07.08,Gunung Omeh,Lima Puluh Kota,Sumatera Barat
+2025-11-24,BANJIR,13.07.12,Bukit Barisan,Lima Puluh Kota,Sumatera Barat
+2025-11-24,BANJIR,13.07.01,Suliki,Lima Puluh Kota,Sumatera Barat
+2025-11-24,BANJIR,13.07.04,Luak,Lima Puluh Kota,Sumatera Barat
+2025-11-24,BANJIR,13.07.02,Guguak,Lima Puluh Kota,Sumatera Barat
+2025-11-24,BANJIR,13.07.11,Mungka,Lima Puluh Kota,Sumatera Barat
+2025-11-24,BANJIR,13.07.09,Lareh Sago Halaban,Lima Puluh Kota,Sumatera Barat
+2025-11-24,BANJIR,13.07.05,Harau,Lima Puluh Kota,Sumatera Barat
+2025-11-24,BANJIR,12.73.01,Sibolga Utara,Kota Sibolga,Sumatera Utara
+2025-11-24,BANJIR,12.73.03,Sibolga Selatan,Kota Sibolga,Sumatera Utara
+2025-11-24,BANJIR,12.73.04,Sibolga Sambas,Kota Sibolga,Sumatera Utara
+2025-11-24,BANJIR,12.73.02,Sibolga Kota,Kota Sibolga,Sumatera Utara
+2025-11-24,BANJIR,12.25.05,Mandrehe,Nias Barat,Sumatera Utara
+2025-11-24,BANJIR,12.03.31,Angkola Sangkunur,Tapanuli Selatan,Sumatera Utara
+2025-11-24,BANJIR,12.03.02,Batang Toru,Tapanuli Selatan,Sumatera Utara
+2025-11-24,BANJIR,12.03.29,Muara Batang Toru,Tapanuli Selatan,Sumatera Utara
+2025-11-24,BANJIR,12.03.21,Sayur Matinggi,Tapanuli Selatan,Sumatera Utara
+2025-11-24,BANJIR,12.03.07,Batang Angkola,Tapanuli Selatan,Sumatera Utara
+2025-11-24,BANJIR,12.03.06,Batang Angkola Selatan,Tapanuli Selatan,Sumatera Utara
+2025-11-24,BANJIR,12.03.20,Marancar,Tapanuli Selatan,Sumatera Utara
+2025-11-24,BANJIR,12.03.04,Sipirok,Tapanuli Selatan,Sumatera Utara
+2025-11-24,BANJIR,12.03.01,Angkola Barat,Tapanuli Selatan,Sumatera Utara
+2025-11-24,BANJIR,12.03.06,Angkola Selatan,Tapanuli Selatan,Sumatera Utara
+2025-11-24,BANJIR,12.03.30,Tanah Timbangan Angkola,Tapanuli Selatan,Sumatera Utara
+2025-11-24,BANJIR,12.03.32,Angkola Muaratais,Tapanuli Selatan,Sumatera Utara
+2025-11-24,BANJIR,12.03.14,Arse,Tapanuli Selatan,Sumatera Utara
+2025-11-24,BANJIR,12.03.05,Saipar Dolok Hole,Tapanuli Selatan,Sumatera Utara
+2025-11-24,BANJIR,12.14.11,Hilimegai,Nias Selatan,Sumatera Utara
+2025-11-24,BANJIR,12.14.18,Fanayama,Nias Selatan,Sumatera Utara
+2025-11-24,BANJIR,12.14.27,Boronadu,Nias Selatan,Sumatera Utara
+2025-11-24,BANJIR,12.14.17,Mazo,Nias Selatan,Sumatera Utara
+2025-11-25,BANJIR,11.13.01,Blangkejeren,Gayo Lues,Aceh
+2025-11-25,BANJIR,11.13.02,Kuta Panjang,Gayo Lues,Aceh
+2025-11-25,BANJIR,11.13.07,Putri Betung,Gayo Lues,Aceh
+2025-11-25,BANJIR,11.13.03,Rikit Gaib,Gayo Lues,Aceh
+2025-11-25,BANJIR,11.13.10,Tripe Jaya,Gayo Lues,Aceh
+2025-11-25,BANJIR,11.13.05,Pining,Gayo Lues,Aceh
+2025-11-25,BANJIR,11.13.11,Pantan Cuaca,Gayo Lues,Aceh
+2025-11-25,BANJIR,11.13.08,Dabun Gelang,Gayo Lues,Aceh
+2025-11-25,BANJIR,11.13.09,Blang Jerango,Gayo Lues,Aceh
+2025-11-25,BANJIR,11.13.06,Blang Pegayon,Gayo Lues,Aceh
+2025-11-25,BANJIR,11.13.04,Terangun,Gayo Lues,Aceh
+2025-11-25,BANJIR,11.18.06,Bandar Baru,Pidie Jaya,Aceh
+2025-11-25,BANJIR,11.18.07,Pante Raja,Pidie Jaya,Aceh
+2025-11-25,BANJIR,11.18.08,Trienggadeng,Pidie Jaya,Aceh
+2025-11-25,BANJIR,11.18.01,Meureudu,Pidie Jaya,Aceh
+2025-11-25,BANJIR,11.18.05,Meurah Dua,Pidie Jaya,Aceh
+2025-11-25,BANJIR,11.18.02,Ulim,Pidie Jaya,Aceh
+2025-11-25,BANJIR,11.18.03,Jangka Buya,Pidie Jaya,Aceh
+2025-11-25,BANJIR,11.18.04,Bandar Dua,Pidie Jaya,Aceh
+2025-11-25,BANJIR,11.04.08,Bintang,Aceh Tengah,Aceh
+2025-11-25,BANJIR,11.04.17,Lut Tawar,Aceh Tengah,Aceh
+2025-11-25,BANJIR,11.04.11,Kebayakan,Aceh Tengah,Aceh
+2025-11-25,BANJIR,11.04.03,Bebesen,Aceh Tengah,Aceh
+2025-11-25,BANJIR,11.04.20,Bies,Aceh Tengah,Aceh
+2025-11-25,BANJIR,11.04.10,Ketol,Aceh Tengah,Aceh
+2025-11-25,BANJIR,11.04.02,Silih Nara,Aceh Tengah,Aceh
+2025-11-25,BANJIR,11.04.07,Pegasing,Aceh Tengah,Aceh
+2025-11-25,BANJIR,11.04.13,Celala,Aceh Tengah,Aceh
+2025-11-25,BANJIR,11.04.12,Kute Panang,Aceh Tengah,Aceh
+2025-11-25,BANJIR,11.04.01,Linge,Aceh Tengah,Aceh
+2025-11-25,BANJIR,11.04.21,Rusip,Aceh Tengah,Aceh
+2025-11-25,BANJIR,11.04.19,Jagong Jeget,Aceh Tengah,Aceh
+2025-11-25,BANJIR,11.74.05,Langsa Baro,Langsa,Aceh
+2025-11-25,BANJIR,11.74.03,Langsa Kota,Langsa,Aceh
+2025-11-25,BANJIR,11.74.02,Langsa Barat,Langsa,Aceh
+2025-11-25,BANJIR,11.74.04,Langsa Lama,Langsa,Aceh
+2025-11-25,BANJIR,11.74.01,Langsa Timur,Langsa,Aceh
+2025-11-25,TANAH LONGSOR,12.15.03,Salak,Aceh Barat,Aceh
+2025-11-25,TANAH LONGSOR,12.15.02,Kerajaan,Aceh Barat,Aceh
+2025-11-25,TANAH LONGSOR,12.15.07,Tinada,Aceh Barat,Aceh
+2025-11-25,TANAH LONGSOR,12.15.04,Sitellu Tali Urang Julu,Aceh Barat,Aceh
+2025-11-25,TANAH LONGSOR,12.15.01,Sitellu Tali Urang Jehe,Aceh Barat,Aceh
+2025-11-25,Banjir,11.03.15,Banda Alam,Aceh Timur,Aceh
+2025-11-25,Banjir,11.03.04,Birem Bayeun,Aceh Timur,Aceh
+2025-11-25,Banjir,11.03.21,Darul Insan,Aceh Timur,Aceh
+2025-11-25,Banjir,11.03.23,Idie Timur,Aceh Timur,Aceh
+2025-11-25,Banjir,11.03.13,Indra Makmur,Aceh Timur,Aceh
+2025-11-25,Banjir,11.03.02,Julok,Aceh Timur,Aceh
+2025-11-25,Banjir,11.03.12,Madat,Aceh Timur,Aceh
+2025-11-25,Banjir,11.03.06,Nurus Salam,Aceh Timur,Aceh
+2025-11-25,Banjir,11.03.11,Pante Bidari,Aceh Timur,Aceh
+2025-11-25,Banjir,11.03.10,Ranto Peurlak,Aceh Timur,Aceh
+2025-11-25,Banjir,11.03.09,Simpang Ulim,Aceh Timur,Aceh
+2025-11-25,Banjir,11.74.05,Langsa Baro,Langsa,Aceh
+2025-11-25,Banjir & Pohon Tumbang,11.11.09,Juli,Bireuen,Aceh
+2025-11-25,Banjir,11.08.01,Baktiya,Aceh Utara,Aceh
+2025-11-25,Banjir,11.08.07,Meurah Mulia,Aceh Utara,Aceh
+2025-11-25,Banjir,11.08.06,Muara Batu,Aceh Utara,Aceh
+2025-11-25,Banjir,11.08.14,Tanah Jambo Aye,Aceh Utara,Aceh
+2025-11-25,Banjir,11.08.09,Seunuddon,Aceh Utara,Aceh
+2025-11-25,Banjir,11.08.19,Baktia Barat,Aceh Utara,Aceh
+2025-11-25,Banjir,11.08.18,Langkahan,Aceh Utara,Aceh
+2025-11-25,Banjir,11.08.08,Samudera,Aceh Utara,Aceh
+2025-11-25,Banjir,11.08.10,Syamtalira Aron,Aceh Utara,Aceh
+2025-11-25,Banjir,11.08.23,Lapang,Aceh Utara,Aceh
+2025-11-25,Banjir,11.08.04,Lhoksukon,Aceh Utara,Aceh
+2025-11-25,Banjir,11.11.07,Gandapura,Bireuen,Aceh
+2025-11-25,Banjir,11.11.10,Jangka,Bireuen,Aceh
+2025-11-25,Banjir,11.11.09,Juli,Bireuen,Aceh
+2025-11-25,Banjir,11.11.17,Kutablang,Bireuen,Aceh
+2025-11-25,Banjir,11.11.06,Makmur,Bireuen,Aceh
+2025-11-25,Banjir,11.11.03,Peudada,Bireuen,Aceh
+2025-11-25,Banjir,11.11.05,Peusangan,Bireuen,Aceh
+2025-11-25,Banjir,11.73.01,Muara Dua,Lhokseumawe,Aceh
+2025-11-25,Banjir & Longsor,11.01.08,Tapaktuan,Aceh Selatan,Aceh
+2025-11-25,Banjir & Longsor,11.08.15,Sawang,Aceh Selatan,Aceh
+2025-11-25,Banjir & Longsor,11.01.17,Kota Bahagia,Aceh Selatan,Aceh
+2025-11-25,Banjir & Longsor,11.01.05,Meukek,Aceh Selatan,Aceh
+2025-11-25,Banjir & Longsor,11.01.06,Samadua,Aceh Selatan,Aceh
+2025-11-25,Banjir & Longsor,11.01.18,Trumon Tengah,Aceh Selatan,Aceh
+2025-11-25,Banjir,11.17.02,Permata,Bener Meriah,Aceh
+2025-11-25,Banjir,11.17.07,Timang Gajah,Bener Meriah,Aceh
+2025-11-26,Banjir Bandang,11.13.10,Tripe Jaya,Gayo Lues,Aceh
+2025-11-26,BANJIR,11.17.01,Pintu Rime,Bener Meriah,Aceh
+2025-11-26,BANJIR,11.17.07,Timang Gajah,Bener Meriah,Aceh
+2025-11-26,BANJIR,11.17.10,Gajah Putih,Bener Meriah,Aceh
+2025-11-26,BANJIR,11.17.06,Wih Pesam,Bener Meriah,Aceh
+2025-11-26,BANJIR,11.17.05,Bukit,Bener Meriah,Aceh
+2025-11-26,BANJIR,11.17.04,Bandar,Bener Meriah,Aceh
+2025-11-26,BANJIR,11.17.08,Bener Kelipah,Bener Meriah,Aceh
+2025-11-26,BANJIR,11.17.02,Permata,Bener Meriah,Aceh
+2025-11-26,BANJIR,11.17.09,Mesidah,Bener Meriah,Aceh
+2025-11-26,BANJIR,11.17.03,Syiah Utama,Bener Meriah,Aceh
+2025-11-26,BANJIR,11.05.03,Sungai Mas,Aceh Barat,Aceh
+2025-11-26,BANJIR,11.05.07,Arongan Lambalek,Aceh Barat,Aceh
+2025-11-26,BANJIR,11.05.11,Woyla Timur,Aceh Barat,Aceh
+2025-11-26,BANJIR,11.05.08,Pante Ceureumen,Aceh Barat,Aceh
+2025-11-26,BANJIR,11.05.01,Johan Pahlawan,Aceh Barat,Aceh
+2025-11-26,BANJIR,11.05.09,Meureubo,Aceh Barat,Aceh
+2025-11-26,BANJIR,11.05.10,Woyla Barat,Aceh Barat,Aceh
+2025-11-26,BANJIR,11.05.02,Kaway XVI,Aceh Barat,Aceh
+2025-11-26,BANJIR,11.05.05,Samatiga,Aceh Barat,Aceh
+2025-11-26,BANJIR,11.05.04,Woyla,Aceh Barat,Aceh
+2025-11-26,BANJIR,11.05.12,Panton Reu,Aceh Barat,Aceh
+2025-11-26,BANJIR,11.75.01,Simpang Kiri,Subulussalam,Aceh
+2025-11-26,BANJIR,11.75.03,Rundeng,Subulussalam,Aceh
+2025-11-26,BANJIR,11.75.05,Longkib,Subulussalam,Aceh
+2025-11-26,BANJIR,11.75.02,Penanggalan,Subulussalam,Aceh
+2025-11-26,BANJIR,11.75.04,Sultan Daulat,Subulussalam,Aceh
+2025-11-26,BANJIR,11.16.09,Banda Mulia,Aceh Tamiang,Aceh
+2025-11-26,BANJIR,11.16.10,Bandar Pusaka,Aceh Tamiang,Aceh
+2025-11-26,BANJIR,11.16.02,Bendahara,Aceh Tamiang,Aceh
+2025-11-26,BANJIR,11.16.03,Karang Baru,Aceh Tamiang,Aceh
+2025-11-26,BANJIR,11.16.06,Kejuruan Muda,Aceh Tamiang,Aceh
+2025-11-26,BANJIR,11.16.05,Kota Kuala Simpang,Aceh Tamiang,Aceh
+2025-11-26,BANJIR,11.16.01,Manyak Payed,Aceh Tamiang,Aceh
+2025-11-26,BANJIR,11.16.08,Rantau,Aceh Tamiang,Aceh
+2025-11-26,BANJIR,11.16.12,Sekerak,Aceh Tamiang,Aceh
+2025-11-26,BANJIR,11.16.04,Seruway,Aceh Tamiang,Aceh
+2025-11-26,BANJIR,11.16.07,Tamiang Hulu,Aceh Tamiang,Aceh
+2025-11-26,BANJIR,11.16.11,Tenggulun.,Aceh Tamiang,Aceh
+2025-11-26,BANJIR,11.73.02,Banda Sakti,Lhokseumawe,Aceh
+2025-11-26,BANJIR,11.73.03,Blang Mangat,Lhokseumawe,Aceh
+2025-11-26,BANJIR,11.73.01,Muara Dua,Lhokseumawe,Aceh
+2025-11-26,BANJIR,11.73.04,Muara Satu,Lhokseumawe,Aceh
+2025-11-26,BANJIR,11.06.23,Blang Bintang,Aceh Besar,Aceh
+2025-11-26,BANJIR,11.06.08,Peukan Bada,Aceh Besar,Aceh
+2025-11-26,BANJIR,11.06.07,Darul Imarah,Aceh Besar,Aceh
+2025-11-26,BANJIR,11.06.04,Seulimum,Aceh Besar,Aceh
+2025-11-26,BANJIR,11.06.11,Kuto Baro,Aceh Besar,Aceh
+2025-11-26,BANJIR,11.06.19,Darul Kamal,Aceh Besar,Aceh
+2025-11-26,BANJIR,11.06.03,Indrapuri,Aceh Besar,Aceh
+2025-11-26,BANJIR,11.06.21,Krueng Barona Jaya,Aceh Besar,Aceh
+2025-11-26,BANJIR,11.06.10,Ingin Jaya,Aceh Besar,Aceh
+2025-11-26,BANJIR,11.15.10,Beutong Ateuh Banggalan,Nagan Raya,Aceh
+2025-11-26,BANJIR,11.15.05,Darul Makmur,Nagan Raya,Aceh
+2025-11-26,BANJIR,11.15.09,Tripa Makmur,Nagan Raya,Aceh
+2025-11-26,BANJIR,12.07.01,Gunung Meriah,Aceh Singkil,Aceh
+2025-11-26,BANJIR,11.10.10,Singkil Utara,Aceh Singkil,Aceh
+2025-11-26,BANJIR,11.10.09,Kuta Baharu,Aceh Singkil,Aceh
+2025-11-26,BANJIR,11.10.04,Singkil,Aceh Singkil,Aceh
+2025-11-26,BANJIR,11.10.02,Simpang Kanan,Aceh Singkil,Aceh
+2025-11-26,BANJIR,11.10.12,Suro,Aceh Singkil,Aceh
+2025-11-26,BANJIR,11.10.11,Danau Paris,Aceh Singkil,Aceh
+2025-11-26,BANJIR,11.10.13,Singkohor,Aceh Singkil,Aceh
+2025-11-26,BANJIR,11.10.14,Kuala Baru,Aceh Singkil,Aceh
+2025-11-26,Banjir & Longsor,12.07.01,Gunung Meriah,Aceh Singkil,Aceh
+2025-11-26,Banjir & Longsor,11.10.09,Kota Baharu,Aceh Singkil,Aceh
+2025-11-26,Banjir & Longsor,11.10.02,Simpang Kanan,Aceh Singkil,Aceh
+2025-11-26,Banjir & Longsor,11.10.04,Singkil,Aceh Singkil,Aceh
+2025-11-26,Banjir & Longsor,11.10.10,Singkil Utara,Aceh Singkil,Aceh
+2025-11-26,Banjir & Longsor,11.10.12,Suro,Aceh Singkil,Aceh
+2025-11-26,BANJIR,13.74.01,Padang Panjang Timur,Kota Padang Panjang,Sumatera Barat
+2025-11-26,BANJIR,13.12.07,Ranah Batahan,Pasaman Barat,Sumatera Barat
+2025-11-26,BANJIR,13.12.01,Sungai Beremas,Pasaman Barat,Sumatera Barat
+2025-11-26,BANJIR,13.12.08,Koto Balingka,Pasaman Barat,Sumatera Barat
+2025-11-26,BANJIR,13.12.09,Sungai Aur,Pasaman Barat,Sumatera Barat
+2025-11-26,BANJIR,13.12.11,Sasak Ranah Pasisie,Pasaman Barat,Sumatera Barat
+2025-11-26,BANJIR,13.12.10,Luhak Nan Duo,Pasaman Barat,Sumatera Barat
+2025-11-26,BANJIR,13.12.02,Lembah Melintang,Pasaman Barat,Sumatera Barat
+2025-11-26,BANJIR,13.12.06,Gunung Tuleh,Pasaman Barat,Sumatera Barat
+2025-11-26,BANJIR,13.12.04,Talamau,Pasaman Barat,Sumatera Barat
+2025-11-26,BANJIR,13.12.03,Pasaman,Pasaman Barat,Sumatera Barat
+2025-11-26,BANJIR,13.12.05,Kinali,Pasaman Barat,Sumatera Barat
+2025-11-26,BANJIR,12.75.05,Binjai Selatan,Kota Binjai,Sumatera Utara
+2025-11-26,BANJIR,12.75.02,Binjai Kota,Kota Binjai,Sumatera Utara
+2025-11-26,BANJIR,12.75.04,Binjai Timur,Kota Binjai,Sumatera Utara
+2025-11-26,BANJIR,12.75.01,Binjai Utara,Kota Binjai,Sumatera Utara
+2025-11-26,BANJIR,12.75.03,Binjai Barat,Kota Binjai,Sumatera Utara
+2025-11-26,BANJIR,12.07.24,Hamparan Perak,Deli Serdang,Sumatera Utara
+2025-11-26,BANJIR,12.07.06,Namorambe,Deli Serdang,Sumatera Utara
+2025-11-26,BANJIR,12.07.22,Deli Tua,Deli Serdang,Sumatera Utara
+2025-11-26,BANJIR,12.07.02,Tanjung Morawa,Deli Serdang,Sumatera Utara
+2025-11-26,BANJIR,12.07.19,Galang,Deli Serdang,Sumatera Utara
+2025-11-26,BANJIR,12.07.26,Percut Seituan,Deli Serdang,Sumatera Utara
+2025-11-26,BANJIR,12.07.21,Patumbak,Deli Serdang,Sumatera Utara
+2025-11-26,BANJIR,12.07.23,Sunggal,Deli Serdang,Sumatera Utara
+2025-11-26,BANJIR,12.07.09,Bangun Purba,Deli Serdang,Sumatera Utara
+2025-11-26,BANJIR,12.07.27,Batang Kuis,Deli Serdang,Sumatera Utara
+2025-11-26,BANJIR,12.07.28,Lubuk Pakam,Deli Serdang,Sumatera Utara
+2025-11-26,BANJIR,12.07.33,Beringin,Deli Serdang,Sumatera Utara
+2025-11-26,BANJIR,12.07.32,Pantai Labu,Deli Serdang,Sumatera Utara
+2025-11-26,BANJIR,12.07.05,Pancur Batu,Deli Serdang,Sumatera Utara
+2025-11-26,BANJIR,12.07.31,Pagar Merbau,Deli Serdang,Sumatera Utara
+2025-11-26,BANJIR,12.07.25,Labuhan Deli,Deli Serdang,Sumatera Utara
+2025-11-26,BANJIR,12.07.04,Kutalimbaru,Deli Serdang,Sumatera Utara
+2025-11-26,BANJIR,12.05.18,Brandan Barat,Langkat,Sumatera Utara
+2025-11-26,BANJIR,12.05.13,Gebang,Langkat,Sumatera Utara
+2025-11-26,BANJIR,12.05.16,Besitang,Langkat,Sumatera Utara
+2025-11-26,BANJIR,12.05.14,Babalan,Langkat,Sumatera Utara
+2025-11-26,BANJIR,12.05.12,Padang Tualang,Langkat,Sumatera Utara
+2025-11-26,BANJIR,12.05.17,Sei Lepan,Langkat,Sumatera Utara
+2025-11-26,BANJIR,12.05.07,Stabat,Langkat,Sumatera Utara
+2025-11-26,BANJIR,12.05.09,Secanggang,Langkat,Sumatera Utara
+2025-11-26,BANJIR,12.05.08,Wampu,Langkat,Sumatera Utara
+2025-11-26,BANJIR,12.05.20,Sawit Seberang,Langkat,Sumatera Utara
+2025-11-26,BANJIR,12.05.11,Tanjung Pura,Langkat,Sumatera Utara
+2025-11-26,BANJIR,12.05.19,Batang Serangan,Langkat,Sumatera Utara
+2025-11-26,BANJIR,12.05.05,Binjai,Langkat,Sumatera Utara
+2025-11-26,BANJIR,12.05.23,Pematang Jaya,Langkat,Sumatera Utara
+2025-11-26,BANJIR,12.05.10,Hinai,Langkat,Sumatera Utara
+2025-11-26,BANJIR,12.05.15,Pangkalan Susu,Langkat,Sumatera Utara
+2025-11-27,BANJIR,11.07.24,Mutiara Timur,Pidie,Aceh
+2025-11-27,BANJIR,11.07.22,Keumala,Pidie,Aceh
+2025-11-27,BANJIR,11.07.16,Pidie,Pidie,Aceh
+2025-11-27,BANJIR,11.07.19,Tangse,Pidie,Aceh
+2025-11-27,BANJIR,11.07.17,Sakti,Pidie,Aceh
+2025-11-27,BANJIR,11.07.12,Muara Tiga,Pidie,Aceh
+2025-11-27,BANJIR,11.07.04,Delima,Pidie,Aceh
+2025-11-27,BANJIR,11.07.09,Kota Sigli,Pidie,Aceh
+2025-11-27,BANJIR,11.07.06,Geulumpang Tiga,Pidie,Aceh
+2025-11-27,BANJIR,11.07.08,Kembang Tanjong,Pidie,Aceh
+2025-11-27,BANJIR,11.07.15,Peukan Baro,Pidie,Aceh
+2025-11-27,Gempa Bumi,11.09.04,Sinabang,Simeulue,Aceh
+2025-11-27,Gempa Bumi,11.09.10,Simeulue,Simeulue,Aceh
+2025-11-27,BANJIR,13.09.04,Siberut Utara,Kepulauan Mentawai,Sumatera Barat
+2025-11-27,BANJIR,13.09.07,Siberut Tengah,Kepulauan Mentawai,Sumatera Barat
+2025-11-27,BANJIR,13.09.05,Siberut Barat,Kepulauan Mentawai,Sumatera Barat
+2025-11-27,BANJIR,13.09.06,Siberut Barat Daya,Kepulauan Mentawai,Sumatera Barat
+2025-11-27,BANJIR,13.09.03,Siberut Selatan,Kepulauan Mentawai,Sumatera Barat
+2025-11-27,BANJIR,13.72.02,Tanjung Harapan,Kota Solok,Sumatera Barat
+2025-11-27,BANJIR,13.72.01,Lubuk Sikarah,Kota Solok,Sumatera Barat
+2025-11-27,BANJIR,13.02.10,Kubung,Solok,Sumatera Barat
+2025-11-27,BANJIR,13.02.13,Junjung Sirih,Solok,Sumatera Barat
+2025-11-27,BANJIR,13.02.11,X Koto Singkarak,Solok,Sumatera Barat
+2025-11-27,BANJIR,13.02.07,Gunung Talang,Solok,Sumatera Barat
+2025-11-27,BANJIR,13.02.08,Bukit Sundi,Solok,Sumatera Barat
+2025-11-27,BANJIR,13.02.03,Pantai Cermin,Solok,Sumatera Barat
+2025-11-27,BANJIR,13.02.06,Lembang Jaya,Solok,Sumatera Barat
+2025-11-27,BANJIR,13.02.19,Danau Kembar,Solok,Sumatera Barat
+2025-11-27,BANJIR,13.02.04,Lembah Gumanti,Solok,Sumatera Barat
+2025-11-27,BANJIR,12.71.11,Medan Johor,Kota Medan,Sumatera Utara
+2025-11-27,BANJIR,12.71.21,Medan Selayang,Kota Medan,Sumatera Utara
+2025-11-27,BANJIR,12.71.15,Medan Maimun,Kota Medan,Sumatera Utara
+2025-11-27,BANJIR,12.71.17,Medan Baru,Kota Medan,Sumatera Utara
+2025-11-27,BANJIR,12.71.02,Medan Sunggal,Kota Medan,Sumatera Utara
+2025-11-27,BANJIR,12.71.16,Medan Polonia,Kota Medan,Sumatera Utara
+2025-11-27,BANJIR,12.71.19,Medan Petisah,Kota Medan,Sumatera Utara
+2025-11-27,BANJIR,12.71.03,Medan Helvetia,Kota Medan,Sumatera Utara
+2025-11-27,BANJIR,12.71.05,Medan Barat,Kota Medan,Sumatera Utara
+2025-11-27,BANJIR,12.71.13,Medan Labuhan,Kota Medan,Sumatera Utara
+2025-11-27,BANJIR,12.71.12,Medan Marelan,Kota Medan,Sumatera Utara
+2025-11-27,BANJIR,12.71.09,Medan Amplas,Kota Medan,Sumatera Utara
+2025-11-27,BANJIR,12.71.04,Medan Denai,Kota Medan,Sumatera Utara
+2025-11-27,BANJIR,12.71.14,Medan Tembung,Kota Medan,Sumatera Utara
+2025-11-27,BANJIR,12.71.06,Medan Deli,Kota Medan,Sumatera Utara
+2025-11-27,BANJIR,12.18.08,Sipispis,Serdang Bedagai,Sumatera Utara
+2025-11-27,BANJIR,12.18.16,Tebing Syahbandar,Serdang Bedagai,Sumatera Utara
+2025-11-27,BANJIR,12.18.09,Dolok Masihul,Serdang Bedagai,Sumatera Utara
+2025-11-27,BANJIR,12.18.02,Perbaungan,Serdang Bedagai,Sumatera Utara
+2025-11-27,BANJIR,12.18.03,Teluk Mengkudu,Serdang Bedagai,Sumatera Utara
+2025-11-27,BANJIR,13.02.03,Pantai Cermin,Serdang Bedagai,Sumatera Utara
+2025-11-27,BANJIR,12.18.04,Sei Rampah,Serdang Bedagai,Sumatera Utara
+2025-11-27,BANJIR,12.18.13,Tebing Tinggi,Serdang Bedagai,Sumatera Utara
+2025-11-27,BANJIR,12.18.05,Tanjung Beringin,Serdang Bedagai,Sumatera Utara
+2025-11-27,BANJIR,12.18.06,Bandar Khalifah,Serdang Bedagai,Sumatera Utara
+2025-11-27,BANJIR,12.18.15,Sei Bamban,Serdang Bedagai,Sumatera Utara
+2025-11-27,BANJIR,12.09.23,Sei Dadap,Asahan,Sumatera Utara
+2025-11-27,BANJIR,12.09.29,Rawang Pancar Arga,Asahan,Sumatera Utara
+2025-11-27,BANJIR,12.09.09,Air Joman,Asahan,Sumatera Utara
+2025-11-27,BANJIR,12.09.20,Kota Kisaran Timur,Asahan,Sumatera Utara
+2025-11-27,BANJIR,12.09.19,Kota Kisaran Barat,Asahan,Sumatera Utara
+2025-11-27,BANJIR,12.09.27,Setia Janji,Asahan,Sumatera Utara
+2025-11-27,BANJIR,12.09.26,Tinggi Raja,Asahan,Sumatera Utara
+2025-11-27,BANJIR,12.09.16,Buntu Pane,Asahan,Sumatera Utara
+2025-11-27,BANJIR,12.76.05,Tebing Tinggi Kota,Kota Tebing Tinggi,Sumatera Utara
+2025-11-27,BANJIR,12.76.02,Rambutan,Kota Tebing Tinggi,Sumatera Utara
+2025-11-27,BANJIR,12.76.04,Bajenis,Kota Tebing Tinggi,Sumatera Utara
+2025-11-27,BANJIR,12.76.03,Padang Hilir,Kota Tebing Tinggi,Sumatera Utara
+2025-11-27,BANJIR,12.76.01,Padang Hulu,Kota Tebing Tinggi,Sumatera Utara
+2025-11-27,BANJIR,13.73.04,Talawi,Batu Bara,Sumatera Utara
+2025-11-27,BANJIR,12.19.02,Sei Suka,Batu Bara,Sumatera Utara
+2025-11-27,BANJIR,12.19.11,Datuk Tanah Datar,Batu Bara,Sumatera Utara
+2025-11-27,BANJIR,12.19.03,Air Putih,Batu Bara,Sumatera Utara
+2025-11-27,BANJIR,12.19.07,Sei Balai,Batu Bara,Sumatera Utara
+2025-11-27,BANJIR,12.19.01,Medang Deras,Batu Bara,Sumatera Utara
+2025-11-27,BANJIR,12.19.09,Lima Puluh Pesisir,Batu Bara,Sumatera Utara
+2025-11-27,BANJIR,12.19.06,Tanjung Tiram,Batu Bara,Sumatera Utara
+2025-11-27,BANJIR,12.19.12,Nibung Hangus,Batu Bara,Sumatera Utara
+2025-11-27,BANJIR,12.19.04,Lima Puluh,Batu Bara,Sumatera Utara
+2025-11-27,BANJIR,12.19.10,Datuk Lima Puluh,Batu Bara,Sumatera Utara
+2025-11-27,BANJIR,12.19.08,Laut Tador,Batu Bara,Sumatera Utara
+2025-11-29,BANJIR,13.08.04,Bonjol,Pasaman,Sumatera Barat
+2025-11-29,BANJIR,13.11.01,Sangir,Solok Selatan,Sumatera Barat
+2025-11-29,BANJIR,13.11.05,Sangir Batang Hari,Solok Selatan,Sumatera Barat
+2025-11-29,BANJIR,13.11.04,Sangir Jujua,Solok Selatan,Sumatera Barat
+2025-11-29,BANJIR,13.11.07,Sangir Balai Janggo,Solok Selatan,Sumatera Barat
+2025-11-29,BANJIR,13.11.02,Sungai Pagu,Solok Selatan,Sumatera Barat
+2025-11-29,BANJIR,13.11.06,Pauh Duo,Solok Selatan,Sumatera Barat
+2025-11-29,BANJIR,13.11.03,Koto Parik Gadang Diateh,Solok Selatan,Sumatera Barat
+2025-12-10,BANJIR,12.24.11,Lahewa Timur,Nias Utara,Sumatera Utara
+2025-12-10,BANJIR,12.24.07,Alasa,Nias Utara,Sumatera Utara
+2025-12-10,BANJIR,12.14.02,Gomo,Nias Selatan,Sumatera Utara
+2025-12-10,BANJIR,12.14.10,Maniamolo,Nias Selatan,Sumatera Utara
+2025-12-10,BANJIR,12.14.15,Aramo,Nias Selatan,Sumatera Utara
+2025-12-10,BANJIR,12.14.07,Amandraya,Nias Selatan,Sumatera Utara
+2025-12-12,Banjir & Longsor (kumulatif),11.17.09,Mesidah,"Bener Meriah, Aceh Tengah, Aceh Tamiang, Aceh Utara",Aceh
+2025-12-12,Banjir & Longsor (kumulatif),11.17.03,Syiah Utama,"Bener Meriah, Aceh Tengah, Aceh Tamiang, Aceh Utara",Aceh
+2025-12-12,Banjir & Longsor (kumulatif),11.17.01,Pintu Rime Gayo,"Bener Meriah, Aceh Tengah, Aceh Tamiang, Aceh Utara",Aceh
+2025-12-12,Banjir & Longsor (kumulatif),11.17.10,Gajah Putih,"Bener Meriah, Aceh Tengah, Aceh Tamiang, Aceh Utara",Aceh
+2025-12-12,Banjir & Longsor (kumulatif),11.17.02,Permata,"Bener Meriah, Aceh Tengah, Aceh Tamiang, Aceh Utara",Aceh
+2025-12-12,Banjir & Longsor (kumulatif),11.17.07,Timang Gajah,"Bener Meriah, Aceh Tengah, Aceh Tamiang, Aceh Utara",Aceh
+2025-12-12,Banjir & Longsor (kumulatif),11.04.08,Bintang,"Bener Meriah, Aceh Tengah, Aceh Tamiang, Aceh Utara",Aceh
+2025-12-12,Banjir & Longsor (kumulatif),11.04.10,Ketol,"Bener Meriah, Aceh Tengah, Aceh Tamiang, Aceh Utara",Aceh
+2025-12-12,Banjir & Longsor (kumulatif),11.04.13,Celala,"Bener Meriah, Aceh Tengah, Aceh Tamiang, Aceh Utara",Aceh
+2025-12-12,Banjir & Longsor (kumulatif),11.04.02,Silihnara (Silih Nara),"Bener Meriah, Aceh Tengah, Aceh Tamiang, Aceh Utara",Aceh
+2025-12-12,Banjir & Longsor (kumulatif),11.04.21,Rusip Antara (Rusi Antara),"Bener Meriah, Aceh Tengah, Aceh Tamiang, Aceh Utara",Aceh
+2025-12-12,Banjir & Longsor (kumulatif),11.04.01,Linge,"Bener Meriah, Aceh Tengah, Aceh Tamiang, Aceh Utara",Aceh
+2025-12-12,Banjir & Longsor (kumulatif),11.04.12,Kute Panang,"Bener Meriah, Aceh Tengah, Aceh Tamiang, Aceh Utara",Aceh
+2025-12-12,Banjir & Longsor (kumulatif),11.16.12,Sekerak,"Bener Meriah, Aceh Tengah, Aceh Tamiang, Aceh Utara",Aceh
+2025-12-12,Banjir & Longsor (kumulatif),11.16.05,Kota Kuala Simpang,"Bener Meriah, Aceh Tengah, Aceh Tamiang, Aceh Utara",Aceh
+2025-12-12,Banjir & Longsor (kumulatif),11.16.11,Tenggulun,"Bener Meriah, Aceh Tengah, Aceh Tamiang, Aceh Utara",Aceh
+2025-12-12,Banjir & Longsor (kumulatif),11.16.07,Tamiang Hulu,"Bener Meriah, Aceh Tengah, Aceh Tamiang, Aceh Utara",Aceh
+2025-12-12,Banjir & Longsor (kumulatif),11.16.02,Bendahara,"Bener Meriah, Aceh Tengah, Aceh Tamiang, Aceh Utara",Aceh
+2025-12-12,Banjir & Longsor (kumulatif),11.16.10,Bandar Pusaka,"Bener Meriah, Aceh Tengah, Aceh Tamiang, Aceh Utara",Aceh
+2025-12-12,Banjir & Longsor (kumulatif),11.16.06,Kejuruan Muda,"Bener Meriah, Aceh Tengah, Aceh Tamiang, Aceh Utara",Aceh
+2025-12-12,Banjir & Longsor (kumulatif),11.16.04,Seruway,"Bener Meriah, Aceh Tengah, Aceh Tamiang, Aceh Utara",Aceh
+2025-12-12,Banjir & Longsor (kumulatif),11.16.03,Karang Baru,"Bener Meriah, Aceh Tengah, Aceh Tamiang, Aceh Utara",Aceh
+2025-12-12,Banjir & Longsor (kumulatif),11.16.01,Manyak Payed (Mayak Payed),"Bener Meriah, Aceh Tengah, Aceh Tamiang, Aceh Utara",Aceh
+2025-12-12,Banjir & Longsor (kumulatif),11.16.08,Rantau,"Bener Meriah, Aceh Tengah, Aceh Tamiang, Aceh Utara",Aceh
+2025-12-12,Banjir & Longsor (kumulatif),11.17.04,Bandar,"Bener Meriah, Aceh Tengah, Aceh Tamiang, Aceh Utara",Aceh
+2025-12-12,Banjir & Longsor (kumulatif),11.08.18,Langkahan,"Bener Meriah, Aceh Tengah, Aceh Tamiang, Aceh Utara",Aceh
+2025-12-12,Banjir & Longsor (kumulatif),11.08.15,Sawang,"Bener Meriah, Aceh Tengah, Aceh Tamiang, Aceh Utara",Aceh
+2025-12-12,Banjir & Longsor (kumulatif),11.08.01,Baktiya,"Bener Meriah, Aceh Tengah, Aceh Tamiang, Aceh Utara",Aceh
+2025-12-12,Banjir & Longsor (kumulatif),11.08.19,Baktiya Barat,"Bener Meriah, Aceh Tengah, Aceh Tamiang, Aceh Utara",Aceh
+2025-12-12,Banjir & Longsor (kumulatif),11.08.06,Muara Batu,"Bener Meriah, Aceh Tengah, Aceh Tamiang, Aceh Utara",Aceh
+2025-12-12,Banjir & Longsor (kumulatif),11.08.09,Seunuddon,"Bener Meriah, Aceh Tengah, Aceh Tamiang, Aceh Utara",Aceh
+2025-12-12,Banjir & Longsor (kumulatif),11.08.10,Syamtalira Aron,"Bener Meriah, Aceh Tengah, Aceh Tamiang, Aceh Utara",Aceh
+2025-12-12,Banjir & Longsor (kumulatif),11.08.08,Samudera,"Bener Meriah, Aceh Tengah, Aceh Tamiang, Aceh Utara",Aceh
+2025-12-12,Banjir & Longsor (kumulatif),11.08.05,Matangkuli,"Bener Meriah, Aceh Tengah, Aceh Tamiang, Aceh Utara",Aceh
+2025-12-12,Banjir & Longsor (kumulatif),11.08.14,Tanah Jambo Aye,"Bener Meriah, Aceh Tengah, Aceh Tamiang, Aceh Utara",Aceh
+2025-12-20,BANJIR,12.04.11,Bawolato,Nias,Sumatera Utara
+2025-12-21,TANAH LONGSOR,13.08.04,Bonjol,Pasaman,Sumatera Barat
+2025-12-28,GEMPA BUMI,13.06.11,Palembayan,Agam,Sumatera Barat
+2025-12-28,GEMPA BUMI,13.06.03,Tanjung Raya,Agam,Sumatera Barat
+2026-01-12,BANJIR,12.21.08,Sosa,Padang Lawas,Sumatera Utara

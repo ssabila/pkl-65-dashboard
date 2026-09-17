@@ -1,42 +1,47 @@
-import MapSection from "../components/MapSection";
+"use client";
+
+import { useState } from "react";
+import RainfallGridSection from "../components/RainfallGridSection";
 import StoryCard from "../components/StoryCard";
 import SectionLabel from "../components/SectionLabel";
 import Legend from "../components/Legend";
+import DateScrubber from "../components/DateScrubber";
+import { sortPeriods, formatPeriode } from "../lib/curahHujanGrid";
+import { RAIN_LEGEND } from "../lib/rainfallColor";
 
-const RAIN_LEGEND = [
-  { color: "#3b0a02", label: ">250 mm" },
-  { color: "#a4381a", label: "200–250 mm" },
-  { color: "#f2810b", label: "150–200 mm" },
-  { color: "#fbc02d", label: "100–150 mm" },
-  { color: "#fff176", label: "75–100 mm" },
-];
+const PERIODS = sortPeriods(["10Nov", "22Nov", "28Nov", "04Des", "10Des", "16Des", "22Des", "28Des"]);
 
 export default function Scene03CurahHujan() {
+  const [index, setIndex] = useState(2); // default: 28 Nov — puncak cerita
+
+  const periode = PERIODS[index];
+
   return (
     <div className="relative w-full h-full">
-      <SectionLabel>Data Curah Hujan 21–30 Nov</SectionLabel>
+      <SectionLabel>Data Curah Hujan — {formatPeriode(periode)}</SectionLabel>
 
-      <MapSection
-        geojsonFiles={["/map/aceh.json"]}
-        center={[3.6, 98]}
-        zoom={7}
-        dotOverlay
+      <RainfallGridSection
+        url="/map/curah-hujan-grid.geojson"
+        boundaryFiles={["/map/aceh.json", "/map/sumut.json", "/map/sumbar.json"]}
+        center={[2.5, 99]}
+        zoom={6}
+        periode={periode}
       />
 
-      <StoryCard title="Intensitas Hujan" className="left-8 bottom-8">
+      <StoryCard title="Intensitas Hujan" className="left-8 bottom-24">
         <p className="text-base leading-relaxed text-slate-700">
           Curah hujan tinggi melanda{" "}
-          <span className="text-blue-500 font-semibold">Utara Sumatera</span> di
-          akhir November 2025, dengan beberapa wilayah mencatat intensitas ekstrem
-          hingga lebih dari{" "}
-          <span className="text-blue-500 font-semibold">250 mm</span>. Kondisi ini
-          meningkatkan risiko banjir, terutama di daerah dengan daya serap tanah
-          yang sudah menurun. Hujan yang berlangsung terus-menerus menjadi salah
-          satu pemicu utama terjadinya bencana banjir di wilayah ini.
+          <span className="text-blue-500 font-semibold">Utara Sumatera</span>,
+          dengan sejumlah wilayah mencatat intensitas hingga kategori{" "}
+          <span className="text-blue-500 font-semibold">Sangat Tinggi</span>{" "}
+          (&gt;100 mm). Kondisi ini meningkatkan risiko banjir, terutama di
+          daerah dengan daya serap tanah yang sudah menurun.
         </p>
       </StoryCard>
 
-      <Legend items={RAIN_LEGEND} className="right-8 bottom-8" />
+      <Legend items={RAIN_LEGEND} className="right-8 bottom-24" />
+
+      <DateScrubber dates={PERIODS} index={index} setIndex={setIndex} formatLabel={formatPeriode} />
     </div>
   );
 }

@@ -1,0 +1,65 @@
+tanggal,kejadian,kecamatan,kabupaten,provinsi,penyebab,meninggal,hilang,terluka,rumah_rusak,rumah_terendam,fasum_rusak
+2025-11-22,BANJIR,"Tanah Jambo Aye, Seunuddon, Baktya, Muara Batu, Langkahan, Syamtalira Aron, Samudera, Baktya Barat, Lapang, Dewantara, Matangkuli, Banda Baro, Lhoksukon, Pirak Timur, Sawang, Merah Mulia, Kutamakmur, Nibong, Cot Girek, Geureudong Pase, Nisam, Nisam Antara, Paya Bakong, Simpang Keuramat, Syamtalira Bayu, Tanah Luas, Tanah Pasir.",Aceh Utara,Aceh,,230.0,6.0,920.0,46347.0,0.0,553.0
+2025-11-22,BANJIR,"Simpang Ulim, Nurussalam, Madat, Pante Bidari, Julok, Darul Ihsan, Indra Makmur, Ranto Peureulak, Birem Bayeun, Idi Timur, Banda Alam, Peudawa, Peureulak Barat, Bayeuen, Peureulak Timur, Sungai Raya, Serbajadi, Simpang Jernih, Bidadari",Aceh Timur,Aceh,,57.0,0.0,0.0,18962.0,0.0,228.0
+2025-11-22,BANJIR,"Lubuk Alung, Batang Anai, Sintuk Toboh Gadang, Ulakan Tapakih, 2x11 Anam Lingkuang, Anam Lingkuang, Nan Sabaris, V Koto Kampung Dalam, Batang Gasan, VII Koto, 2x11 Kayu Tanam, Sungai Geringging, IV Koto Aia Malintang, Patamuan, Sungai Limau, V Koto Timur, VII Koto Padang Sago",Padang Pariaman,Sumatera Barat,,35.0,0.0,0.0,3622.0,5045.0,149.0
+2025-11-22,BANJIR,"Hutabargot, Muara Batang Gadis, Siabu, Panyabungan Barat, Panyabungan Selatan, Ranto Baek, Batahan, Natal, Batang Natal, Puncak Sorik Marapi, Lembah Sorik Marapi, Muara Sipongi, Kotanopan, Naga Juang, Bukit Malintang, Tambangan, Ulu Pungkut, Panyabungan",Mandailing Natal,Sumatera Utara,,0.0,0.0,25.0,0.0,6.0,0.0
+2025-11-23,BANJIR,"Makmur, Peudada, Juli, Jangka, Kota Juang, Peusangan, Samalanga, Jeunieb, Jeumpa, Gandapura, Peusangan Selatan, Peusangan Siblah Krueng, Kuala, Peulimbang, Kuta Blang, Simpang Mamplam, Pandrah",Bireuen,Aceh,,40.0,3.0,4.0,11455.0,0.0,182.0
+2025-11-23,BANJIR,"X Koto, Batipuh, Batipuh Selatan, Pariangan, Lima Kaum, Rambatan, Sungai Tarab, Lintau Buo Utara, Tanjung Emas, Padang Ganting, Sungayang, Lintau Buo",Tanah Datar,Sumatera Barat,,1.0,0.0,5.0,447.0,3347.0,85.0
+2025-11-23,BANJIR,"Palembayan, Ampek Nagari, Palupuh, Malalak, Matur, Tanjung Raya, Banuhampu, IV Koto, Lubuk Basung, Kamang Magek, Tilatang Kamang, Sungai Pua, Baso, Ampek Angkek, Canduang, Tanjung Mutiara",Agam,Sumatera Barat,,194.0,38.0,255.0,1385.0,2282.0,144.0
+2025-11-23,BANJIR,"Pandan, Sarudik, Badiri, Kolang, Lumut, Barus, Sorkam, Pinangsori, Sibangun, Tapian Nauli",Tapanuli Tengah,Sumatera Utara,,35.0,11.0,8926.0,0.0,64.0,0.0
+2025-11-24,BANJIR,"Meukek, Kota Bahagia, Bakongan, Samadua, Trumon Tengah, Trumon, Kluet Selatan, Trumon Timur, Sawan",Aceh Selatan,Aceh,,0.0,0.0,0.0,872.0,0.0,53.0
+2025-11-24,BANJIR,"Pariaman Tengah, Pariaman Selatan, Pariaman Timur, Pariaman Utara",Kota Pariaman,Sumatera Barat,,,,,55.0,1638.0,90.0
+2025-11-24,BANJIR,"Koto XI Tarusan, Bayang, IV Nagari Bayang Utara, IV Jurai, Batang Kapas, Sutera, Lengayang, Pancung Soal, Air Pura, Ranah Pesisir, Linggo Sari Baganti",Pesisir Selatan,Sumatera Barat,,,,,288.0,18728.0,267.0
+2025-11-24,BANJIR,"Koto Tengah, Pauh, Lubuk Kilangan, Padang Utara",Kota Padang,Sumatera Barat,,11.0,2.0,31.0,5625.0,,83.0
+2025-11-24,BANJIR,"Gunung Omeh, Bukit Barisan, Suliki, Luak, Guguak, Mungka, Lareh Sago Halaban, Harau",Lima Puluh Kota,Sumatera Barat,,,,,404.0,,56.0
+2025-11-24,BANJIR,"Sibolga Utara, Sibolga Selatan, Sibolga Sambas, Sibolga Kota",Kota Sibolga,Sumatera Utara,,,68.0,646.0,,7.0,
+2025-11-24,BANJIR,Mandrehe,Nias Barat,Sumatera Utara,,,,76.0,,0.0,
+2025-11-24,BANJIR," Angkola Sangkunur,  Batang Toru,   Muara Batang Toru,  Sayur Matinggi,  Batang Angkola,  Batang Angkola Selatan,  Marancar,  Sipirok,  Angkola Barat,  Angkola Selatan,  Tanah Timbangan Angkola,  Angkola Muaratais,  Arse,  Saipar Dolok Hole",Tapanuli Selatan,Sumatera Utara,,4.0,160.0,2461.0,,89.0,
+2025-11-24,BANJIR,"Hilimegai, Fanayama, Boronadu, Mazo",Nias Selatan,Sumatera Utara,,,,65.0,85.0,37.0,
+2025-11-25,BANJIR,"Blangkejeren, Kuta Panjang, Putri Betung, Rikit Gaib, Tripe Jaya, Pining, Pantan Cuaca, Dabun Gelang, Blang Jerango, Blang Pegayon, Terangun",Gayo Lues,Aceh,,5.0,0.0,0.0,5507.0,0.0,94.0
+2025-11-25,BANJIR,"Bandar Baru, Pante Raja, Trienggadeng, Meureudu, Meurah Dua, Ulim, Jangka Buya, Bandar Dua",Pidie Jaya,Aceh,,29.0,0.0,1823.0,10594.0,0.0,163.0
+2025-11-25,BANJIR,"Bintang, Lut Tawar, Kebayakan, Bebesen, Bies, Ketol, Silih Nara, Pegasing, Celala, Kute Panang, Linge, Rusip, Jagong Jeget",Aceh Tengah,Aceh,,24.0,4.0,58.0,4426.0,0.0,203.0
+2025-11-25,BANJIR," Langsa Baro, Langsa Kota, Langsa Barat, Langsa Lama, Langsa Timur",Langsa,Aceh,,5.0,0.0,0.0,90.0,0.0,92.0
+2025-11-25,TANAH LONGSOR," Salak, Kerajaan, Tinada, Sitellu Tali Urang Julu, Sitellu Tali Urang Jehe",Aceh Barat,Aceh,,0.0,0.0,0.0,0.0,0.0,0.0
+2025-11-25,Banjir,"Banda Alam, Birem Bayeun, Darul Insan, Idie Timur, Indra Makmur, Julok, Madat, Nurus Salam, Pante Bidari, Ranto Peurlak, Simpang Ulim",Aceh Timur,Aceh,Hujan deras / Cuaca ekstrim,0.0,0.0,0.0,0.0,489.0,"Pohon tumbang, tiang listrik roboh"
+2025-11-25,Banjir,Langsa Baro,Langsa,Aceh,Hujan deras / Cuaca ekstrim,0.0,0.0,0.0,0.0,150.0,"Pohon tumbang, tiang listrik roboh"
+2025-11-25,Banjir & Pohon Tumbang,Juli,Bireuen,Aceh,Hujan deras / Cuaca ekstrim,0.0,0.0,0.0,0.0,0.0,"Tower transmisi 150 kV roboh, jaringan komunikasi terganggu"
+2025-11-25,Banjir,"Baktiya, Meurah Mulia, Muara Batu, Tanah Jambo Aye, Seunuddon, Baktia Barat, Langkahan, Samudera, Syamtalira Aron, Lapang, Lhoksukon",Aceh Utara,Aceh,Hujan deras / Tanggul Jebol,1.0,0.0,0.0,0.0,2.0,"Tanggul sungai jebol, Mapolsek Lhoksukon, jalan lintas, sawah & tambak"
+2025-11-25,Banjir,"Gandapura, Jangka, Juli, Kutablang, Makmur, Peudada, Peusangan",Bireuen,Aceh,Hujan deras,0.0,0.0,0.0,0.0,956.0,Akses Jalinsum terganggu
+2025-11-25,Banjir,Muara Dua,Lhokseumawe,Aceh,Hujan deras,0.0,0.0,0.0,0.0,100.0,0.0
+2025-11-25,Banjir & Longsor,"Tapaktuan, Sawang, Kota Bahagia, Meukek, Samadua, Trumon Tengah",Aceh Selatan,Aceh,Hujan deras,0.0,0.0,0.0,0.0,0.0,Jalan nasional dan gampong tertutup longsor
+2025-11-25,Banjir,"Permata, Timang Gajah",Bener Meriah,Aceh,Hujan deras,0.0,0.0,0.0,0.0,6.0,0.0
+2025-11-26,Banjir Bandang,Tripe Jaya,Gayo Lues,Aceh,Hujan deras,0.0,0.0,0.0,Beberapa hanyut,0.0,"SDN 3 Tripe Jaya terendam (3 meter), jalan utama putus total"
+2025-11-26,BANJIR," Pintu Rime, Timang Gajah, Gajah Putih, Wih Pesam, Bukit, Bandar, Bener Kelipah, Permata, Mesidah, Syiah Utama",Bener Meriah,Aceh,,31.0,14.0,12.0,1288.0,0.0,246.0
+2025-11-26,BANJIR,"Sungai Mas, Arongan Lambalek, Woyla Timur, Pante Ceureumen, Johan Pahlawan, Meureubo, Woyla Barat, Kaway XVI, Samatiga, Woyla, Panton Reu",Aceh Barat,Aceh,,0.0,0.0,0.0,187.0,0.0,37.0
+2025-11-26,BANJIR,"Simpang Kiri, Rundeng, Longkib, Penanggalan, Sultan Daulat",Subulussalam,Aceh,,2.0,0.0,0.0,1029.0,0.0,41.0
+2025-11-26,BANJIR,"Banda Mulia, Bandar Pusaka, Bendahara, Karang Baru, Kejuruan Muda, Kota Kuala Simpang, Manyak Payed, Rantau, Sekerak, Seruway, Tamiang Hulu, Tenggulun.",Aceh Tamiang,Aceh,,101.0,0.0,18.0,37888.0,0.0,887.0
+2025-11-26,BANJIR," Banda Sakti, Blang Mangat, Muara Dua, Muara Satu",Lhokseumawe,Aceh,,5.0,0.0,4.0,1152.0,0.0,100.0
+2025-11-26,BANJIR,"Blang Bintang, Peukan Bada, Darul Imarah, Seulimum, Kuto Baro, Darul Kamal, Indrapuri, Krueng Barona Jaya, Ingin Jaya",Aceh Besar,Aceh,,0.0,0.0,0.0,0.0,0.0,15.0
+2025-11-26,BANJIR," Beutong Ateuh Banggalan, Darul Makmur, Tripa Makmur",Nagan Raya,Aceh,,1.0,3.0,1476.0,914.0,0.0,102.0
+2025-11-26,BANJIR," Gunung Meriah, Singkil Utara, Kuta Baharu, Singkil, Simpang Kanan, Suro, Danau Paris, Singkohor, Kuala Baru",Aceh Singkil,Aceh,,0.0,0.0,0.0,1968.0,0.0,101.0
+2025-11-26,Banjir & Longsor," Gunung Meriah, Kota Baharu, Simpang Kanan, Singkil, Singkil Utara, Suro",Aceh Singkil,Aceh,Hujan lebat sepekan,0.0,0.0,0.0,0.0,6.109,Akses jalan terhambat
+2025-11-26,BANJIR,Padang Panjang Timur,Kota Padang Panjang,Sumatera Barat,,17.0,29.0,3.0,398.0,,70.0
+2025-11-26,BANJIR,"Ranah Batahan, Sungai Beremas, Koto Balingka, Sungai Aur, Sasak Ranah Pasisie, Luhak Nan Duo, Lembah Melintang, Gunung Tuleh, Talamau, Pasaman, Kinali",Pasaman Barat,Sumatera Barat,,5.0,3.0,,82.0,2591.0,95.0
+2025-11-26,BANJIR,"Binjai Selatan, Binjai Kota, Binjai Timur, Binjai Utara, Binjai Barat",Kota Binjai,Sumatera Utara,,,,37.0,7672.0,0.0,
+2025-11-26,BANJIR,"Hamparan Perak, Namorambe, Deli Tua, Tanjung Morawa, Galang, Percut Seituan, Patumbak, Sunggal, Bangun Purba, Batang Kuis, Lubuk Pakam, Beringin, Pantai Labu, Pancur Batu, Pagar Merbau, Labuhan Deli, Kutalimbaru",Deli Serdang,Sumatera Utara,,,,113.0,64626.0,0.0,
+2025-11-26,BANJIR,"Brandan Barat, Gebang, Besitang, Babalan, Padang Tualang, Sei Lepan, Stabat, Secanggang, Wampu, Sawit Seberang, Tanjung Pura, Batang Serangan, Binjai, Pematang Jaya, Hinai, Pangkalan Susu",Langkat,Sumatera Utara,,,,3420.0,,10.0,
+2025-11-27,BANJIR,"Mutiara Timur, Keumala, Pidie, Tangse, Sakti, Muara Tiga, Delima, Kota Sigli, Geulumpang Tiga, Kembang Tanjong, Peukan Baro",Pidie,Aceh,,1.0,0.0,0.0,168.0,0.0,52.0
+2025-11-27,Gempa Bumi,"Sinabang, Simeulue",Simeulue,Aceh,Aktivitas Tektonik Laut,0.0,0.0,10.0,0.0,0.0,2.0
+2025-11-27,BANJIR,"Siberut Utara, Siberut Tengah, Siberut Barat, Siberut Barat Daya, Siberut Selatan",Kepulauan Mentawai,Sumatera Barat,,,,,0.0,2372.0,67.0
+2025-11-27,BANJIR,"Tanjung Harapan, Lubuk Sikarah",Kota Solok,Sumatera Barat,,1.0,,,35.0,2233.0,34.0
+2025-11-27,BANJIR,"Kubung, Junjung Sirih, X Koto Singkarak, Gunung Talang, Bukit Sundi, Pantai Cermin, Lembang Jaya, Danau Kembar, Lembah Gumanti",Solok,Sumatera Barat,,,,88.0,300.0,2353.0,100.0
+2025-11-27,BANJIR,"Medan Johor, Medan Selayang, Medan Maimun, Medan Baru, Medan Sunggal, Medan Polonia, Medan Petisah, Medan Helvetia, Medan Barat, Medan Labuhan, Medan Marelan, Medan Amplas, Medan Denai, Medan Tembung, Medan Deli",Kota Medan,Sumatera Utara,,,,242.0,3098.0,0.0,
+2025-11-27,BANJIR,"Sipispis, Tebing Syahbandar, Dolok Masihul, Perbaungan, Teluk Mengkudu, Pantai Cermin, Sei Rampah, Tebing Tinggi, Tanjung Beringin, Bandar Khalifah, Sei Bamban",Serdang Bedagai,Sumatera Utara,,,,24.0,16679.0,0.0,
+2025-11-27,BANJIR,"Sei Dadap, Rawang Pancar Arga, Air Joman, Kota Kisaran Timur, Kota Kisaran Barat, Setia Janji, Tinggi Raja, Buntu Pane",Asahan,Sumatera Utara,,,,0.0,643.0,0.0,
+2025-11-27,BANJIR,"Tebing Tinggi Kota, Rambutan, Bajenis, Padang Hilir, Padang Hulu",Kota Tebing Tinggi,Sumatera Utara,,,,35.0,6971.0,0.0,
+2025-11-27,BANJIR,"Talawi, Sei Suka, Datuk Tanah Datar, Air Putih, Sei Balai, Medang Deras, Lima Puluh Pesisir, Tanjung Tiram, Nibung Hangus, Lima Puluh, Datuk Lima Puluh, Laut Tador",Batu Bara,Sumatera Utara,,,,42.0,13016.0,4.0,
+2025-11-29,BANJIR,Bonjol,Pasaman,Sumatera Barat,,,,,31.0,361.0,34.0
+2025-11-29,BANJIR,"Sangir, Sangir Batang Hari, Sangir Jujua, Sangir Balai Janggo, Sungai Pagu, Pauh Duo, Koto Parik Gadang Diateh",Solok Selatan,Sumatera Barat,,,,,0.0,78.0,1.0
+2025-12-10,BANJIR,"Lahewa Timur, Alasa",Nias Utara,Sumatera Utara,,,,0.0,,0.0,
+2025-12-10,BANJIR,"Gomo, Maniamolo, Aramo, Amandraya",Nias Selatan,Sumatera Utara,,,,1.0,86.0,0.0,
+2025-12-12,Banjir & Longsor (kumulatif),"Mesidah, Syiah Utama, Pintu Rime Gayo, Gajah Putih, Permata, Timang Gajah, Bintang, Ketol, Celala, Silihnara (Silih Nara), Rusip Antara (Rusi Antara), Linge, Kute Panang, Sekerak, Kota Kuala Simpang, Tenggulun, Tamiang Hulu, Bendahara, Bandar Pusaka, Kejuruan Muda, Seruway, Karang Baru, Manyak Payed (Mayak Payed), Rantau, Bandar, Langkahan, Sawang, Baktiya, Baktiya Barat, Muara Batu, Seunuddon, Syamtalira Aron, Samudera, Matangkuli, Tanah Jambo Aye","Bener Meriah, Aceh Tengah, Aceh Tamiang, Aceh Utara",Aceh,Bencana Hidrometeorologi,550.0,0.0,0.0,49296.0,0.0,0.0
+2025-12-20,BANJIR,Bawolato,Nias,Sumatera Utara,,,,0.0,14.0,0.0,
+2025-12-21,TANAH LONGSOR,Bonjol,Pasaman,Sumatera Barat,,,,,0.0,40.0,0.0
+2025-12-28,GEMPA BUMI,"Palembayan, Tanjung Raya",Agam,Sumatera Barat,,,,,41.0,,
+2026-01-12,BANJIR,Sosa,Padang Lawas,Sumatera Utara,,,,0.0,105.0,0.0,

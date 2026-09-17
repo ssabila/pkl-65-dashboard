@@ -5,16 +5,18 @@ import dynamic from "next/dynamic";
 
 const MapLeaflet = dynamic(() => import("./MapLeaflet"), { ssr: false });
 
-export default function MapSection({ geojsonFiles, center, zoom, getFeatureStyle, dotOverlay = false }) {
+// components/MapSection.jsx — teruskan fileKeys
+export default function MapSection({ geojsonFiles, fileKeys, center, zoom, getFeatureStyle, fileStyles }) {
   return (
     <div className="absolute inset-0 z-10">
       <MapLeaflet
         geojsonFiles={geojsonFiles}
+        fileKeys={fileKeys}
         center={center}
         zoom={zoom}
         getFeatureStyle={getFeatureStyle}
+        fileStyles={fileStyles}
       />
-      {dotOverlay && <div className="absolute inset-0 dot-flood-overlay pointer-events-none" />}
     </div>
   );
 }
