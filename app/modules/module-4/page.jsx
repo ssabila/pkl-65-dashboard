@@ -139,8 +139,13 @@ export default function Modul4Page() {
     setCoverflowIndex((prev) => (prev === coverflowItems.length - 1 ? 0 : prev + 1));
   };
 
-  // Sorting States for Table
+  // Sorting & Search States for Table
   const [sortOrder, setSortOrder] = useState("desc"); // 'asc' or 'desc'
+  const [searchQuery, setSearchQuery] = useState("");
+
+  // Pagination States for Table
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
 
   // Download Checklist States
   const [checkedDownloads, setCheckedDownloads] = useState({});
@@ -191,9 +196,24 @@ export default function Modul4Page() {
     setSelectedKabupaten(""); // Reset chosen kabupaten
   };
 
-  // Top 10 sorted and filtered dataset
+  // Filtered and sorted dataset for the regency table
   const processedDataKerentanan = useMemo(() => {
     let dataset = [...dataKerentanan];
+
+    // Filter by selected province if active
+    if (selectedProvinsi && selectedProvinsi !== "Semua Provinsi") {
+      dataset = dataset.filter((item) => item.provinsi === selectedProvinsi);
+    }
+
+    // Filter by Search Query
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase().trim();
+      dataset = dataset.filter(
+        (item) =>
+          item.kabupaten.toLowerCase().includes(q) ||
+          item.provinsi.toLowerCase().includes(q)
+      );
+    }
 
     // Sort logic based on Indeks
     dataset.sort((a, b) => {
@@ -202,7 +222,20 @@ export default function Modul4Page() {
     });
 
     return dataset;
-  }, [sortOrder]);
+  }, [sortOrder, selectedProvinsi, searchQuery]);
+
+  // Reset pagination on filter or search change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, sortOrder, selectedProvinsi, itemsPerPage]);
+
+  // Paginated data slice
+  const totalItems = processedDataKerentanan.length;
+  const totalPages = Math.ceil(totalItems / itemsPerPage) || 1;
+  const paginatedDataKerentanan = useMemo(() => {
+    const start = (currentPage - 1) * itemsPerPage;
+    return processedDataKerentanan.slice(start, start + itemsPerPage);
+  }, [processedDataKerentanan, currentPage, itemsPerPage]);
 
   // Handle Map direct marker click (binds back to filters)
   const handleMapMarkerSelect = (kabupatenName) => {
@@ -424,31 +457,27 @@ export default function Modul4Page() {
         <div className="max-w-7xl mx-auto space-y-16 relative z-10">
 
           {/* OVERVIEW / HERO (Redesigned) */}
-          <section id="overview" className="scroll-mt-24 flex flex-col items-center justify-center pt-6 space-y-8 sm:space-y-12">
+          <section id="overview" className="scroll-mt-24 flex flex-col items-center justify-center pt-6 space-y-6 sm:space-y-8">
 
-            {/* Judul Utama (Fluid Proportional Scale) */}
-            <div className="flex flex-col items-center justify-center text-center w-full max-w-7xl mx-auto select-none px-4">
-              {/* PROFIL */}
-              <h1 className="font-heading font-extrabold text-[clamp(2rem,4vw,3.5rem)] text-[#0f8575] tracking-[0.4em] leading-none uppercase pl-[0.4em] mb-2 sm:mb-4">
-                PROFIL
+            {/* Judul Utama (Modern, Aesthetic Horizontal Hero Title) */}
+            <div className="flex flex-col items-center justify-center text-center w-full max-w-5xl mx-auto select-none px-4 space-y-3 sm:space-y-4">
+              {/* Main Title: PROFIL KERENTANAN WILAYAH */}
+              <h1 className="font-heading font-black text-3xl sm:text-5xl md:text-6xl lg:text-7xl tracking-tight leading-tight uppercase drop-shadow-sm">
+                <span className="text-[#0f8575] inline-block mr-2 sm:mr-3">PROFIL</span>
+                <span className="bg-gradient-to-r from-[#ea4e3d] via-[#e8395f] to-[#e42978] bg-clip-text text-transparent inline-block mr-2 sm:mr-3">
+                  KERENTANAN
+                </span>
+                <span className="bg-gradient-to-r from-[#3b597b] to-[#1e3a8a] bg-clip-text text-transparent inline-block">
+                  WILAYAH
+                </span>
               </h1>
 
-              {/* KERENTANAN (Gradient Coral-Red to Magenta-Pink) */}
-              <h1 className="font-heading font-black text-[clamp(3.5rem,10vw,9.5rem)] bg-gradient-to-r from-[#ea4e3d] via-[#e8395f] to-[#e42978] bg-clip-text text-transparent tracking-tighter leading-none uppercase py-1 sm:py-2">
-                KERENTANAN
-              </h1>
-
-              {/* WILAYAH (Gradient Steel-Blue to Dark-Navy) */}
-              <h1 className="font-heading font-extrabold text-[clamp(4.5rem,12.5vw,12rem)] bg-gradient-to-r from-[#678ba7] via-[#456784] to-[#29435b] bg-clip-text text-transparent tracking-[0.02em] leading-none uppercase pb-2 sm:pb-4 pl-[0.02em]">
-                WILAYAH
-              </h1>
-            </div>
-
-            {/* Badge Provinsi */}
-            <div className="bg-[#8e9eb2] px-8 sm:px-16 py-2.5 sm:py-3 rounded-full shadow-lg text-center max-w-fit border border-white/30 backdrop-blur-sm mt-2">
-              <h2 className="text-white font-serif italic font-bold text-base sm:text-2xl md:text-3xl tracking-wide drop-shadow-sm">
-                Provinsi Aceh, Sumatera Utara dan Sumatera Barat
-              </h2>
+              {/* Badge Provinsi */}
+              <div className="bg-[#8e9eb2]/90 px-6 sm:px-12 py-2 sm:py-2.5 rounded-full shadow-md text-center max-w-fit border border-white/40 backdrop-blur-md">
+                <h2 className="text-white font-serif italic font-bold text-sm sm:text-xl md:text-2xl tracking-wide drop-shadow-sm">
+                  Provinsi Aceh, Sumatera Utara dan Sumatera Barat
+                </h2>
+              </div>
             </div>
 
             {/* Gallery Images (Interactive 3D Coverflow Style with Navigation) */}
@@ -823,19 +852,53 @@ export default function Modul4Page() {
 
               {/* TABLE: Top 10 Regencies */}
               <div className="lg:col-span-7 space-y-4">
-                <div className="flex justify-between items-center">
-                  <span className="text-sm font-semibold text-text-primary flex items-center gap-1.5">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                  <span className="text-sm font-semibold text-text-primary">
                     Tabel Peringkat Indeks Kerentanan Wilayah
-                    <span className="text-xxs text-text-light font-normal font-sans">(Urutan Indeks)</span>
                   </span>
 
-                  {/* Sorting control */}
-                  <button
-                    onClick={() => setSortOrder(prev => prev === "desc" ? "asc" : "desc")}
-                    className="text-xs text-accent-primary font-medium hover:underline flex items-center gap-1 cursor-pointer"
-                  >
-                    Urutkan Indeks: {sortOrder === "desc" ? "Tertinggi ↓" : "Terendah ↑"}
-                  </button>
+                  <div className="flex items-center gap-3 w-full sm:w-auto">
+                    {/* Search Input Box */}
+                    <div className="relative flex-1 sm:w-56">
+                      <svg
+                        className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                        />
+                      </svg>
+                      <input
+                        type="text"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        placeholder="Cari kabupaten/kota..."
+                        className="w-full bg-white border border-card-border rounded-lg pl-8 pr-8 py-1.5 text-xs text-text-primary placeholder:text-text-light focus:outline-none focus:ring-2 focus:ring-accent-primary/20 transition-all shadow-2xs"
+                      />
+                      {searchQuery && (
+                        <button
+                          onClick={() => setSearchQuery("")}
+                          aria-label="Hapus pencarian"
+                          className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-xs font-bold cursor-pointer"
+                        >
+                          ✕
+                        </button>
+                      )}
+                    </div>
+
+                    {/* Sorting control */}
+                    <button
+                      onClick={() => setSortOrder((prev) => (prev === "desc" ? "asc" : "desc"))}
+                      className="text-xs text-accent-primary font-medium hover:underline flex items-center gap-1 shrink-0 cursor-pointer"
+                    >
+                      {sortOrder === "desc" ? "Indeks: Tertinggi ↓" : "Indeks: Terendah ↑"}
+                    </button>
+                  </div>
                 </div>
 
                 <div className="overflow-x-auto rounded-xl border border-card-border shadow-xs bg-white">
@@ -851,7 +914,16 @@ export default function Modul4Page() {
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-card-border">
-                      {processedDataKerentanan.map((row) => {
+                      {processedDataKerentanan.length === 0 ? (
+                        <tr>
+                          <td colSpan="6" className="p-8 text-center text-slate-400 font-sans text-xs">
+                            Tidak ditemukan kabupaten/kota dengan kata kunci &quot;
+                            <strong className="text-slate-600">{searchQuery}</strong>
+                            &quot;
+                          </td>
+                        </tr>
+                      ) : (
+                        paginatedDataKerentanan.map((row) => {
                         // Highlight if this regency is currently selected in filters
                         const isMatchFilter = selectedKabupaten === row.kabupaten;
 
@@ -888,9 +960,70 @@ export default function Modul4Page() {
                             </td>
                           </tr>
                         );
-                      })}
+                      }))}
                     </tbody>
                   </table>
+
+                  {/* Pagination Footer Controls */}
+                  {totalItems > 0 && (
+                    <div className="p-3 bg-slate-50/80 border-t border-card-border flex flex-col sm:flex-row items-center justify-between gap-3 text-xs font-sans text-text-secondary">
+                      {/* Left: Info Counter & Items Per Page Selector */}
+                      <div className="flex items-center gap-4 flex-wrap">
+                        <span>
+                          Menampilkan{" "}
+                          <strong className="text-text-primary font-semibold">
+                            {Math.min((currentPage - 1) * itemsPerPage + 1, totalItems)}
+                          </strong>{" "}
+                          -{" "}
+                          <strong className="text-text-primary font-semibold">
+                            {Math.min(currentPage * itemsPerPage, totalItems)}
+                          </strong>{" "}
+                          dari{" "}
+                          <strong className="text-text-primary font-semibold">{totalItems}</strong> Kabupaten/Kota
+                        </span>
+
+                        <div className="flex items-center gap-1.5 border-l border-slate-200 pl-4">
+                          <label htmlFor="rows-per-page" className="text-slate-500 text-xxs uppercase tracking-wider">
+                            Baris:
+                          </label>
+                          <select
+                            id="rows-per-page"
+                            value={itemsPerPage}
+                            onChange={(e) => setItemsPerPage(Number(e.target.value))}
+                            className="bg-white border border-card-border rounded px-2 py-0.5 text-xs text-text-primary focus:outline-none cursor-pointer"
+                          >
+                            <option value={5}>5</option>
+                            <option value={10}>10</option>
+                            <option value={25}>25</option>
+                            <option value={50}>50</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      {/* Right: Page Navigation Controls */}
+                      <div className="flex items-center gap-1">
+                        <button
+                          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                          disabled={currentPage === 1}
+                          className="px-2.5 py-1 rounded border border-card-border bg-white text-text-primary hover:bg-slate-100 disabled:opacity-40 disabled:hover:bg-white disabled:cursor-not-allowed cursor-pointer transition-colors"
+                        >
+                          &larr; Prev
+                        </button>
+
+                        <div className="px-3 text-xs font-semibold text-text-primary">
+                          {currentPage} / {totalPages}
+                        </div>
+
+                        <button
+                          onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                          disabled={currentPage === totalPages}
+                          className="px-2.5 py-1 rounded border border-card-border bg-white text-text-primary hover:bg-slate-100 disabled:opacity-40 disabled:hover:bg-white disabled:cursor-not-allowed cursor-pointer transition-colors"
+                        >
+                          Next &rarr;
+                        </button>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -913,28 +1046,26 @@ export default function Modul4Page() {
                           <span className="font-semibold text-text-primary">Indeks Sensitivitas: Kemiskinan (%)</span>
                           <span className="text-[10px] text-text-light">Batas kritis: 15%</span>
                         </div>
-                        <div className="space-y-2 max-h-[170px] overflow-y-auto pr-1">
+                        <div className="space-y-2.5 max-h-[170px] overflow-y-auto pr-1">
                           {chartData.map((item) => {
                             const isFocused = selectedKabupaten === item.kabupaten;
+                            const isCritical = item.miskinPct > 15;
                             return (
                               <div key={item.kabupaten} className="space-y-1">
                                 <div className="flex justify-between text-[10px] font-sans">
-                                  <span className={isFocused ? "text-accent-danger font-bold" : "text-text-secondary"}>
+                                  <span className={isFocused ? "text-accent-primary font-bold" : "text-text-secondary"}>
                                     {item.kabupaten}
                                   </span>
-                                  <span className={isFocused ? "text-accent-danger font-bold" : "text-text-primary font-semibold"}>
+                                  <span className={isFocused ? "text-accent-primary font-bold" : "text-text-primary font-semibold"}>
                                     {item.miskinPct}%
                                   </span>
                                 </div>
                                 <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden border border-slate-200">
                                   <div
-                                    className={`h-full rounded-full transition-all duration-500 ${isFocused
-                                      ? "bg-accent-danger"
-                                      : item.miskinPct > 15
-                                        ? "bg-accent-warning"
-                                        : "bg-accent-primary"
-                                      }`}
-                                    style={{ width: `${Math.min(100, (item.miskinPct / 35) * 100)}%` }} // Max reference 35%
+                                    className={`h-full rounded-full transition-all duration-500 ${
+                                      isCritical ? "bg-accent-warning" : "bg-accent-primary"
+                                    }`}
+                                    style={{ width: `${Math.min(100, (item.miskinPct / 35) * 100)}%` }}
                                   ></div>
                                 </div>
                               </div>
@@ -949,26 +1080,24 @@ export default function Modul4Page() {
                           <span className="font-semibold text-text-primary">Kapasitas Adaptasi: Jumlah Faskes</span>
                           <span className="text-[10px] text-text-light">Unit sarana kesehatan</span>
                         </div>
-                        <div className="space-y-2 max-h-[170px] overflow-y-auto pr-1">
+                        <div className="space-y-2.5 max-h-[170px] overflow-y-auto pr-1">
                           {chartData.map((item) => {
                             const isFocused = selectedKabupaten === item.kabupaten;
+                            const maxFaskesRef = Math.max(250, ...chartData.map((d) => d.faskes || 0));
                             return (
                               <div key={item.kabupaten} className="space-y-1">
                                 <div className="flex justify-between text-[10px] font-sans">
-                                  <span className={isFocused ? "text-accent-danger font-bold" : "text-text-secondary"}>
+                                  <span className={isFocused ? "text-accent-secondary font-bold" : "text-text-secondary"}>
                                     {item.kabupaten}
                                   </span>
-                                  <span className={isFocused ? "text-accent-danger font-bold" : "text-text-primary font-semibold"}>
+                                  <span className={isFocused ? "text-accent-secondary font-bold" : "text-text-primary font-semibold"}>
                                     {item.faskes} Unit
                                   </span>
                                 </div>
                                 <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden border border-slate-200">
                                   <div
-                                    className={`h-full rounded-full transition-all duration-500 ${isFocused
-                                      ? "bg-accent-danger"
-                                      : "bg-accent-secondary"
-                                      }`}
-                                    style={{ width: `${Math.min(100, (item.faskes / 200) * 100)}%` }} // Max reference 200 units
+                                    className="h-full rounded-full transition-all duration-500 bg-accent-secondary"
+                                    style={{ width: `${Math.min(100, (item.faskes / maxFaskesRef) * 100)}%` }}
                                   ></div>
                                 </div>
                               </div>
