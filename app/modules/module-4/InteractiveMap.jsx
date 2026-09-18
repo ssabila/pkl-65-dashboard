@@ -84,22 +84,22 @@ export default function InteractiveMap({ selectedProvinsi, selectedKabupaten, on
 
   return (
     <div
-      className="relative w-full h-[520px] bg-[#0c1322] rounded-2xl border border-slate-800 shadow-2xl overflow-hidden flex flex-col justify-between p-4 sm:p-5 select-none"
+      className="relative w-full h-[540px] bg-[#e0f2fe] rounded-2xl border border-sky-200/90 shadow-xl overflow-hidden flex flex-col justify-between p-4 sm:p-5 select-none"
       onMouseMove={handleMouseMove}
     >
-      {/* Top Header Layer (Compact Floating Pill) */}
+      {/* Top Header Layer (Compact Floating Glassmorphism Pill) */}
       <div className="z-10 flex items-center justify-between gap-3 pointer-events-none">
-        <div className="bg-slate-900/80 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-slate-800/80 shadow-md pointer-events-auto flex items-center gap-2.5 text-xs text-slate-300">
-          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-          <span className="font-heading font-semibold text-white">Peta Kerentanan Sumatra</span>
-          <span className="text-slate-600">•</span>
-          <span className="text-slate-400 text-[11px]">Arahkan kursor / klik kabupaten</span>
+        <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-full border border-sky-200/80 shadow-md pointer-events-auto flex items-center gap-2.5 text-xs text-slate-700">
+          <span className="w-2.5 h-2.5 rounded-full bg-[#0f8575] animate-pulse"></span>
+          <span className="font-heading font-bold text-slate-900">Peta Interaktif Kerentanan Wilayah</span>
+          <span className="text-slate-300">•</span>
+          <span className="text-slate-500 text-[11px] font-sans">Arahkan kursor / klik kabupaten</span>
         </div>
 
         {/* Selected Province Badge */}
         {selectedProvinsi && selectedProvinsi !== "Semua Provinsi" && (
-          <div className="bg-emerald-500/10 border border-emerald-500/30 backdrop-blur-md px-3 py-1 rounded-full text-emerald-400 font-sans text-xs font-semibold shadow-md pointer-events-auto flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
+          <div className="bg-[#0f8575]/10 border border-[#0f8575]/30 backdrop-blur-md px-3.5 py-1.5 rounded-full text-[#0f8575] font-sans text-xs font-bold shadow-sm pointer-events-auto flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-[#0f8575]"></span>
             Fokus: {selectedProvinsi}
           </div>
         )}
@@ -112,18 +112,14 @@ export default function InteractiveMap({ selectedProvinsi, selectedKabupaten, on
           className="w-full h-full object-contain"
           fill="none"
         >
-          {/* Subtle Grid Background Pattern */}
           <defs>
             <pattern id="mapGrid" width="40" height="40" patternUnits="userSpaceOnUse">
-              <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255, 255, 255, 0.03)" strokeWidth="0.5" />
+              <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(14, 165, 233, 0.15)" strokeWidth="0.75" strokeDasharray="3 3" />
             </pattern>
           </defs>
-          <rect width="800" height="600" fill="url(#mapGrid)" />
 
-          {/* Region Label Watermarks inside SVG Canvas */}
-          <text x="180" y="140" fill="rgba(255, 255, 255, 0.08)" fontSize="18" fontWeight="bold" letterSpacing="4" uppercase="true">ACEH</text>
-          <text x="360" y="270" fill="rgba(255, 255, 255, 0.08)" fontSize="18" fontWeight="bold" letterSpacing="4" uppercase="true">SUMATERA UTARA</text>
-          <text x="520" y="470" fill="rgba(255, 255, 255, 0.08)" fontSize="18" fontWeight="bold" letterSpacing="4" uppercase="true">SUMATERA BARAT</text>
+          {/* Seamless Grid Layer */}
+          <rect width="800" height="600" fill="url(#mapGrid)" />
 
           {/* Vector Map Features Layer */}
           {geoJsonData && geoJsonData.features ? (
@@ -157,9 +153,9 @@ export default function InteractiveMap({ selectedProvinsi, selectedKabupaten, on
                   <path
                     key={idx}
                     d={renderGeometryPath(feature.geometry)}
-                    fill="rgba(14, 165, 233, 0.35)"
-                    stroke="rgba(56, 189, 248, 0.6)"
-                    strokeWidth="1"
+                    fill="rgba(2, 132, 199, 0.45)"
+                    stroke="#0284c7"
+                    strokeWidth="1.2"
                     className="pointer-events-auto cursor-default"
                     onMouseEnter={() =>
                       setHoveredFeature({
@@ -175,30 +171,30 @@ export default function InteractiveMap({ selectedProvinsi, selectedKabupaten, on
                 );
               }
 
-              // Color mapping per vulnerability status
-              let fillColor = "rgba(234, 179, 8, 0.55)"; // Sedang (Yellow)
-              let strokeColor = "rgba(234, 179, 8, 0.8)";
-              let dotColor = "#eab308";
+              // Color mapping per vulnerability status (Vibrant & Crisp over Light Ocean BG)
+              let fillColor = "rgba(234, 179, 8, 0.7)"; // Sedang (Amber Yellow)
+              let strokeColor = "rgba(180, 83, 9, 0.6)";
+              let dotColor = "#d97706";
 
               if (status === "Sangat Tinggi") {
-                fillColor = "rgba(239, 68, 68, 0.65)"; // Vibrant Red
-                strokeColor = "rgba(239, 68, 68, 0.9)";
-                dotColor = "#ef4444";
+                fillColor = "rgba(239, 68, 68, 0.78)"; // Vibrant Red
+                strokeColor = "rgba(185, 28, 28, 0.85)";
+                dotColor = "#dc2626";
               } else if (status === "Tinggi") {
-                fillColor = "rgba(249, 115, 22, 0.6)"; // Warm Orange
-                strokeColor = "rgba(249, 115, 22, 0.85)";
-                dotColor = "#f97316";
+                fillColor = "rgba(249, 115, 22, 0.75)"; // Warm Orange
+                strokeColor = "rgba(194, 65, 12, 0.8)";
+                dotColor = "#ea580c";
               } else if (status === "Rendah") {
-                fillColor = "rgba(16, 185, 129, 0.5)"; // Emerald Green
-                strokeColor = "rgba(16, 185, 129, 0.8)";
-                dotColor = "#10b981";
+                fillColor = "rgba(16, 185, 129, 0.7)"; // Emerald Green
+                strokeColor = "rgba(4, 120, 87, 0.8)";
+                dotColor = "#059669";
               }
 
               // Dim non-selected provinces
-              let opacity = isProvinceActive ? 1 : 0.15;
+              let opacity = isProvinceActive ? 1 : 0.2;
               if (isSelected || isHovered) {
-                fillColor = fillColor.replace(/0\.\d+/, "0.9");
-                strokeColor = "#ffffff";
+                fillColor = fillColor.replace(/0\.\d+/, "0.95");
+                strokeColor = "#0f172a";
                 opacity = 1;
               }
 
@@ -213,9 +209,9 @@ export default function InteractiveMap({ selectedProvinsi, selectedKabupaten, on
                     d={renderGeometryPath(feature.geometry)}
                     fill={fillColor}
                     stroke={strokeColor}
-                    strokeWidth={isSelected ? "2.5" : isHovered ? "2" : "0.8"}
+                    strokeWidth={isSelected ? "2.5" : isHovered ? "1.8" : "0.75"}
                     opacity={opacity}
-                    className="cursor-pointer transition-all duration-200 hover:brightness-125"
+                    className="cursor-pointer transition-all duration-200 hover:brightness-110"
                     onClick={() => onSelectKabupaten(kabName)}
                     onMouseEnter={() =>
                       setHoveredFeature({
@@ -232,7 +228,7 @@ export default function InteractiveMap({ selectedProvinsi, selectedKabupaten, on
                     onMouseLeave={() => setHoveredFeature(null)}
                   />
 
-                  {/* SVG Centroid Marker Pin (100% Perfectly Aligned with Polygon) */}
+                  {/* SVG Centroid Marker Pin */}
                   {isProvinceActive && (
                     <g
                       transform={`translate(${point.x}, ${point.y})`}
@@ -254,7 +250,7 @@ export default function InteractiveMap({ selectedProvinsi, selectedKabupaten, on
                         fill={dotColor}
                         stroke="#ffffff"
                         strokeWidth={isSelected || isHovered ? "1.5" : "0.8"}
-                        className="transition-all duration-200 shadow-lg"
+                        className="transition-all duration-200 shadow-md"
                       />
                     </g>
                   )}
@@ -264,20 +260,74 @@ export default function InteractiveMap({ selectedProvinsi, selectedKabupaten, on
           ) : (
             /* Sleek Loading Fallback */
             <g>
-              <text x="400" y="300" textAnchor="middle" fill="#94a3b8" fontSize="14" fontFamily="sans-serif">
+              <text x="400" y="300" textAnchor="middle" fill="#64748b" fontSize="14" fontFamily="sans-serif">
                 Memuat Peta Vektor GeoJSON...
               </text>
             </g>
           )}
+
+          {/* Cartographic Province Labels (Rendered on top with crisp white outline) */}
+          <g className="pointer-events-none select-none">
+            {/* ACEH */}
+            <text
+              x="180"
+              y="100"
+              fill="#0f172a"
+              stroke="#ffffff"
+              strokeWidth="3.5"
+              paintOrder="stroke fill"
+              fontSize="13"
+              fontWeight="800"
+              letterSpacing="3"
+              opacity="0.9"
+              fontFamily="sans-serif"
+            >
+              ACEH
+            </text>
+
+            {/* SUMATERA UTARA */}
+            <text
+              x="340"
+              y="235"
+              fill="#0f172a"
+              stroke="#ffffff"
+              strokeWidth="3.5"
+              paintOrder="stroke fill"
+              fontSize="13"
+              fontWeight="800"
+              letterSpacing="3"
+              opacity="0.9"
+              fontFamily="sans-serif"
+            >
+              SUMATERA UTARA
+            </text>
+
+            {/* SUMATERA BARAT */}
+            <text
+              x="530"
+              y="445"
+              fill="#0f172a"
+              stroke="#ffffff"
+              strokeWidth="3.5"
+              paintOrder="stroke fill"
+              fontSize="13"
+              fontWeight="800"
+              letterSpacing="3"
+              opacity="0.9"
+              fontFamily="sans-serif"
+            >
+              SUMATERA BARAT
+            </text>
+          </g>
         </svg>
       </div>
 
-      {/* Floating Hover Tooltip (Positioned safely away from cursor) */}
+      {/* Floating Hover Tooltip */}
       {hoveredFeature && (
         <div
-          className="pointer-events-none absolute z-50 bg-slate-900/95 backdrop-blur-md border border-slate-700/90 rounded-xl px-3 py-1.5 text-white shadow-2xl flex items-center gap-2.5 whitespace-nowrap transition-all duration-75"
+          className="pointer-events-none absolute z-50 bg-slate-900/95 backdrop-blur-md border border-slate-700/90 rounded-xl px-3.5 py-2 text-white shadow-2xl flex items-center gap-2.5 whitespace-nowrap transition-all duration-75"
           style={{
-            left: `${mousePos.x > 550 ? mousePos.x - 200 : mousePos.x + 22}px`,
+            left: `${mousePos.x > 550 ? mousePos.x - 210 : mousePos.x + 22}px`,
             top: `${mousePos.y < 60 ? mousePos.y + 24 : mousePos.y - 54}px`
           }}
         >
@@ -302,7 +352,7 @@ export default function InteractiveMap({ selectedProvinsi, selectedKabupaten, on
           </div>
 
           {!hoveredFeature.isWater && (
-            <div className="flex items-center gap-1.5 text-[11px] text-slate-300 font-sans border-l border-slate-750 pl-2">
+            <div className="flex items-center gap-1.5 text-[11px] text-slate-300 font-sans border-l border-slate-700 pl-2">
               <span className="text-slate-400">{hoveredFeature.provName}</span>
               <span className="text-slate-500">•</span>
               <span>Skor: <strong className="text-emerald-400">{hoveredFeature.indeks}</strong></span>
@@ -314,33 +364,33 @@ export default function InteractiveMap({ selectedProvinsi, selectedKabupaten, on
       {/* Bottom Info Overlay Layer (Legend & Detail Card) */}
       <div className="z-10 flex w-full justify-between items-end gap-4 pointer-events-none mt-auto">
         {/* Map Legend */}
-        <div className="bg-slate-900/90 backdrop-blur-md px-3.5 py-2.5 rounded-xl border border-slate-800/80 text-xs text-slate-300 flex flex-col gap-1.5 shadow-xl pointer-events-auto">
-          <span className="font-heading font-bold text-white text-[11px] uppercase tracking-wider">
+        <div className="bg-white/95 backdrop-blur-md px-4 py-3 rounded-xl border border-slate-200/90 text-xs text-slate-700 flex flex-col gap-1.5 shadow-lg pointer-events-auto">
+          <span className="font-heading font-bold text-slate-900 text-[11px] uppercase tracking-wider">
             Indeks Kerentanan
           </span>
           <div className="flex items-center gap-3 text-[11px]">
             <div className="flex items-center gap-1.5">
               <span className="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
-              <span>Rendah</span>
+              <span className="font-sans font-medium">Rendah</span>
             </div>
             <div className="flex items-center gap-1.5">
-              <span className="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
-              <span>Sedang</span>
+              <span className="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+              <span className="font-sans font-medium">Sedang</span>
             </div>
             <div className="flex items-center gap-1.5">
               <span className="w-2.5 h-2.5 rounded-full bg-orange-500"></span>
-              <span>Tinggi</span>
+              <span className="font-sans font-medium">Tinggi</span>
             </div>
             <div className="flex items-center gap-1.5">
               <span className="w-2.5 h-2.5 rounded-full bg-red-500"></span>
-              <span>Sangat Tinggi</span>
+              <span className="font-sans font-medium">Sangat Tinggi</span>
             </div>
           </div>
         </div>
 
         {/* Selected Kabupaten Detail Card */}
         {selectedKabupaten && (
-          <div className="bg-slate-900/95 backdrop-blur-md p-4 rounded-xl border border-emerald-500/40 w-full max-w-[260px] text-xs text-white shadow-2xl pointer-events-auto transition-all duration-300">
+          <div className="bg-white/95 backdrop-blur-md p-4 rounded-xl border border-emerald-500/40 w-full max-w-[270px] text-xs text-slate-800 shadow-xl pointer-events-auto transition-all duration-300">
             {(() => {
               const selectedData = dataKerentanan.find(
                 (d) => d.kabupaten === selectedKabupaten
@@ -348,51 +398,51 @@ export default function InteractiveMap({ selectedProvinsi, selectedKabupaten, on
               if (!selectedData) return null;
               return (
                 <div>
-                  <div className="flex justify-between items-center gap-2 border-b border-slate-800 pb-2 mb-2">
+                  <div className="flex justify-between items-center gap-2 border-b border-slate-200 pb-2 mb-2">
                     <div>
-                      <h6 className="font-heading font-bold text-white text-xs sm:text-sm">
+                      <h6 className="font-heading font-bold text-slate-900 text-xs sm:text-sm">
                         {selectedData.kabupaten}
                       </h6>
-                      <p className="text-[10px] text-slate-400 font-sans">
+                      <p className="text-[10px] text-slate-500 font-sans">
                         {selectedData.provinsi}
                       </p>
                     </div>
                     <span
-                      className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${selectedData.status === "Sangat Tinggi"
-                        ? "bg-red-500/20 text-red-400 border border-red-500/40"
+                      className={`text-[10px] px-2.5 py-0.5 rounded-full font-bold ${selectedData.status === "Sangat Tinggi"
+                        ? "bg-red-500/15 text-red-700 border border-red-500/30"
                         : selectedData.status === "Tinggi"
-                          ? "bg-orange-500/20 text-orange-400 border border-orange-500/40"
+                          ? "bg-orange-500/15 text-orange-700 border border-orange-500/30"
                           : selectedData.status === "Sedang"
-                            ? "bg-amber-500/20 text-amber-400 border border-amber-500/40"
-                            : "bg-emerald-500/20 text-emerald-400 border border-emerald-500/40"
+                            ? "bg-amber-500/15 text-amber-700 border border-amber-500/30"
+                            : "bg-emerald-500/15 text-emerald-700 border border-emerald-500/30"
                         }`}
                     >
                       {selectedData.status}
                     </span>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-2 text-[11px] text-slate-300 font-sans">
-                    <div className="bg-slate-800/50 p-1.5 rounded-lg border border-slate-750">
-                      <span className="text-slate-400 text-[10px] block">Kejadian Banjir</span>
-                      <strong className="text-white text-xs">{selectedData.banjir}x</strong>
+                  <div className="grid grid-cols-2 gap-2 text-[11px] font-sans">
+                    <div className="bg-slate-50 p-1.5 rounded-lg border border-slate-200">
+                      <span className="text-slate-500 text-[10px] block">Banjir</span>
+                      <strong className="text-slate-900 text-xs">{selectedData.banjir}x</strong>
                     </div>
-                    <div className="bg-slate-800/50 p-1.5 rounded-lg border border-slate-750">
-                      <span className="text-slate-400 text-[10px] block">Kejadian Longsor</span>
-                      <strong className="text-white text-xs">{selectedData.longsor}x</strong>
+                    <div className="bg-slate-50 p-1.5 rounded-lg border border-slate-200">
+                      <span className="text-slate-500 text-[10px] block">Longsor</span>
+                      <strong className="text-slate-900 text-xs">{selectedData.longsor}x</strong>
                     </div>
-                    <div className="bg-slate-800/50 p-1.5 rounded-lg border border-slate-750">
-                      <span className="text-slate-400 text-[10px] block">Angka Kemiskinan</span>
-                      <strong className="text-white text-xs">{selectedData.miskinPct}%</strong>
+                    <div className="bg-slate-50 p-1.5 rounded-lg border border-slate-200">
+                      <span className="text-slate-500 text-[10px] block">Kemiskinan</span>
+                      <strong className="text-slate-900 text-xs">{selectedData.miskinPct}%</strong>
                     </div>
-                    <div className="bg-slate-800/50 p-1.5 rounded-lg border border-slate-750">
-                      <span className="text-slate-400 text-[10px] block">Fasilitas Kesehatan</span>
-                      <strong className="text-white text-xs">{selectedData.faskes} unit</strong>
+                    <div className="bg-slate-50 p-1.5 rounded-lg border border-slate-200">
+                      <span className="text-slate-500 text-[10px] block">Faskes</span>
+                      <strong className="text-slate-900 text-xs">{selectedData.faskes} unit</strong>
                     </div>
                   </div>
 
-                  <div className="mt-2.5 flex items-center justify-between pt-2 border-t border-slate-800 text-[11px]">
-                    <span className="text-slate-400">Skor Indeks Total:</span>
-                    <span className="font-heading font-black text-emerald-400 text-xs">
+                  <div className="mt-2.5 flex items-center justify-between pt-2 border-t border-slate-200 text-[11px]">
+                    <span className="text-slate-500 font-medium">Skor Indeks Total:</span>
+                    <span className="font-heading font-black text-[#0f8575] text-xs sm:text-sm">
                       {selectedData.indeks}
                     </span>
                   </div>
