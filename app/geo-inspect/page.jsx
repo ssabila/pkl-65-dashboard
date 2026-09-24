@@ -2,6 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 
 const GeoIndexInspector = dynamic(() => import("./GeoIndexInspector"), { ssr: false });
 
@@ -11,7 +12,7 @@ const CONFIG = {
   sumbar: { url: "/map/sumbar.json", center: [-0.8, 100.5], zoom: 7 },
 };
 
-export default function GeoInspectPage() {
+function GeoInspectContent() {
   const params = useSearchParams();
   const prov = params.get("prov") || "aceh";
   const cfg = CONFIG[prov] || CONFIG.aceh;
@@ -23,5 +24,13 @@ export default function GeoInspectPage() {
       </div>
       <GeoIndexInspector url={cfg.url} center={cfg.center} zoom={cfg.zoom} />
     </div>
+  );
+}
+
+export default function GeoInspectPage() {
+  return (
+    <Suspense fallback={<div className="w-screen h-screen" />}>
+      <GeoInspectContent />
+    </Suspense>
   );
 }
