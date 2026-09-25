@@ -1,0 +1,1540 @@
+/* ============================================================
+   Module-3: Dashboard Pemantauan Banjir & Tanah Longsor
+   Responsive CSS — Desktop → Tablet → Mobile
+   ============================================================ */
+
+@font-face {
+  font-family: 'Garet-Heavy';
+  src: url('/fonts/Garet-Heavy.woff2') format('woff2');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --font-garet-heavy: 'Garet-Heavy', 'Garet', system-ui, sans-serif;
+}
+
+/* ---- ROOT CONTAINER ---- */
+.mod3-root {
+  position: relative;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.mod3-gradient-top {
+  position: absolute;
+  inset: 0;
+  bottom: auto;
+  height: 200px;
+  background: linear-gradient(180deg, rgba(35, 71, 42, 0.65) 0%, rgba(86, 116, 97, 0.3) 60%, transparent 100%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.mod3-gradient-bottom {
+  position: absolute;
+  inset: 0;
+  top: auto;
+  height: 100px;
+  background: linear-gradient(0deg, rgba(15, 88, 31, 0.65) 0%, rgba(43, 109, 62, 0.3) 50%, transparent 100%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.mod3-content {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* ---- HEADER ---- */
+.mod3-header {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+  padding: 50px 16px 8px;
+  position: relative;
+  z-index: 50;
+  width: 100%;
+  gap: 16px;
+  pointer-events: none;
+}
+
+@media (min-width: 1150px) {
+  .mod3-header {
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 40px 60px 8px;
+    gap: 20px;
+  }
+}
+
+.mod3-header-title {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 1;
+  pointer-events: auto;
+  min-width: 0;
+}
+
+.mod3-title-main {
+  font-weight: 850;
+  color: #FACB48;
+  line-height: 1;
+  white-space: nowrap;
+  font-size: clamp(24px, 3.5vw, 43px);
+  filter: drop-shadow(0 4px 4px rgba(0, 0, 0, 1));
+}
+
+.mod3-title-sub {
+  font-weight: 900;
+  font-style: italic;
+  color: #F06E6E;
+  font-size: clamp(28px, 4.5vw, 55px);
+  line-height: 1.38;
+  white-space: nowrap;
+  filter: drop-shadow(0 4px 4px rgba(0, 0, 0, 1));
+  margin-top: -10px;
+}
+
+.mod3-title-line {
+  height: 5px;
+  width: 100%;
+  max-width: 696px;
+  box-shadow: 0 3px 3.8px rgba(0, 0, 0, 0.26);
+  margin-top: -15px;
+}
+
+.mod3-title-region {
+  font-weight: 700;
+  color: #FFFBF2;
+  line-height: 1;
+  white-space: nowrap;
+  font-size: clamp(16px, 2.2vw, 28px);
+  filter: drop-shadow(0 4px 4px rgba(0, 0, 0, 1));
+  margin-top: 8px;
+}
+
+.mod3-header-filters {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: stretch !important;
+  justify-content: center !important;
+  gap: 12px;
+  margin-top: 16px;
+  width: 100% !important;
+  max-width: 100% !important;
+  pointer-events: auto;
+}
+
+@media (min-width: 1150px) {
+  .mod3-header-filters {
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: clamp(8px, 1.2vw, 20px);
+    margin-top: 20px;
+    width: 100% !important;
+    max-width: 880px !important;
+  }
+}
+
+.mod3-dropdown-wrapper {
+  position: relative;
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+@media (min-width: 1150px) {
+  .mod3-dropdown-wrapper {
+    width: auto !important;
+    max-width: none !important;
+  }
+}
+
+.mod3-dropdown-trigger {
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  padding: 12px 24px;
+  gap: 10px;
+  width: 100% !important;
+  max-width: 100% !important;
+  height: 54px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.38) 0%, rgba(255, 255, 255, 0.15) 100%);
+  border: 5px solid rgba(255, 255, 255, 0.45);
+  box-shadow: inset 0px 2px 4px rgba(255, 255, 255, 0.6), inset 0px -2px 4px rgba(0, 0, 0, 0.25), 0 8px 24px rgba(0, 0, 0, 0.12);
+  backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(40px);
+  border-radius: 35px;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+@media (min-width: 1150px) {
+  .mod3-dropdown-trigger {
+    width: clamp(175px, 14vw, 270px) !important;
+    min-width: 0 !important;
+    max-width: none !important;
+  }
+}
+
+.mod3-dropdown-text {
+  display: flex;
+  align-items: center;
+  font-weight: 850;
+  font-size: clamp(14px, 1.6vw, 24px);
+  line-height: 1.4;
+  color: white;
+  white-space: nowrap;
+  overflow: hidden;
+  -webkit-text-stroke: 1px rgba(44, 44, 44, 0.63);
+  text-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.mod3-dropdown-arrow {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  font-weight: 500;
+  font-size: clamp(14px, 1.6vw, 24px);
+  line-height: 1.3;
+  color: #272525;
+  text-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.mod3-dropdown-list {
+  position: absolute;
+  left: 0;
+  top: calc(100% + 8px);
+  z-index: 999;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.15);
+  min-width: 200px;
+  max-width: 300px;
+}
+
+.mod3-dropdown-option {
+  width: 100%;
+  text-align: left;
+  padding: 12px 20px;
+  font-size: clamp(13px, 1.4vw, 18px);
+  font-weight: 850;
+  transition: background-color 0.15s;
+  border: none;
+  cursor: pointer;
+}
+
+.mod3-dropdown-option:hover {
+  background: rgba(160, 160, 160, 0.15) !important;
+}
+
+/* ---- BODY (sidebar + cards + map) ---- */
+.mod3-body {
+  display: flex;
+  flex: 1;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 8px 8px 16px;
+}
+
+/* ---- SIDEBAR ---- */
+.mod3-sidebar-desktop {
+  display: flex;
+}
+
+.mod3-sidebar-mobile {
+  display: none;
+}
+
+.mod3-sidebar {
+  position: relative;
+  flex-shrink: 0;
+  margin-left: 60px;
+  margin-top: 30px;
+  align-self: flex-start;
+  z-index: 40;
+}
+
+/* Spacer — always 84px wide, keeps flow stable */
+.mod3-sidebar-spacer {
+  width: 84px;
+  min-height: 560px;
+}
+
+/* Inner panel — absolutely positioned, overlays on hover */
+.mod3-sidebar-inner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 24px 8px;
+  transition: width 0.3s ease-in-out, border-radius 0.3s ease-in-out,
+    background 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  min-height: 560px;
+  width: 84px;
+}
+
+.mod3-sidebar-inner.mod3-sidebar-expanded {
+  width: 240px;
+}
+
+.mod3-sidebar-group {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.mod3-sidebar-btn {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  transition: all 0.2s;
+  background: transparent;
+  border-radius: 50px;
+  padding: 5px;
+  min-height: 48px;
+  border: none;
+  cursor: pointer;
+}
+
+.mod3-sidebar-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}
+
+.mod3-sidebar-label {
+  font-weight: 700;
+  white-space: nowrap;
+  transition: all 0.3s;
+  overflow: hidden;
+  border-radius: 50px;
+  text-align: center;
+  font-size: 15px;
+}
+
+/* ---- CARDS AREA ---- */
+.mod3-cards-area {
+  flex: none;
+  margin-top: 30px;
+  margin-left: 40px;
+}
+
+/* ---- MAP AREA ---- */
+.mod3-map-area {
+  flex: 1;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  height: 100%;
+  padding-right: 60px;
+  margin-left: 30px;
+}
+
+.beranda-container {
+  width: 100%;
+}
+
+.beranda-desktop-only {
+  display: grid;
+}
+
+.beranda-mobile-carousel {
+  display: none;
+}
+
+/* ---- BERANDA GRID (Staggered 2x2 Grid) ---- */
+.beranda-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(10px, 1.2vw, 20px);
+  max-width: 680px;
+}
+
+/* Cards */
+.beranda-card {
+  border-radius: 24px;
+  padding: clamp(12px, 1.5vw, 20px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.beranda-card-large {
+  border-radius: 34px;
+  padding: clamp(14px, 1.8vw, 24px);
+  height: clamp(210px, 20vw, 260px);
+  justify-content: center;
+  align-self: start;
+}
+
+.beranda-card-small {
+  border-radius: 24px;
+  padding: clamp(14px, 1.6vw, 22px);
+  height: clamp(165px, 16.5vw, 210px);
+  justify-content: center;
+  align-self: start;
+}
+
+/* Top Right Card (Small) aligned to bottom of Row 1 */
+.beranda-card-top-right {
+  align-self: end !important;
+}
+
+.beranda-card-title {
+  font-size: clamp(14px, 1.6vw, 22px);
+  font-weight: 850;
+  text-align: center;
+  line-height: 1.3;
+  color: #FFFFFF;
+  text-shadow: 0px 3px 6px rgba(0, 0, 0, 0.7), 0px 1px 2px rgba(0, 0, 0, 0.9);
+  -webkit-text-stroke: 0.5px rgba(0, 0, 0, 0.4);
+}
+
+.beranda-divider {
+  width: 100%;
+  height: 2px;
+  margin: 4px 0;
+}
+
+.beranda-number-row {
+  display: flex;
+  align-items: baseline;
+  gap: clamp(6px, 1vw, 12px);
+}
+
+.beranda-number {
+  font-size: clamp(26px, 3.4vw, 42px);
+  font-weight: 850;
+  color: #FF2B1B;
+  display: inline-block;
+  filter: drop-shadow(2px 3px 2px rgba(0, 0, 0, 0.85));
+}
+
+.beranda-unit {
+  font-family: var(--font-lora), Georgia, serif;
+  font-style: normal;
+  font-size: clamp(20px, 2.8vw, 36px);
+  font-weight: 700;
+  color: #FFFFFF;
+  text-shadow: 0px 2px 5px rgba(0, 0, 0, 0.85);
+  -webkit-text-stroke: 0.8px rgba(0, 0, 0, 0.5);
+}
+
+.beranda-subtitle {
+  font-size: clamp(12px, 1.4vw, 18px);
+  font-weight: 800;
+  text-align: center;
+  color: #FFFFFF;
+  text-shadow: 0px 2px 5px rgba(0, 0, 0, 0.85);
+  -webkit-text-stroke: 0.5px rgba(0, 0, 0, 0.4);
+}
+
+/* ---- DETAIL VIEW (Banjir / Longsor) ---- */
+.mod3-detail-view {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  max-width: 320px;
+}
+
+.mod3-glass-card {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0.22) 100%);
+  backdrop-filter: blur(25px);
+  border: 2px solid rgba(255, 255, 255, 0.75);
+  border-radius: 24px;
+  padding: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), inset 0px 2px 4px rgba(255, 255, 255, 0.6);
+}
+
+.mod3-card-header {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: clamp(0.6rem, 1.2vw, 0.75rem);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 8px;
+}
+
+.mod3-data-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.mod3-kategori-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: clamp(0.6rem, 1.2vw, 0.75rem);
+  font-weight: 600;
+}
+
+.mod3-legend-dot {
+  width: 16px;
+  height: 12px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+/* ---- METADATA LAYOUT ---- */
+.mod3-metadata-layout {
+  display: flex;
+  gap: 16px;
+  width: 100%;
+}
+
+.mod3-metadata-col {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1;
+}
+
+.mod3-metadata-row {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: 8px;
+}
+
+.mod3-klasifikasi-grid {
+  display: flex;
+  gap: 16px;
+}
+
+/* ---- PETA (MAP) ---- */
+.mod3-peta-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  max-width: 880px;
+  margin-top: -115px;
+  gap: 12px;
+}
+
+.mod3-peta-filters {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+  margin-top: -24px;
+  margin-bottom: 8px;
+  position: relative;
+  z-index: 100;
+  pointer-events: auto;
+}
+
+.mod3-peta-filters .mod3-dropdown-wrapper {
+  flex: 1;
+  width: 100%;
+}
+
+.mod3-peta-filters .mod3-dropdown-trigger {
+  width: 100%;
+}
+
+.mod3-peta-header-bar {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  align-self: center;
+  width: fit-content;
+  max-width: 90%;
+  padding: 8px 36px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0.22) 100%);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  border: 2px solid rgba(255, 255, 255, 0.75);
+  border-radius: 50px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12), inset 0px 2px 4px rgba(255, 255, 255, 0.6);
+  z-index: 10;
+}
+
+.mod3-peta-card {
+  position: relative;
+  border-radius: 34px;
+  overflow: hidden;
+  border: 2px solid rgba(255, 255, 255, 0.75);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0.22) 100%);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15), inset 0px 2px 4px rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(25px);
+  width: 100%;
+  height: clamp(530px, 45vw, 565px);
+  display: flex;
+  flex-direction: column;
+  padding: 16px 20px;
+}
+
+.mod3-peta-header-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 10px;
+}
+
+.mod3-peta-header-icon {
+  width: 22px;
+  height: 22px;
+  color: #FFFFFF;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+}
+
+.mod3-peta-title-text {
+  font-weight: 850;
+  color: #FFFFFF;
+  font-size: clamp(14px, 1.4vw, 20px);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.6));
+}
+
+.mod3-legenda-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 20px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.33) 0%, rgba(255, 255, 255, 0.1) 100%);
+  border: 3px solid rgba(255, 255, 255, 0.7);
+  border-radius: 35px;
+  color: #FFFFFF;
+  font-weight: 850;
+  font-size: clamp(13px, 1.2vw, 17px);
+  cursor: pointer;
+  backdrop-filter: blur(20px);
+  box-shadow: inset 0px -2px 4px rgba(0, 0, 0, 0.2), inset 0px 2px 4px rgba(255, 255, 255, 0.4);
+  transition: all 0.2s;
+}
+
+.mod3-legenda-btn:hover {
+  background: rgba(255, 255, 255, 0.4);
+  transform: translateY(-1px);
+}
+
+.mod3-legenda-arrow {
+  transition: transform 0.3s ease;
+}
+
+.mod3-legenda-arrow.open {
+  transform: rotate(180deg);
+}
+
+.mod3-peta-svg-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  flex: 1;
+  overflow: hidden;
+  border-radius: 20px;
+}
+
+.mod3-peta-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.mod3-peta-legend-box {
+  position: absolute;
+  bottom: 24px;
+  left: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px 20px;
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(20px);
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+  z-index: 20;
+}
+
+.mod3-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.mod3-legend-dot-red {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background-color: #D94235;
+  box-shadow: 0 0 10px rgba(217, 66, 53, 0.8);
+}
+
+.mod3-legend-dot-cream {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background-color: #F4D5B5;
+  box-shadow: 0 0 10px rgba(244, 213, 181, 0.8);
+}
+
+.mod3-legend-label {
+  color: #FFFFFF;
+  font-weight: 700;
+  font-size: clamp(12px, 1.1vw, 15px);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.mod3-peta-controls {
+  position: absolute;
+  bottom: 24px;
+  right: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 20;
+}
+
+.mod3-control-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(20px);
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  color: #FFFFFF;
+  font-size: 20px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+}
+
+.mod3-control-btn:hover {
+  background: rgba(255, 255, 255, 0.35);
+  transform: scale(1.08);
+}
+
+.mod3-peta-tooltip {
+  position: absolute;
+  pointer-events: none;
+  z-index: 100;
+  padding: 10px 16px;
+  background: rgba(15, 23, 18, 0.88);
+  backdrop-filter: blur(16px);
+  border: 1.5px solid rgba(255, 255, 255, 0.35);
+  border-radius: 14px;
+  color: #FFF;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  font-family: var(--font-garet-heavy), sans-serif;
+  transition: opacity 0.15s ease;
+}
+
+.mod3-tooltip-title {
+  font-weight: 850;
+  font-size: 15px;
+  margin-bottom: 4px;
+}
+
+.mod3-tooltip-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.mod3-tooltip-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+
+/* ============================================================
+   RESPONSIVE BREAKPOINTS
+   ============================================================ */
+
+/* ---- LARGE DESKTOP (> 1400px) — original Figma scale ---- */
+@media (min-width: 1400px) {
+  .mod3-header {
+    padding: 69px 81px 16px;
+  }
+
+  .mod3-sidebar {
+    margin-left: 60px;
+  }
+
+  .mod3-cards-area {
+    margin-left: 50px;
+  }
+}
+
+/* ---- DESKTOP (1024px – 1399px) ---- */
+@media (max-width: 1399px) {
+  .mod3-header {
+    padding: 40px 30px 16px;
+    gap: 12px;
+  }
+
+  .mod3-sidebar {
+    margin-left: 16px;
+  }
+
+  .mod3-cards-area {
+    margin-left: 16px;
+  }
+
+  .beranda-grid {
+    max-width: 420px;
+  }
+
+  .mod3-detail-view {
+    max-width: 260px;
+  }
+
+  .mod3-peta-wrapper {
+    max-width: 480px;
+  }
+
+  .mod3-dropdown-trigger {
+    width: clamp(130px, 13vw, 220px);
+    padding: 10px 16px;
+  }
+}
+
+/* ---- TABLET & MOBILE RESPONSIVE LAYOUT (<= 1080px, including iPad Air & iPad Pro) ---- */
+@media (max-width: 1080px) {
+  .mod3-header {
+    padding: 64px 20px 8px !important;
+    gap: 10px;
+    align-items: center !important;
+    text-align: center !important;
+  }
+
+  .mod3-title-sub {
+    margin-top: -5px;
+  }
+
+  .mod3-title-line {
+    margin-top: -8px;
+  }
+
+  .mod3-sidebar-desktop {
+    display: none !important;
+  }
+
+  .mod3-sidebar-mobile {
+    display: flex !important;
+    position: absolute;
+    top: 14px;
+    left: 16px;
+    z-index: 99999 !important;
+  }
+
+  .mod3-mobile-square-hamburger {
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0.15) 100%);
+    backdrop-filter: blur(20px);
+    WebkitBackdropFilter: blur(20px);
+    border: 1.5px solid rgba(255, 255, 255, 0.55);
+    color: #FFFFFF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.4), 0 4px 14px rgba(0, 0, 0, 0.2);
+    transition: all 0.2s ease;
+  }
+
+  .mod3-mobile-square-hamburger:active {
+    transform: scale(0.92);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.65) 0%, rgba(255, 255, 255, 0.3) 100%);
+  }
+
+  .mod3-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 4px 16px 24px;
+    gap: 16px;
+    width: 100%;
+  }
+
+  /* Display contents trick: brings mod3-peta-filters to order 1 above carousel/grid! */
+  .mod3-map-area {
+    display: contents !important;
+  }
+
+  .mod3-peta-wrapper {
+    display: contents !important;
+  }
+
+  /* Order 1: Dropdown Filters ABOVE Stat Cards */
+  .mod3-peta-filters {
+    order: 1 !important;
+    margin-top: 0 !important;
+    margin-bottom: 8px !important;
+    width: 100% !important;
+  }
+
+  /* Order 2: Stat Cards Area */
+  .mod3-cards-area {
+    order: 2 !important;
+    margin: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  /* Order 3: Map Title Header Bar */
+  .mod3-peta-header-bar {
+    order: 3 !important;
+    align-self: center !important;
+    margin-top: 6px !important;
+  }
+
+  /* Order 4: Map Glass Card */
+  .mod3-peta-card {
+    order: 4 !important;
+    width: 100% !important;
+    height: 440px !important;
+  }
+
+  .mod3-peta-svg-container {
+    aspect-ratio: 4 / 3;
+    min-height: 290px;
+  }
+}
+
+/* Tablet specific filter & stat cards adjustments (768px – 1080px, e.g. iPad Air & iPad Pro) */
+@media (max-width: 1080px) and (min-width: 768px) {
+  .mod3-peta-filters {
+    flex-direction: row !important;
+    gap: 12px !important;
+  }
+
+  .mod3-peta-filters .mod3-dropdown-wrapper {
+    flex: 1 !important;
+    width: 100% !important;
+  }
+
+  /* Show 2x2 Staggered Stat Cards Grid on Tablet (matching desktop card sizes) */
+  .beranda-desktop-only {
+    display: grid !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 16px !important;
+  }
+
+  .beranda-mobile-carousel {
+    display: none !important;
+  }
+
+  .beranda-card-large {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 235px !important;
+    align-self: start !important;
+  }
+
+  .beranda-card-small {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 185px !important;
+    align-self: start !important;
+  }
+
+  .beranda-card-top-right {
+    align-self: end !important;
+  }
+
+  .mod3-detail-view {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .mod3-peta-card {
+    height: 540px !important;
+  }
+}
+
+/* Mobile specific filter & carousel adjustments (< 768px) */
+@media (max-width: 767px) {
+  .mod3-peta-filters {
+    flex-direction: column !important;
+    gap: 8px !important;
+  }
+
+  .mod3-peta-filters .mod3-dropdown-wrapper,
+  .mod3-peta-filters .mod3-dropdown-trigger {
+    width: 100% !important;
+  }
+
+  /* Show 3D Carousel exclusively on Mobile */
+  .beranda-desktop-only {
+    display: none !important;
+  }
+
+  .beranda-mobile-carousel {
+    display: flex !important;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+}
+
+/* Drawer Overlay (Shared for Mobile & Tablet) */
+.mod3-mobile-drawer-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 99999;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(12px);
+  WebkitBackdropFilter: blur(12px);
+  animation: fadeInBackdrop 0.25s ease forwards;
+}
+
+@keyframes fadeInBackdrop {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.mod3-mobile-drawer-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 85vw;
+  max-width: 320px;
+  background: linear-gradient(180deg, rgba(32, 46, 38, 0.94) 0%, rgba(18, 28, 22, 0.96) 100%);
+  backdrop-filter: blur(35px);
+  WebkitBackdropFilter: blur(35px);
+  border-radius: 0 28px 28px 0;
+  border-right: 1.5px solid rgba(255, 255, 255, 0.25);
+  padding: 24px 18px 20px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 16px 0 48px rgba(0, 0, 0, 0.6);
+  animation: slideInDrawer 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes slideInDrawer {
+  from {
+    transform: translateX(-100%);
+  }
+
+  to {
+    transform: translateX(0);
+  }
+}
+
+/* Drawer Header Branding */
+.mod3-drawer-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding-bottom: 16px;
+  margin-bottom: 8px;
+}
+
+.mod3-drawer-branding {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.mod3-drawer-logo {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #DF5353 0%, #A92C2C 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 16px rgba(223, 83, 83, 0.4);
+  border: 1.5px solid rgba(255, 255, 255, 0.3);
+  flex-shrink: 0;
+}
+
+.mod3-drawer-title-box {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.mod3-drawer-tag {
+  font-size: 11px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.8);
+  letter-spacing: 0.3px;
+}
+
+.mod3-drawer-title {
+  font-size: 14px;
+  font-weight: 900;
+  color: #FFFFFF;
+  font-family: var(--font-garet-heavy), sans-serif;
+  margin-top: 1px;
+  margin-bottom: 2px;
+  line-height: 1.2;
+}
+
+.mod3-drawer-title .text-red {
+  color: #EF5353;
+  font-weight: 900;
+}
+
+.mod3-drawer-title .text-gold {
+  color: #F0B446;
+  font-weight: 900;
+}
+
+.mod3-drawer-location {
+  font-size: 10px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.mod3-drawer-close-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1.5px solid rgba(255, 255, 255, 0.3);
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.mod3-drawer-close-btn:active {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(0.92);
+}
+
+/* Menu List */
+.mod3-drawer-menu-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.mod3-drawer-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 11px 16px;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1.5px solid rgba(255, 255, 255, 0.12);
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.mod3-drawer-item:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.mod3-drawer-item.active {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0.08) 100%);
+  border: 1.5px solid rgba(240, 180, 70, 0.75);
+  border-left: 4px solid #F0B446;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
+}
+
+.mod3-drawer-item-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.16);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.mod3-drawer-item.active .mod3-drawer-item-icon {
+  background: rgba(255, 255, 255, 0.28);
+}
+
+.mod3-drawer-item-label {
+  font-size: 14px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.9);
+  font-family: var(--font-garet-heavy), sans-serif;
+  flex: 1;
+  text-align: left;
+}
+
+.mod3-drawer-item.active .mod3-drawer-item-label {
+  color: #FFFFFF;
+  font-weight: 900;
+}
+
+.mod3-drawer-active-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #FACB48;
+  box-shadow: 0 0 10px rgba(250, 203, 72, 0.9);
+}
+
+.mod3-drawer-chevron {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* Footer Section */
+.mod3-drawer-footer {
+  margin-top: auto;
+  padding-top: 14px;
+}
+
+.mod3-drawer-footer-divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.12);
+  margin-bottom: 14px;
+  width: 100%;
+}
+
+.mod3-drawer-footer-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 4px;
+}
+
+.mod3-drawer-footer-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.mod3-drawer-footer-text {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.footer-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.footer-time {
+  font-size: 11px;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin-top: 1px;
+}
+
+@media (max-width: 767px) {
+  .beranda-desktop-only {
+    display: none !important;
+  }
+
+  .beranda-mobile-carousel {
+    display: flex !important;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    gap: 8px;
+    margin-top: 4px;
+    margin-bottom: 2px;
+  }
+
+  .hstack-deck-container {
+    position: relative;
+    width: 100%;
+    max-width: 440px;
+    height: 215px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    perspective: 1000px;
+  }
+
+  .hstack-card {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: clamp(275px, 80vw, 335px);
+    height: 100%;
+    margin-left: clamp(-165px, -40vw, -137px);
+    border-radius: 28px !important;
+    padding: 18px 20px !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.45s cubic-bezier(0.34, 1.35, 0.64, 1),
+      opacity 0.45s ease,
+      filter 0.45s ease;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25) !important;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  /* Center Active Card */
+  .hstack-card-center {
+    transform: translate3d(0, 0, 0) scale(1) rotate(0deg);
+    z-index: 10;
+    opacity: 1;
+    pointer-events: auto;
+    filter: brightness(1);
+  }
+
+  /* Right Stacked Card (Peeking on right) */
+  .hstack-card-right {
+    transform: translate3d(45px, 4px, -40px) scale(0.86) rotate(4deg);
+    z-index: 5;
+    opacity: 0.68;
+    filter: brightness(0.85);
+  }
+
+  /* Left Stacked Card (Peeking on left) */
+  .hstack-card-left {
+    transform: translate3d(-45px, 4px, -40px) scale(0.86) rotate(-4deg);
+    z-index: 5;
+    opacity: 0.68;
+    filter: brightness(0.85);
+  }
+
+  /* Hidden Background Cards */
+  .hstack-card-hidden {
+    transform: translate3d(0, 10px, -100px) scale(0.72) rotate(0deg);
+    z-index: 1;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .stack-card-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .stack-card-content .beranda-card-title {
+    font-size: 15px !important;
+    font-weight: 900 !important;
+    color: #FFFFFF !important;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6), 0 1px 2px rgba(0, 0, 0, 0.9) !important;
+    -webkit-text-stroke: 0.5px rgba(0, 0, 0, 0.6) !important;
+    letter-spacing: 0.3px;
+    line-height: 1.25;
+    text-align: center;
+  }
+
+  .stack-card-content .beranda-number {
+    font-size: 34px !important;
+    font-weight: 900 !important;
+    filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.75)) !important;
+  }
+
+  .stack-card-content .beranda-unit {
+    font-size: 26px !important;
+    font-weight: 800 !important;
+    color: #FFFFFF !important;
+    -webkit-text-stroke: 0.5px #000000 !important;
+  }
+
+  .stack-card-content .beranda-subtitle {
+    font-size: 13px !important;
+    font-weight: 800 !important;
+    color: #FFFFFF !important;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.7) !important;
+    -webkit-text-stroke: none !important;
+    opacity: 0.95;
+    text-align: center;
+  }
+
+  .stack-card-content .beranda-divider {
+    height: 2px !important;
+    margin: 4px 0 !important;
+    background: linear-gradient(90deg, #FFFFFF 0%, #E0C9C9 100%) !important;
+    opacity: 0.9;
+  }
+
+  /* Outer Floating Glass Arrow Buttons */
+  .hstack-outer-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0.15) 100%);
+    backdrop-filter: blur(16px);
+    border: 1.5px solid rgba(255, 255, 255, 0.65);
+    color: #FFFFFF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 30;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22), inset 0 1px 2px rgba(255, 255, 255, 0.5);
+    transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    user-select: none;
+  }
+
+  .hstack-outer-arrow-left {
+    left: 2px;
+  }
+
+  .hstack-outer-arrow-right {
+    right: 2px;
+  }
+
+  .hstack-outer-arrow:hover {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.65) 0%, rgba(255, 255, 255, 0.3) 100%);
+    border-color: rgba(255, 255, 255, 0.9);
+    transform: translateY(-50%) scale(1.12);
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.3), inset 0 1px 3px rgba(255, 255, 255, 0.8);
+  }
+
+  .hstack-outer-arrow:active {
+    transform: translateY(-50%) scale(0.95);
+  }
+
+  /* Bare Floating Dots Matching Reference Image */
+  .carousel-dots-standalone {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 4px;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    padding: 0 !important;
+  }
+
+  .carousel-dot-bare {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.4);
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .carousel-dot-bare.active {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #FACB48;
+    box-shadow: 0 0 10px rgba(250, 203, 72, 0.85);
+    transform: scale(1.1);
+  }
+
+  .mod3-detail-view {
+    max-width: 100%;
+  }
+
+  .mod3-glass-card {
+    padding: 12px;
+  }
+
+  .mod3-peta-container {
+    border-radius: 20px;
+  }
+
+  .mod3-peta-label {
+    padding: 4px 16px;
+    border-width: 3px;
+    border-radius: 50px;
+  }
+
+  .mod3-metadata-row {
+    grid-template-columns: 100px 1fr;
+    gap: 4px;
+  }
+
+  .mod3-klasifikasi-grid {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .mod3-map-area {
+    padding: 0 4px;
+  }
+}
+
+/* ---- VERY SMALL MOBILE (< 400px) ---- */
+@media (max-width: 400px) {
+  .mod3-header {
+    padding: 16px 10px 8px;
+  }
+
+  .mod3-header-filters {
+    flex-direction: column;
+  }
+
+  .mod3-dropdown-trigger {
+    width: 100%;
+  }
+
+  .mod3-sidebar-icon {
+    width: 32px;
+    height: 32px;
+  }
+
+  .mod3-sidebar-icon img {
+    width: 20px !important;
+    height: 20px !important;
+  }
+
+  .beranda-number-row {
+    gap: 8px;
+  }
+}
