@@ -1,88 +1,10 @@
 "use client";
-import { useState } from "react";
-
-const STATS = {
-  totalLuasBanjir: 100000,
-  jumlahKotaTerdampak: 10,
-  jumlahKecamatanTerdampak: 10,
-  totalLuasLongsor: 100000,
-};
+import { useState, useEffect } from "react";
 
 function formatAngka(num) {
-  return num.toLocaleString("id-ID");
+  if (num === null || num === undefined || isNaN(num)) return "-";
+  return Math.round(num).toLocaleString("id-ID");
 }
-
-// Data cards beranda dengan pendaran elips radial-gradient + 75px ultra blur (100% mulus sesuai gambar figma)
-const CARDS_DATA = [
-  {
-    id: 1,
-    titleLine1: "Total Luas Area",
-    titleLine2: "Banjir (ha)",
-    value: formatAngka(STATS.totalLuasBanjir),
-    subtitle: "15% dari total wilayah",
-    ellipseStyle: {
-      width: "220px",
-      height: "240px",
-      background: "radial-gradient(ellipse at center, #EB8B68 0%, rgba(235, 139, 104, 0.75) 40%, transparent 75%)",
-      right: "-40px",
-      bottom: "-40px",
-      borderRadius: "50%",
-      filter: "blur(65px)",
-      opacity: 0.95,
-    },
-  },
-  {
-    id: 2,
-    titleLine1: "Jumlah Kota",
-    titleLine2: "Terdampak",
-    value: STATS.jumlahKotaTerdampak,
-    subtitle: "dari 30 kab/kota",
-    ellipseStyle: {
-      width: "220px",
-      height: "240px",
-      background: "radial-gradient(ellipse at center, #EB8B68 0%, rgba(235, 139, 104, 0.75) 40%, transparent 75%)",
-      right: "-40px",
-      top: "-40px",
-      borderRadius: "50%",
-      filter: "blur(65px)",
-      opacity: 0.95,
-    },
-  },
-  {
-    id: 3,
-    titleLine1: "Jumlah Kecamatan",
-    titleLine2: "Terdampak",
-    value: STATS.jumlahKecamatanTerdampak,
-    subtitle: "dari 30 kecamatan",
-    ellipseStyle: {
-      width: "220px",
-      height: "240px",
-      background: "radial-gradient(ellipse at center, #EB8B68 0%, rgba(235, 139, 104, 0.75) 40%, transparent 75%)",
-      left: "-40px",
-      bottom: "-40px",
-      borderRadius: "50%",
-      filter: "blur(65px)",
-      opacity: 0.95,
-    },
-  },
-  {
-    id: 4,
-    titleLine1: "Total Luas Area",
-    titleLine2: "Longsor (ha)",
-    value: formatAngka(STATS.totalLuasLongsor),
-    subtitle: "15% dari total wilayah",
-    ellipseStyle: {
-      width: "220px",
-      height: "240px",
-      background: "radial-gradient(ellipse at center, #EB8B68 0%, rgba(235, 139, 104, 0.75) 40%, transparent 75%)",
-      left: "-40px",
-      bottom: "-40px",
-      borderRadius: "50%",
-      filter: "blur(65px)",
-      opacity: 0.95,
-    },
-  },
-];
 
 // Single Card Component - Sesuai Figma CSS dengan Frosted Glass Effect & Responsive 5px Border
 function StatCard({ item, isCarousel = false }) {
@@ -149,15 +71,150 @@ export default function BerandaView() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [touchStart, setTouchStart] = useState(null);
   const [touchEnd, setTouchEnd] = useState(null);
+  const [cardsData, setCardsData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const minSwipeDistance = 50;
 
+  // Fetch data modul3_dampak.json dan hitung statistik
+  useEffect(() => {
+    fetch("/data/modul3_dampak.json")
+      .then((res) => res.json())
+      .then((data) => {
+        // Hitung total luas area banjir (pixel_count * 0.09 ha untuk resolusi 30m)
+        const totalLuasBanjirHa = data.reduce(
+          (acc, r) => acc + r.dampak_banjir_longsor.pixel_count * 0.09,
+          0
+        );
+
+        // Hitung jumlah kabupaten/kota terdampak banjir (mean_nilai > 0)
+        const kabTerdampakBanjir = new Set(
+          data
+            .filter((r) => r.dampak_banjir_longsor.mean_nilai > 0)
+            .map((r) => r.nm_kabupaten)
+        ).size;
+
+        // Hitung jumlah kecamatan terdampak banjir
+        const kecTerdampakBanjir = data.filter(
+          (r) => r.dampak_banjir_longsor.mean_nilai > 0
+        ).length;
+
+        // Hitung total luas area longsor (pixel_count * 0.09 ha untuk resolusi 30m)
+        const totalLuasLongsorHa = data.reduce(
+          (acc, r) => acc + r.dampak_genangan_longsor.pixel_count * 0.09,
+          0
+        );
+
+        // Hitung total kab/kota dan kecamatan untuk subtitle
+        const totalKab = new Set(data.map((r) => r.nm_kabupaten)).size;
+        const totalKec = data.length;
+
+        // Hitung kab/kec terdampak longsor
+        const kabTerdampakLongsor = new Set(
+          data
+            .filter((r) => r.dampak_genangan_longsor.mean_nilai > 0)
+            .map((r) => r.nm_kabupaten)
+        ).size;
+
+        const kecTerdampakLongsor = data.filter(
+          (r) => r.dampak_genangan_longsor.mean_nilai > 0
+        ).length;
+
+        // Hitung total luas wilayah (km2 -> ha)
+        const totalLuasWilayahHa = data.reduce(
+          (acc, r) => acc + r.luas_kec_km2 * 100,
+          0
+        );
+
+        const pctBanjir = ((totalLuasBanjirHa / totalLuasWilayahHa) * 100).toFixed(1);
+        const pctLongsor = ((totalLuasLongsorHa / totalLuasWilayahHa) * 100).toFixed(1);
+
+        const cards = [
+          {
+            id: 1,
+            titleLine1: "Total Luas Area",
+            titleLine2: "Banjir (ha)",
+            value: formatAngka(totalLuasBanjirHa),
+            subtitle: `${pctBanjir}% dari total wilayah`,
+            ellipseStyle: {
+              width: "220px",
+              height: "240px",
+              background: "radial-gradient(ellipse at center, #EB8B68 0%, rgba(235, 139, 104, 0.75) 40%, transparent 75%)",
+              right: "-40px",
+              bottom: "-40px",
+              borderRadius: "50%",
+              filter: "blur(65px)",
+              opacity: 0.95,
+            },
+          },
+          {
+            id: 2,
+            titleLine1: "Jumlah Kab/Kota",
+            titleLine2: "Terdampak Banjir",
+            value: kabTerdampakBanjir,
+            subtitle: `dari ${totalKab} kab/kota`,
+            ellipseStyle: {
+              width: "220px",
+              height: "240px",
+              background: "radial-gradient(ellipse at center, #EB8B68 0%, rgba(235, 139, 104, 0.75) 40%, transparent 75%)",
+              right: "-40px",
+              top: "-40px",
+              borderRadius: "50%",
+              filter: "blur(65px)",
+              opacity: 0.95,
+            },
+          },
+          {
+            id: 3,
+            titleLine1: "Jumlah Kecamatan",
+            titleLine2: "Terdampak Banjir",
+            value: kecTerdampakBanjir,
+            subtitle: `dari ${totalKec} kecamatan`,
+            ellipseStyle: {
+              width: "220px",
+              height: "240px",
+              background: "radial-gradient(ellipse at center, #EB8B68 0%, rgba(235, 139, 104, 0.75) 40%, transparent 75%)",
+              left: "-40px",
+              bottom: "-40px",
+              borderRadius: "50%",
+              filter: "blur(65px)",
+              opacity: 0.95,
+            },
+          },
+          {
+            id: 4,
+            titleLine1: "Total Luas Area",
+            titleLine2: "Longsor (ha)",
+            value: formatAngka(totalLuasLongsorHa),
+            subtitle: `${pctLongsor}% dari total wilayah`,
+            ellipseStyle: {
+              width: "220px",
+              height: "240px",
+              background: "radial-gradient(ellipse at center, #EB8B68 0%, rgba(235, 139, 104, 0.75) 40%, transparent 75%)",
+              left: "-40px",
+              bottom: "-40px",
+              borderRadius: "50%",
+              filter: "blur(65px)",
+              opacity: 0.95,
+            },
+          },
+        ];
+
+        setCardsData(cards);
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        console.error("Gagal memuat data modul3_dampak.json:", err);
+        setIsLoading(false);
+      });
+  }, []);
+
   const nextCard = () => {
-    setActiveIndex((prev) => (prev + 1) % CARDS_DATA.length);
+    setActiveIndex((prev) => (prev + 1) % cardsData.length);
   };
 
   const prevCard = () => {
-    setActiveIndex((prev) => (prev - 1 + CARDS_DATA.length) % CARDS_DATA.length);
+    setActiveIndex((prev) => (prev - 1 + cardsData.length) % cardsData.length);
   };
 
   const onTouchStart = (e) => {
@@ -182,11 +239,24 @@ export default function BerandaView() {
     }
   };
 
+  if (isLoading || cardsData.length === 0) {
+    return (
+      <div className="w-full max-w-[640px] mx-auto mt-2 xl:mt-[40px] 2xl:mt-[56px] select-none flex items-center justify-center min-h-[230px]">
+        <p
+          className="text-white text-[18px] font-[850] animate-pulse [text-shadow:0_3px_6px_rgba(0,0,0,0.5)]"
+          style={{ fontFamily: "var(--font-garet-heavy), 'Garet', sans-serif" }}
+        >
+          Memuat data...
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="w-full max-w-[640px] mx-auto mt-2 xl:mt-[40px] 2xl:mt-[56px] select-none">
       {/* Grid Layout for Desktop & Tablet (screens >= 640px) */}
       <div className="hidden sm:grid grid-cols-2 gap-4 lg:gap-5 beranda-desktop-only">
-        {CARDS_DATA.map((item) => (
+        {cardsData.map((item) => (
           <StatCard key={item.id} item={item} />
         ))}
       </div>
@@ -212,8 +282,8 @@ export default function BerandaView() {
 
           {/* 3D Side-Stacked Container */}
           <div className="relative w-[68%] h-[215px] flex items-center justify-center">
-            {CARDS_DATA.map((item, idx) => {
-              const total = CARDS_DATA.length;
+            {cardsData.map((item, idx) => {
+              const total = cardsData.length;
               let diff = idx - activeIndex;
 
               if (diff > total / 2) diff -= total;
@@ -281,7 +351,7 @@ export default function BerandaView() {
 
         {/* Carousel Indicators / Dots */}
         <div className="flex items-center justify-center gap-2 mt-3">
-          {CARDS_DATA.map((_, idx) => {
+          {cardsData.map((_, idx) => {
             const isActive = idx === activeIndex;
             return (
               <button

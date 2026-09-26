@@ -1,5 +1,5 @@
 "use client";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import mapData from "./sumatra_map_data_optimized.json";
 
 const JUDUL_PETA = {
@@ -8,35 +8,39 @@ const JUDUL_PETA = {
   longsor: "Peta Tanah Longsor Sumatra",
 };
 
-// Flood severity colors for Banjir tab (Matching Klasifikasi Banjir Image)
-const BANJIR_CLASSIFICATION = {
-  "Kota Medan": "#0044FF", // Berat (> 1,5 m)
-  "Kab. Aceh Besar": "#0084FF", // Sedang (0,5 - 1,5 m)
-  "Kab. Pidie": "#0044FF", // Berat (> 1,5 m)
-  "Kota Padang": "#0084FF", // Sedang (0,5 - 1,5 m)
-  "Kab. Deli Serdang": "#00D2FF", // Ringan (< 0,5 m)
-};
-
-// Landslide severity colors for Tanah Longsor tab (Matching Klasifikasi Longsor Image)
-const LONGSOR_CLASSIFICATION = {
-  "Kab. Aceh Besar": "#DC2626", // Berat (> 4 dB)
-  "Kab. Pidie": "#DC2626", // Berat (> 4 dB)
-  "Kota Medan": "#DC2626", // Berat (> 4 dB)
-  "Kab. Deli Serdang": "#F97316", // Sedang (2 - 4 dB)
-  "Kota Padang": "#DC2626", // Berat (> 4 dB)
-  "Kab. Aceh Jaya": "#FCD34D", // Ringan (< 2 dB)
-  "Kab. Aceh Barat": "#F97316", // Sedang (2 - 4 dB)
-  "Kab. Aceh Selatan": "#FCD34D", // Ringan (< 2 dB)
-  "Kab. Nagan Raya": "#F97316", // Sedang (2 - 4 dB)
-  "Kab. Karo": "#F97316", // Sedang (2 - 4 dB)
-  "Kab. Simalungun": "#FCD34D", // Ringan (< 2 dB)
-  "Kab. Pesisir Selatan": "#F97316", // Sedang (2 - 4 dB)
-  "Kab. Solok": "#FCD34D", // Ringan (< 2 dB)
-};
-
 function normalizeName(str) {
   if (!str) return "";
   return str.toLowerCase().replace(/^(kab\.|kota)\s+/i, "").trim();
+}
+
+// Warna klasifikasi banjir berdasarkan mean_nilai
+function getBanjirColor(meanNilai) {
+  if (meanNilai <= 0) return null; // Tidak terdampak
+  if (meanNilai < 3) return "#00D2FF"; // Ringan
+  if (meanNilai < 5) return "#0084FF"; // Sedang
+  return "#0044FF"; // Berat
+}
+
+// Warna klasifikasi longsor berdasarkan mean_nilai (selisih backscatter dB)
+function getLongsorColor(meanNilai) {
+  if (meanNilai <= 0) return null; // Tidak terdampak
+  if (meanNilai < 3) return "#FCD34D"; // Ringan
+  if (meanNilai < 5) return "#F97316"; // Sedang
+  return "#DC2626"; // Berat
+}
+
+// Warna beranda: merah jika terdampak, null jika tidak
+function getBerandaColor(kabData) {
+  if (!kabData) return null;
+  const hasBanjir = kabData.banjir_mean > 0;
+  const hasLongsor = kabData.longsor_mean > 0;
+  if (!hasBanjir && !hasLongsor) return null;
+  return "#E33434"; // Terdampak
+}
+
+function formatAngka(num) {
+  if (num === null || num === undefined || isNaN(num)) return "-";
+  return Math.round(num).toLocaleString("id-ID");
 }
 
 export default function PetaSumatra({
@@ -46,6 +50,69 @@ export default function PetaSumatra({
   kecamatan, setKecamatan,
 }) {
   const targetProvinces = ["Aceh", "Sumatera Utara", "Sumatera Barat"];
+
+  // Data dampak dari modul3_dampak.json
+  const [dampakData, setDampakData] = useState([]);
+
+  useEffect(() => {
+    fetch("/data/modul3_dampak.json")
+      .then((res) => res.json())
+      .then((data) => setDampakData(data))
+      .catch((err) => console.error("Gagal memuat data dampak:", err));
+  }, []);
+
+  // Build lookup per kabupaten: aggregate mean_nilai per kabupaten
+  const kabLookup = useMemo(() => {
+    if (!dampakData.length) return {};
+    const lookup = {};
+    for (const r of dampakData) {
+      const rawKey = r.nm_kabupaten;
+      const normKey = normalizeName(rawKey);
+      if (!lookup[normKey]) {
+        lookup[normKey] = {
+          banjir_pixel: 0,
+          banjir_sum: 0,
+          longsor_pixel: 0,
+          longsor_sum: 0,
+          luas_km2: 0,
+        };
+      }
+      lookup[normKey].banjir_pixel += r.dampak_banjir_longsor.pixel_count;
+      lookup[normKey].banjir_sum += r.dampak_banjir_longsor.sum_nilai;
+      lookup[normKey].longsor_pixel += r.dampak_genangan_longsor.pixel_count;
+      lookup[normKey].longsor_sum += r.dampak_genangan_longsor.sum_nilai;
+      lookup[normKey].luas_km2 += r.luas_kec_km2;
+    }
+    // Compute mean per kab and mirror raw names
+    for (const normKey of Object.keys(lookup)) {
+      const d = lookup[normKey];
+      d.banjir_mean = d.banjir_pixel > 0 ? d.banjir_sum / d.banjir_pixel : 0;
+      d.longsor_mean = d.longsor_pixel > 0 ? d.longsor_sum / d.longsor_pixel : 0;
+      d.banjir_ha = d.banjir_pixel * 0.09;
+      d.longsor_ha = d.longsor_pixel * 0.09;
+    }
+    return lookup;
+  }, [dampakData]);
+
+  // Build lookup per kecamatan
+  const kecLookup = useMemo(() => {
+    if (!dampakData.length) return {};
+    const lookup = {};
+    for (const r of dampakData) {
+      const rawKey = `${r.nm_kabupaten}|${r.nm_kecamatan}`;
+      const normKey = `${normalizeName(r.nm_kabupaten)}|${normalizeName(r.nm_kecamatan)}`;
+      const val = {
+        banjir_mean: r.dampak_banjir_longsor.mean_nilai,
+        longsor_mean: r.dampak_genangan_longsor.mean_nilai,
+        banjir_ha: r.dampak_banjir_longsor.pixel_count * 0.09,
+        longsor_ha: r.dampak_genangan_longsor.pixel_count * 0.09,
+        luas_km2: r.luas_kec_km2,
+      };
+      lookup[rawKey] = val;
+      lookup[normKey] = val;
+    }
+    return lookup;
+  }, [dampakData]);
 
   // Zoom, Pan, and 3D State
   const [scale, setScale] = useState(1.18);
@@ -96,6 +163,7 @@ export default function PetaSumatra({
 
   // Match active kecamatan item
   const normActiveKec = normalizeName(kecamatan);
+  const isFilterActive = Boolean(provinsi || kabupaten || normActiveKec);
 
   return (
     <div className="flex flex-col items-center gap-4 w-full max-w-[1050px] mx-auto select-none">
@@ -184,7 +252,7 @@ export default function PetaSumatra({
                   <span className="w-4 h-4 rounded-full bg-[#00D2FF] shadow-sm flex-shrink-0" />
                   <span className="font-serif text-[14px]">Ringan</span>
                 </div>
-                <span className="font-serif text-[13px] text-gray-800">&lt; 0,5 m</span>
+                <span className="font-serif text-[13px] text-gray-800">&lt; 3</span>
               </div>
 
               {/* Sedang */}
@@ -193,7 +261,7 @@ export default function PetaSumatra({
                   <span className="w-4 h-4 rounded-full bg-[#0084FF] shadow-sm flex-shrink-0" />
                   <span className="font-serif text-[14px]">Sedang</span>
                 </div>
-                <span className="font-serif text-[13px] text-gray-800">0,5 - 1,5 m</span>
+                <span className="font-serif text-[13px] text-gray-800">3 - 5</span>
               </div>
 
               {/* Berat */}
@@ -202,7 +270,7 @@ export default function PetaSumatra({
                   <span className="w-4 h-4 rounded-full bg-[#0044FF] shadow-sm flex-shrink-0" />
                   <span className="font-serif text-[14px]">Berat</span>
                 </div>
-                <span className="font-serif text-[13px] text-gray-800">&gt; 1,5 m</span>
+                <span className="font-serif text-[13px] text-gray-800">&gt; 5</span>
               </div>
 
               {/* Tidak Terdampak */}
@@ -235,7 +303,7 @@ export default function PetaSumatra({
                   <span className="w-4 h-4 rounded-full bg-[#FCD34D] shadow-sm flex-shrink-0" />
                   <span className="font-serif text-[14px]">Ringan</span>
                 </div>
-                <span className="font-serif text-[13px] text-gray-800">&lt; 2 dB</span>
+                <span className="font-serif text-[13px] text-gray-800">&lt; 3 dB</span>
               </div>
 
               {/* Sedang */}
@@ -244,7 +312,7 @@ export default function PetaSumatra({
                   <span className="w-4 h-4 rounded-full bg-[#F97316] shadow-sm flex-shrink-0" />
                   <span className="font-serif text-[14px]">Sedang</span>
                 </div>
-                <span className="font-serif text-[13px] text-gray-800">2 - 4 dB</span>
+                <span className="font-serif text-[13px] text-gray-800">3 - 5 dB</span>
               </div>
 
               {/* Berat */}
@@ -253,7 +321,7 @@ export default function PetaSumatra({
                   <span className="w-4 h-4 rounded-full bg-[#DC2626] shadow-sm flex-shrink-0" />
                   <span className="font-serif text-[14px]">Berat</span>
                 </div>
-                <span className="font-serif text-[13px] text-gray-800">&gt; 4 dB</span>
+                <span className="font-serif text-[13px] text-gray-800">&gt; 5 dB</span>
               </div>
 
               {/* Tidak Terdampak */}
@@ -265,64 +333,55 @@ export default function PetaSumatra({
           </div>
         )}
 
-        {/* Hover Tooltip / Callout Pointer Line */}
-        {hoveredItem && (
-          activeMenu === "banjir" ? (
-            <div
-              className="fixed z-50 pointer-events-none flex items-center gap-1.5 transition-opacity duration-150"
-              style={{
-                left: `${tooltipPos.x - 12}px`,
-                top: `${tooltipPos.y - 45}px`,
-              }}
-            >
-              <svg className="w-10 h-10 overflow-visible">
-                <defs>
-                  <marker id="calloutArrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-                    <path d="M 0 0 L 10 5 L 0 10 z" fill="#FFFFFF" />
-                  </marker>
-                </defs>
-                <circle cx="6" cy="30" r="4.5" fill="#FFFFFF" stroke="#EE3B3B" strokeWidth="2.5" />
-                <line x1="8" y1="28" x2="34" y2="12" stroke="#FFFFFF" strokeWidth="2" markerEnd="url(#calloutArrow)" />
-              </svg>
 
-              <div className="bg-white/95 backdrop-blur-md px-4 py-2 rounded-[20px] shadow-[0_10px_25px_rgba(0,0,0,0.25)] border border-gray-200/90 flex flex-col ml-1">
-                <span className="font-black text-[#0F5257] text-[14px] leading-snug" style={{ fontFamily: "var(--font-garet-heavy), sans-serif" }}>
-                  {hoveredItem.rawTitle || hoveredItem.title}
-                </span>
-                <div className="flex items-baseline gap-1">
+
+        {/* Hover Tooltip */}
+        {hoveredItem && (
+          <div
+            className="fixed z-50 pointer-events-none flex items-center gap-1.5 transition-opacity duration-150"
+            style={{
+              left: `${tooltipPos.x - 12}px`,
+              top: `${tooltipPos.y - 45}px`,
+            }}
+          >
+            <svg className="w-10 h-10 overflow-visible">
+              <defs>
+                <marker id="calloutArrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                  <path d="M 0 0 L 10 5 L 0 10 z" fill="#FFFFFF" />
+                </marker>
+              </defs>
+              <circle cx="6" cy="30" r="4.5" fill="#FFFFFF" stroke={hoveredItem.isSelected ? "#0F5257" : "#EE3B3B"} strokeWidth="2.5" />
+              <line x1="8" y1="28" x2="34" y2="12" stroke="#FFFFFF" strokeWidth="2" markerEnd="url(#calloutArrow)" />
+            </svg>
+
+            <div className="bg-white/95 backdrop-blur-md px-4 py-2 rounded-[20px] shadow-[0_10px_25px_rgba(0,0,0,0.25)] border border-gray-200/90 flex flex-col ml-1">
+              <span className="font-black text-[#0F5257] text-[14px] leading-snug" style={{ fontFamily: "var(--font-garet-heavy), sans-serif" }}>
+                {hoveredItem.rawTitle || hoveredItem.title}
+              </span>
+              <span className="text-gray-500 text-[11px] font-medium">{hoveredItem.subtitle}</span>
+              {hoveredItem.dampakHa != null && (
+                <div className="flex items-baseline gap-1 mt-0.5">
                   <span className="font-black text-[#EE3B3B] text-[14px]" style={{ fontFamily: "var(--font-garet-heavy), sans-serif" }}>
-                    4.200 ha
+                    {formatAngka(hoveredItem.dampakHa)} ha
                   </span>
                   <span className="font-semibold text-gray-500 text-[11px]">
                     terdampak
                   </span>
                 </div>
-              </div>
-            </div>
-          ) : (
-            <div
-              className="fixed z-50 pointer-events-none px-3.5 py-2 rounded-xl bg-gray-900/90 text-white backdrop-blur-md shadow-2xl border border-white/20 text-xs flex flex-col gap-0.5 transition-opacity duration-150"
-              style={{
-                left: `${tooltipPos.x + 15}px`,
-                top: `${tooltipPos.y + 15}px`,
-              }}
-            >
-              <span className="font-bold text-yellow-300 text-sm">{hoveredItem.title}</span>
-              <span className="text-gray-300">{hoveredItem.subtitle}</span>
-              {hoveredItem.isRed && (
-                <span className="text-red-400 font-semibold text-[11px] mt-0.5">⚠️ Wilayah Bencana</span>
+              )}
+              {hoveredItem.hasDampak && (
+                <span className="text-orange-500 font-semibold text-[11px] mt-0.5">⚠️ Wilayah Terdampak</span>
               )}
             </div>
-          )
+          </div>
         )}
 
         {/* 3D / 2D Transform Wrapper */}
         <div
           className="w-full h-full flex items-center justify-center transition-transform duration-300 ease-out"
           style={{
-            transform: `translate(${position.x}px, ${position.y}px) scale(${scale}) ${
-              is3D ? "perspective(1200px) rotateX(25deg) rotateZ(-4deg)" : "rotateX(0deg)"
-            }`,
+            transform: `translate(${position.x}px, ${position.y}px) scale(${scale}) ${is3D ? "perspective(1200px) rotateX(25deg) rotateZ(-4deg)" : "rotateX(0deg)"
+              }`,
             transformOrigin: "center center",
           }}
         >
@@ -334,6 +393,9 @@ export default function PetaSumatra({
             <defs>
               <filter id="mod3MapExtrudeShadow" x="-20%" y="-20%" width="140%" height="140%">
                 <feDropShadow dx="0" dy="12" stdDeviation="8" floodColor="#000000" floodOpacity="0.35" />
+              </filter>
+              <filter id="selectedGlow" x="-20%" y="-20%" width="140%" height="140%">
+                <feDropShadow dx="0" dy="2" stdDeviation="2.5" floodColor="#0F5257" floodOpacity="0.35" />
               </filter>
             </defs>
 
@@ -355,9 +417,9 @@ export default function PetaSumatra({
                 <path
                   key={`nontarget-${prov.name}`}
                   d={prov.path}
-                  fill="#F2E4C4"
-                  stroke="#A89678"
-                  strokeWidth="1.2"
+                  fill={isFilterActive ? "#FFFFFF" : "#F2E4C4"}
+                  stroke={isFilterActive ? "#E2D8CC" : "#A89678"}
+                  strokeWidth={isFilterActive ? "0.6" : "1.2"}
                   strokeLinejoin="round"
                   strokeLinecap="round"
                   onMouseEnter={(e) => {
@@ -373,11 +435,67 @@ export default function PetaSumatra({
               {normActiveKec && mapData.kecamatan ? (
                 mapData.kecamatan.map((item, idx) => {
                   const isSelectedKec = normalizeName(item.kec) === normActiveKec;
-                  let fillColor = isSelectedKec ? "#FF1744" : "#F2E4C4";
-                  if (activeMenu === "banjir" && !isSelectedKec) {
-                    fillColor = BANJIR_CLASSIFICATION[item.kab] || "#0084FF";
-                  } else if (activeMenu === "longsor" && !isSelectedKec) {
-                    fillColor = LONGSOR_CLASSIFICATION[item.kab] || "#F97316";
+                  const kecKey = `${item.kab}|${item.kec}`;
+                  const normKecKey = `${normalizeName(item.kab)}|${normalizeName(item.kec)}`;
+                  const kecData = kecLookup[normKecKey] || kecLookup[kecKey];
+                  const isProvTarget = targetProvinces.includes(item.prov);
+
+                  // Cek apakah kecamatan ini termasuk dalam wilayah filter
+                  let matchesFilter = true;
+                  if (normActiveKec) {
+                    matchesFilter = isSelectedKec;
+                  } else if (kabupaten) {
+                    matchesFilter = (item.kab === kabupaten || normalizeName(item.kab) === normalizeName(kabupaten));
+                  } else if (provinsi) {
+                    matchesFilter = (item.prov === provinsi);
+                  }
+
+                  const isExcluded = isFilterActive && !matchesFilter;
+                  const hasDampak = Boolean(kecData && (kecData.banjir_mean > 0 || kecData.longsor_mean > 0));
+
+                  // Tentukan warna fill dan stroke
+                  let fillColor = "#F2E4C4";
+                  let strokeColor = "#A89678";
+                  let strokeW = 0.4;
+                  let filterAttr = undefined;
+
+                  if (isExcluded) {
+                    // TIDAK DIFILTER -> warna putih!
+                    fillColor = "#FFFFFF";
+                    strokeColor = "#E2D8CC";
+                    strokeW = 0.3;
+                  } else {
+                    // KEFILTER ATAU TANPA FILTER -> warnanya sama aja tanpa filter!
+                    filterAttr = isSelectedKec ? "url(#selectedGlow)" : undefined;
+
+                    if (activeMenu === "banjir") {
+                      if (isProvTarget) {
+                        const banjirMean = kecData?.banjir_mean ?? 0;
+                        fillColor = getBanjirColor(banjirMean) || "#FFFFFF";
+                        strokeColor = isSelectedKec ? "#0F5257" : (banjirMean > 0 ? "#004080" : "#D0C4B8");
+                        strokeW = isSelectedKec ? 2.0 : (banjirMean > 0 ? 0.8 : 0.4);
+                      }
+                    } else if (activeMenu === "longsor") {
+                      if (isProvTarget) {
+                        const longsorMean = kecData?.longsor_mean ?? 0;
+                        fillColor = getLongsorColor(longsorMean) || "#FFFFFF";
+                        strokeColor = isSelectedKec ? "#0F5257" : (longsorMean > 0 ? "#991B1B" : "#D0C4B8");
+                        strokeW = isSelectedKec ? 2.0 : (longsorMean > 0 ? 0.8 : 0.4);
+                      }
+                    } else {
+                      // Beranda: biner merah awal (#E33434 dengan outline merah tua #900C0C) dan putih (#FFFFFF)
+                      if (isProvTarget) {
+                        if (hasDampak) {
+                          fillColor = "#E33434";
+                          strokeColor = isSelectedKec ? "#0F5257" : "#900C0C";
+                          strokeW = isSelectedKec ? 2.0 : 1.0;
+                        } else {
+                          fillColor = "#FFFFFF";
+                          strokeColor = isSelectedKec ? "#0F5257" : "#D0C4B8";
+                          strokeW = isSelectedKec ? 2.0 : 0.4;
+                        }
+                      }
+                    }
                   }
 
                   return (
@@ -385,17 +503,20 @@ export default function PetaSumatra({
                       key={`kec-${item.prov}-${item.kab}-${item.kec}-${idx}`}
                       d={item.path}
                       fill={fillColor}
-                      stroke={isSelectedKec ? "#900C0C" : "#D0C2A8"}
-                      strokeWidth={isSelectedKec ? 2.2 : 0.4}
+                      stroke={strokeColor}
+                      strokeWidth={strokeW}
                       strokeLinejoin="round"
                       strokeLinecap="round"
+                      filter={filterAttr}
                       className="transition-colors duration-200 hover:opacity-85 cursor-pointer"
                       onMouseEnter={(e) => {
                         setHoveredItem({
                           rawTitle: item.kec,
                           title: `Kec. ${item.kec}`,
                           subtitle: `${item.kab}, ${item.prov}`,
-                          isRed: isSelectedKec,
+                          isSelected: isSelectedKec,
+                          dampakHa,
+                          hasDampak: (kecData?.banjir_mean > 0 || kecData?.longsor_mean > 0),
                         });
                         setTooltipPos({ x: e.clientX, y: e.clientY });
                       }}
@@ -414,45 +535,118 @@ export default function PetaSumatra({
                 /* RENDER KABUPATEN LAYER OTHERWISE */
                 mapData.kabupaten.map((kab) => {
                   const isProvTarget = targetProvinces.includes(kab.prov);
-                  let isRed = false;
+                  const isKabSelected = Boolean(kabupaten && (kabupaten === kab.kab || normalizeName(kabupaten) === normalizeName(kab.kab)));
+                  const isProvSelected = Boolean(provinsi && provinsi === kab.prov);
+                  const kabData = kabLookup[normalizeName(kab.kab)] || kabLookup[kab.kab];
 
-                  if (!provinsi || provinsi === "") {
-                    isRed = isProvTarget;
-                  } else if (provinsi === kab.prov) {
-                    if (!kabupaten || kabupaten === "") {
-                      isRed = true;
+                  // Cek apakah kabupaten ini masuk dalam cakupan filter
+                  let matchesFilter = true;
+                  if (kabupaten) {
+                    matchesFilter = isKabSelected;
+                  } else if (provinsi) {
+                    matchesFilter = isProvSelected;
+                  }
+
+                  const isExcluded = isFilterActive && !matchesFilter;
+                  const hasDampak = Boolean(kabData && (kabData.banjir_mean > 0 || kabData.longsor_mean > 0));
+
+                  // Tentukan warna fill dan stroke
+                  let fillColor = "#F2E4C4";
+                  let strokeColor = "#A89678";
+                  let strokeW = 0.8;
+                  let filterAttr = undefined;
+
+                  if (isExcluded) {
+                    // TIDAK DIFILTER -> warnanya putih aja!
+                    fillColor = "#FFFFFF";
+                    strokeColor = "#E2D8CC";
+                    strokeW = 0.5;
+                  } else {
+                    // KEFILTER ATAU TANPA FILTER -> warnanya sama aja tanpa filter!
+                    filterAttr = isKabSelected ? "url(#selectedGlow)" : undefined;
+
+                    if (activeMenu === "banjir") {
+                      if (isProvTarget) {
+                        const banjirMean = kabData?.banjir_mean ?? 0;
+                        fillColor = getBanjirColor(banjirMean) || "#FFFFFF";
+                        if (isKabSelected) {
+                          strokeColor = "#0F5257";
+                          strokeW = 2.0;
+                        } else if (banjirMean > 0) {
+                          strokeColor = "#004080";
+                          strokeW = 1.0;
+                        } else {
+                          strokeColor = "#D0C4B8";
+                          strokeW = 0.8;
+                        }
+                      }
+                    } else if (activeMenu === "longsor") {
+                      if (isProvTarget) {
+                        const longsorMean = kabData?.longsor_mean ?? 0;
+                        fillColor = getLongsorColor(longsorMean) || "#FFFFFF";
+                        if (isKabSelected) {
+                          strokeColor = "#0F5257";
+                          strokeW = 2.0;
+                        } else if (longsorMean > 0) {
+                          strokeColor = "#991B1B";
+                          strokeW = 1.0;
+                        } else {
+                          strokeColor = "#D0C4B8";
+                          strokeW = 0.8;
+                        }
+                      }
                     } else {
-                      isRed = kab.kab === kabupaten;
+                      // Beranda: biner merah awal (#E33434 dengan outline merah tua #900C0C) dan putih (#FFFFFF)
+                      if (isProvTarget) {
+                        if (hasDampak) {
+                          fillColor = "#E33434";
+                          if (isKabSelected) {
+                            strokeColor = "#0F5257";
+                            strokeW = 2.0;
+                          } else {
+                            strokeColor = "#900C0C";
+                            strokeW = 1.4;
+                          }
+                        } else {
+                          fillColor = "#FFFFFF";
+                          if (isKabSelected) {
+                            strokeColor = "#0F5257";
+                            strokeW = 2.0;
+                          } else {
+                            strokeColor = "#D0C4B8";
+                            strokeW = 0.8;
+                          }
+                        }
+                      }
                     }
                   }
 
-                  const isKabSelected = kabupaten && kabupaten === kab.kab;
-                  let fillColor = "#F2E4C4";
-
-                  if (activeMenu === "banjir") {
-                    fillColor = isKabSelected
-                      ? "#FF1744"
-                      : (BANJIR_CLASSIFICATION[kab.kab] || (isProvTarget ? "#0084FF" : "#F2E4C4"));
-                  } else if (activeMenu === "longsor") {
-                    fillColor = isKabSelected
-                      ? "#FF1744"
-                      : (LONGSOR_CLASSIFICATION[kab.kab] || (isProvTarget ? "#F97316" : "#F2E4C4"));
-                  } else {
-                    fillColor = isRed ? (isKabSelected ? "#FF1744" : "#E33434") : "#F2E4C4";
-                  }
+                  const dampakHa = activeMenu === "banjir"
+                    ? kabData?.banjir_ha ?? 0
+                    : activeMenu === "longsor"
+                      ? kabData?.longsor_ha ?? 0
+                      : (kabData ? (kabData.banjir_ha + kabData.longsor_ha) : 0);
 
                   return (
                     <path
                       key={`kab-${kab.prov}-${kab.kab}`}
                       d={kab.path}
                       fill={fillColor}
-                      stroke={isRed ? "#900C0C" : "#A89678"}
-                      strokeWidth={isRed ? 1.4 : 0.8}
+                      stroke={strokeColor}
+                      strokeWidth={strokeW}
                       strokeLinejoin="round"
                       strokeLinecap="round"
+                      filter={filterAttr}
                       className="transition-colors duration-200 hover:opacity-85 cursor-pointer"
                       onMouseEnter={(e) => {
-                        setHoveredItem({ rawTitle: kab.kab, title: kab.kab, subtitle: kab.prov, isRed });
+                        setHoveredItem({
+                          rawTitle: kab.kab,
+                          title: kab.kab,
+                          subtitle: kab.prov,
+                          isSelected: isHighlighted,
+                          dampakHa,
+                          hasDampak: (kabData?.banjir_mean > 0 || kabData?.longsor_mean > 0),
+                        });
                         setTooltipPos({ x: e.clientX, y: e.clientY });
                       }}
                       onMouseMove={(e) => setTooltipPos({ x: e.clientX, y: e.clientY })}

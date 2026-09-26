@@ -1,66 +1,157 @@
 "use client";
-
-// Data Banjir dummy per kecamatan
-const DATA_BANJIR = {
-  "Aceh": {
-    "Kab. Aceh Besar": {
-      "Krueng Barona Jaya": { luasBanjir: 4200, persentase: 50, kedalamanRataRata: "0,85", kedalamanMaks: "2,1", kategoriBahaya: "Sedang" },
-      "Ingin Jaya": { luasBanjir: 2100, persentase: 30, kedalamanRataRata: "0,60", kedalamanMaks: "1,5", kategoriBahaya: "Ringan" },
-      "Kuta Baro": { luasBanjir: 1500, persentase: 20, kedalamanRataRata: "0,40", kedalamanMaks: "1,1", kategoriBahaya: "Ringan" },
-    },
-    "Kab. Pidie": {
-      "Kota Sigli": { luasBanjir: 5800, persentase: 65, kedalamanRataRata: "1,20", kedalamanMaks: "2,8", kategoriBahaya: "Berat" },
-      "Mutiara": { luasBanjir: 3200, persentase: 40, kedalamanRataRata: "0,75", kedalamanMaks: "1,8", kategoriBahaya: "Sedang" },
-    },
-  },
-  "Sumatera Utara": {
-    "Kota Medan": {
-      "Medan Kota": { luasBanjir: 6500, persentase: 70, kedalamanRataRata: "1,40", kedalamanMaks: "3,0", kategoriBahaya: "Berat" },
-      "Medan Baru": { luasBanjir: 3100, persentase: 35, kedalamanRataRata: "0,65", kedalamanMaks: "1,6", kategoriBahaya: "Sedang" },
-    },
-    "Kab. Deli Serdang": {
-      "Lubuk Pakam": { luasBanjir: 4900, persentase: 55, kedalamanRataRata: "0,95", kedalamanMaks: "2,2", kategoriBahaya: "Sedang" },
-    },
-  },
-  "Sumatera Barat": {
-    "Kota Padang": {
-      "Padang Utara": { luasBanjir: 5200, persentase: 60, kedalamanRataRata: "1,10", kedalamanMaks: "2,5", kategoriBahaya: "Sedang" },
-      "Kuranji": { luasBanjir: 7100, persentase: 75, kedalamanRataRata: "1,60", kedalamanMaks: "3,2", kategoriBahaya: "Berat" },
-    },
-  },
-};
-
-// Fallback data jika belum memilih wilayah
-const DEFAULT_DATA = {
-  provinsi: "Provinsi Aceh",
-  kabupaten: "Kabupaten Aceh Besar",
-  kecamatan: "Kecamatan Krueng Barona Jaya",
-  luasBanjir: 4200,
-  persentase: 50,
-  kedalamanRataRata: "0,85",
-  kedalamanMaks: "2,1",
-  kategoriBahaya: "Sedang",
-};
+import { useState, useEffect, useMemo } from "react";
 
 function formatAngka(num) {
-  return num?.toLocaleString("id-ID") ?? "-";
+  if (num === null || num === undefined || isNaN(num)) return "-";
+  return Math.round(num).toLocaleString("id-ID");
+}
+
+function formatDesimal(num) {
+  if (num === null || num === undefined || isNaN(num)) return "-";
+  return num.toLocaleString("id-ID", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+// Klasifikasi bahaya banjir berdasarkan mean_nilai
+function getKategoriBahayaBanjir(meanNilai) {
+  if (meanNilai <= 0) return "Tidak Terdampak";
+  if (meanNilai < 3) return "Ringan";
+  if (meanNilai < 5) return "Sedang";
+  return "Berat";
 }
 
 export default function BanjirView({ provinsi, kabupaten, kecamatan }) {
-  const selectedData =
-    provinsi && kabupaten && kecamatan
-      ? DATA_BANJIR[provinsi]?.[kabupaten]?.[kecamatan]
-      : null;
+  const [allData, setAllData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const displayProv = provinsi ? (provinsi.startsWith("Provinsi") ? provinsi : `Provinsi ${provinsi}`) : DEFAULT_DATA.provinsi;
-  const displayKab = kabupaten ? (kabupaten.startsWith("Kab.") || kabupaten.startsWith("Kota") ? kabupaten : `Kabupaten ${kabupaten}`) : DEFAULT_DATA.kabupaten;
-  const displayKec = kecamatan ? (kecamatan.startsWith("Kecamatan") ? kecamatan : `Kecamatan ${kecamatan}`) : DEFAULT_DATA.kecamatan;
+  // Fetch data modul3_dampak.json
+  useEffect(() => {
+    fetch("/data/modul3_dampak.json")
+      .then((res) => res.json())
+      .then((data) => {
+        setAllData(data);
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        console.error("Gagal memuat data modul3_dampak.json:", err);
+        setIsLoading(false);
+      });
+  }, []);
 
-  const luasBanjir = selectedData ? selectedData.luasBanjir : DEFAULT_DATA.luasBanjir;
-  const persentase = selectedData ? selectedData.persentase : DEFAULT_DATA.persentase;
-  const kedalamanRataRata = selectedData ? selectedData.kedalamanRataRata : DEFAULT_DATA.kedalamanRataRata;
-  const kedalamanMaks = selectedData ? selectedData.kedalamanMaks : DEFAULT_DATA.kedalamanMaks;
-  const kategoriBahaya = selectedData ? selectedData.kategoriBahaya : DEFAULT_DATA.kategoriBahaya;
+  // Cari data berdasarkan filter wilayah
+  const selectedData = useMemo(() => {
+    if (!allData.length) return null;
+
+    // Jika ada kecamatan terpilih, cari data kecamatan spesifik
+    if (provinsi && kabupaten && kecamatan) {
+      return allData.find(
+        (r) =>
+          r.provinsi === provinsi &&
+          r.nm_kabupaten === kabupaten &&
+          r.nm_kecamatan === kecamatan
+      ) || null;
+    }
+
+    // Jika hanya provinsi dan kabupaten, aggregate data kabupaten
+    if (provinsi && kabupaten) {
+      const kabData = allData.filter(
+        (r) => r.provinsi === provinsi && r.nm_kabupaten === kabupaten
+      );
+      if (kabData.length === 0) return null;
+      const totalPixel = kabData.reduce((acc, r) => acc + r.dampak_banjir_longsor.pixel_count, 0);
+      const totalSum = kabData.reduce((acc, r) => acc + r.dampak_banjir_longsor.sum_nilai, 0);
+      const totalLuas = kabData.reduce((acc, r) => acc + r.luas_kec_km2, 0);
+      const meanNilai = totalPixel > 0 ? totalSum / totalPixel : 0;
+      return {
+        provinsi,
+        nm_kabupaten: kabupaten,
+        nm_kecamatan: `${kabData.length} Kecamatan`,
+        luas_kec_km2: totalLuas,
+        dampak_banjir_longsor: {
+          pixel_count: totalPixel,
+          sum_nilai: totalSum,
+          mean_nilai: meanNilai,
+        },
+      };
+    }
+
+    // Jika hanya provinsi, aggregate data provinsi
+    if (provinsi) {
+      const provData = allData.filter((r) => r.provinsi === provinsi);
+      if (provData.length === 0) return null;
+      const totalPixel = provData.reduce((acc, r) => acc + r.dampak_banjir_longsor.pixel_count, 0);
+      const totalSum = provData.reduce((acc, r) => acc + r.dampak_banjir_longsor.sum_nilai, 0);
+      const totalLuas = provData.reduce((acc, r) => acc + r.luas_kec_km2, 0);
+      const meanNilai = totalPixel > 0 ? totalSum / totalPixel : 0;
+      const kabCount = new Set(provData.map((r) => r.nm_kabupaten)).size;
+      return {
+        provinsi,
+        nm_kabupaten: `${kabCount} Kab/Kota`,
+        nm_kecamatan: `${provData.length} Kecamatan`,
+        luas_kec_km2: totalLuas,
+        dampak_banjir_longsor: {
+          pixel_count: totalPixel,
+          sum_nilai: totalSum,
+          mean_nilai: meanNilai,
+        },
+      };
+    }
+
+    // Default: aggregate seluruh wilayah
+    const totalPixel = allData.reduce((acc, r) => acc + r.dampak_banjir_longsor.pixel_count, 0);
+    const totalSum = allData.reduce((acc, r) => acc + r.dampak_banjir_longsor.sum_nilai, 0);
+    const totalLuas = allData.reduce((acc, r) => acc + r.luas_kec_km2, 0);
+    const meanNilai = totalPixel > 0 ? totalSum / totalPixel : 0;
+    const provCount = new Set(allData.map((r) => r.provinsi)).size;
+    const kabCount = new Set(allData.map((r) => r.nm_kabupaten)).size;
+    return {
+      provinsi: `${provCount} Provinsi`,
+      nm_kabupaten: `${kabCount} Kab/Kota`,
+      nm_kecamatan: `${allData.length} Kecamatan`,
+      luas_kec_km2: totalLuas,
+      dampak_banjir_longsor: {
+        pixel_count: totalPixel,
+        sum_nilai: totalSum,
+        mean_nilai: meanNilai,
+      },
+    };
+  }, [allData, provinsi, kabupaten, kecamatan]);
+
+  // Compute display values
+  const displayProv = provinsi
+    ? provinsi.startsWith("Provinsi") ? provinsi : `Provinsi ${provinsi}`
+    : selectedData?.provinsi || "Semua Wilayah";
+  const displayKab = kabupaten
+    ? kabupaten.startsWith("Kab.") || kabupaten.startsWith("Kota") ? kabupaten : kabupaten
+    : selectedData?.nm_kabupaten || "-";
+  const displayKec = kecamatan
+    ? kecamatan.startsWith("Kecamatan") ? kecamatan : `Kecamatan ${kecamatan}`
+    : selectedData?.nm_kecamatan || "-";
+
+  const banjirData = selectedData?.dampak_banjir_longsor;
+  // Luas banjir dalam hektar (pixel_count * 0.09 ha at 30m resolution)
+  const luasBanjirHa = banjirData ? banjirData.pixel_count * 0.09 : 0;
+  // Persentase terhadap luas wilayah
+  const luasWilayahHa = selectedData ? selectedData.luas_kec_km2 * 100 : 1;
+  const persentase = luasWilayahHa > 0 ? ((luasBanjirHa / luasWilayahHa) * 100) : 0;
+  // Mean nilai sebagai kedalaman rata-rata (dB)
+  const meanNilai = banjirData ? banjirData.mean_nilai : 0;
+  // Sum nilai / pixel count adjusted 
+  const sumNilai = banjirData ? banjirData.sum_nilai : 0;
+  // Kategori bahaya
+  const kategoriBahaya = getKategoriBahayaBanjir(meanNilai);
+
+  if (isLoading) {
+    return (
+      <div className="w-full max-w-[580px] xl:max-w-[620px] mx-auto mt-2 xl:mt-[40px] 2xl:mt-[56px] select-none flex items-center justify-center min-h-[300px]">
+        <p
+          className="text-white text-[18px] font-[850] animate-pulse [text-shadow:0_3px_6px_rgba(0,0,0,0.5)]"
+          style={{ fontFamily: "var(--font-garet-heavy), 'Garet', sans-serif" }}
+        >
+          Memuat data...
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full max-w-[580px] xl:max-w-[620px] mx-auto mt-2 xl:mt-[40px] 2xl:mt-[56px] select-none">
@@ -153,7 +244,7 @@ export default function BanjirView({ provinsi, kabupaten, kecamatan }) {
                       filter: "drop-shadow(0px 4px 4px #000000E3)",
                     }}
                   >
-                    {formatAngka(luasBanjir)}
+                    {formatAngka(luasBanjirHa)}
                   </span>
                   <span
                     className="text-[18px] sm:text-[22px] font-[850]"
@@ -187,7 +278,7 @@ export default function BanjirView({ provinsi, kabupaten, kecamatan }) {
                       filter: "drop-shadow(0px 4px 4px #000000E3)",
                     }}
                   >
-                    {persentase}%
+                    {formatDesimal(persentase)}%
                   </span>
                 </div>
               </div>
@@ -200,14 +291,14 @@ export default function BanjirView({ provinsi, kabupaten, kecamatan }) {
               <div className="w-2.5 h-2.5 rounded-full bg-[#7C5A37]" />
             </div>
 
-            {/* Bottom Row: Kedalaman Rata-Rata & Kedalaman Maks. */}
+            {/* Bottom Row: Rata-rata Dampak & Total Dampak */}
             <div className="grid grid-cols-2 gap-3 text-left">
               <div>
                 <p
                   className="font-[850] text-[#0F5257] text-[13px] sm:text-[14px] [-webkit-text-stroke:0.4px_rgba(15,82,87,0.3)] [text-shadow:0_1.5px_3px_rgba(0,0,0,0.25)]"
                   style={{ fontFamily: "var(--font-garet-heavy), 'Garet', sans-serif" }}
                 >
-                  Kedalaman Rata-Rata
+                  Rata-rata Dampak
                 </p>
                 <span
                   className="text-[26px] sm:text-[30px] lg:text-[34px] font-[850] leading-none block mt-0.5"
@@ -219,7 +310,7 @@ export default function BanjirView({ provinsi, kabupaten, kecamatan }) {
                     filter: "drop-shadow(0px 4px 4px #000000E3)",
                   }}
                 >
-                  {kedalamanRataRata} m
+                  {formatDesimal(meanNilai)}
                 </span>
               </div>
               <div>
@@ -227,7 +318,7 @@ export default function BanjirView({ provinsi, kabupaten, kecamatan }) {
                   className="font-[850] text-[#0F5257] text-[13px] sm:text-[14px] [-webkit-text-stroke:0.4px_rgba(15,82,87,0.3)] [text-shadow:0_1.5px_3px_rgba(0,0,0,0.25)]"
                   style={{ fontFamily: "var(--font-garet-heavy), 'Garet', sans-serif" }}
                 >
-                  Kedalaman Maks.
+                  Total Dampak
                 </p>
                 <span
                   className="text-[26px] sm:text-[30px] lg:text-[34px] font-[850] leading-none block mt-0.5"
@@ -239,7 +330,7 @@ export default function BanjirView({ provinsi, kabupaten, kecamatan }) {
                     filter: "drop-shadow(0px 4px 4px #000000E3)",
                   }}
                 >
-                  {kedalamanMaks} m
+                  {formatAngka(sumNilai)}
                 </span>
               </div>
             </div>

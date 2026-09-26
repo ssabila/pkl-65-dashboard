@@ -1,64 +1,155 @@
 "use client";
-
-// Data Longsor dummy per kecamatan
-const DATA_LONGSOR = {
-  "Aceh": {
-    "Kab. Aceh Besar": {
-      "Krueng Barona Jaya": { luasLongsor: 3000, persentase: 50, selisihBackscatter: "6,2", kategoriBahaya: "Berat" },
-      "Ingin Jaya": { luasLongsor: 1200, persentase: 25, selisihBackscatter: "3,1", kategoriBahaya: "Sedang" },
-      "Kuta Baro": { luasLongsor: 800, persentase: 15, selisihBackscatter: "1,8", kategoriBahaya: "Ringan" },
-    },
-    "Kab. Pidie": {
-      "Kota Sigli": { luasLongsor: 4500, persentase: 60, selisihBackscatter: "5,4", kategoriBahaya: "Berat" },
-      "Mutiara": { luasLongsor: 2300, persentase: 35, selisihBackscatter: "3,5", kategoriBahaya: "Sedang" },
-    },
-  },
-  "Sumatera Utara": {
-    "Kota Medan": {
-      "Medan Kota": { luasLongsor: 5100, persentase: 65, selisihBackscatter: "5,8", kategoriBahaya: "Berat" },
-      "Medan Baru": { luasLongsor: 2800, persentase: 30, selisihBackscatter: "2,9", kategoriBahaya: "Sedang" },
-    },
-    "Kab. Deli Serdang": {
-      "Lubuk Pakam": { luasLongsor: 3900, persentase: 45, selisihBackscatter: "3,8", kategoriBahaya: "Sedang" },
-    },
-  },
-  "Sumatera Barat": {
-    "Kota Padang": {
-      "Padang Utara": { luasLongsor: 4200, persentase: 55, selisihBackscatter: "4,6", kategoriBahaya: "Berat" },
-      "Kuranji": { luasLongsor: 6300, persentase: 70, selisihBackscatter: "6,8", kategoriBahaya: "Berat" },
-    },
-  },
-};
-
-// Fallback data jika belum memilih wilayah (Identik dengan Gambar Referensi)
-const DEFAULT_DATA = {
-  provinsi: "Provinsi Aceh",
-  kabupaten: "Kabupaten Aceh Besar",
-  kecamatan: "Kecamatan Krueng Barona Jaya",
-  luasLongsor: 3000,
-  persentase: 50,
-  selisihBackscatter: "6,2",
-  kategoriBahaya: "Berat",
-};
+import { useState, useEffect, useMemo } from "react";
 
 function formatAngka(num) {
-  return num?.toLocaleString("id-ID") ?? "-";
+  if (num === null || num === undefined || isNaN(num)) return "-";
+  return Math.round(num).toLocaleString("id-ID");
+}
+
+function formatDesimal(num) {
+  if (num === null || num === undefined || isNaN(num)) return "-";
+  return num.toLocaleString("id-ID", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+// Klasifikasi bahaya longsor berdasarkan mean_nilai (selisih backscatter dB)
+function getKategoriBahayaLongsor(meanNilai) {
+  if (meanNilai <= 0) return "Tidak Terdampak";
+  if (meanNilai < 3) return "Ringan";
+  if (meanNilai < 5) return "Sedang";
+  return "Berat";
 }
 
 export default function TanahLongsorView({ provinsi, kabupaten, kecamatan }) {
-  const selectedData =
-    provinsi && kabupaten && kecamatan
-      ? DATA_LONGSOR[provinsi]?.[kabupaten]?.[kecamatan]
-      : null;
+  const [allData, setAllData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const displayProv = provinsi ? (provinsi.startsWith("Provinsi") ? provinsi : `Provinsi ${provinsi}`) : DEFAULT_DATA.provinsi;
-  const displayKab = kabupaten ? (kabupaten.startsWith("Kab.") || kabupaten.startsWith("Kota") ? kabupaten : `Kabupaten ${kabupaten}`) : DEFAULT_DATA.kabupaten;
-  const displayKec = kecamatan ? (kecamatan.startsWith("Kecamatan") ? kecamatan : `Kecamatan ${kecamatan}`) : DEFAULT_DATA.kecamatan;
+  // Fetch data modul3_dampak.json
+  useEffect(() => {
+    fetch("/data/modul3_dampak.json")
+      .then((res) => res.json())
+      .then((data) => {
+        setAllData(data);
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        console.error("Gagal memuat data modul3_dampak.json:", err);
+        setIsLoading(false);
+      });
+  }, []);
 
-  const luasLongsor = selectedData ? selectedData.luasLongsor : DEFAULT_DATA.luasLongsor;
-  const persentase = selectedData ? selectedData.persentase : DEFAULT_DATA.persentase;
-  const selisihBackscatter = selectedData ? selectedData.selisihBackscatter : DEFAULT_DATA.selisihBackscatter;
-  const kategoriBahaya = selectedData ? selectedData.kategoriBahaya : DEFAULT_DATA.kategoriBahaya;
+  // Cari data berdasarkan filter wilayah
+  const selectedData = useMemo(() => {
+    if (!allData.length) return null;
+
+    // Jika ada kecamatan terpilih, cari data kecamatan spesifik
+    if (provinsi && kabupaten && kecamatan) {
+      return allData.find(
+        (r) =>
+          r.provinsi === provinsi &&
+          r.nm_kabupaten === kabupaten &&
+          r.nm_kecamatan === kecamatan
+      ) || null;
+    }
+
+    // Jika hanya provinsi dan kabupaten, aggregate data kabupaten
+    if (provinsi && kabupaten) {
+      const kabData = allData.filter(
+        (r) => r.provinsi === provinsi && r.nm_kabupaten === kabupaten
+      );
+      if (kabData.length === 0) return null;
+      const totalPixel = kabData.reduce((acc, r) => acc + r.dampak_genangan_longsor.pixel_count, 0);
+      const totalSum = kabData.reduce((acc, r) => acc + r.dampak_genangan_longsor.sum_nilai, 0);
+      const totalLuas = kabData.reduce((acc, r) => acc + r.luas_kec_km2, 0);
+      const meanNilai = totalPixel > 0 ? totalSum / totalPixel : 0;
+      return {
+        provinsi,
+        nm_kabupaten: kabupaten,
+        nm_kecamatan: `${kabData.length} Kecamatan`,
+        luas_kec_km2: totalLuas,
+        dampak_genangan_longsor: {
+          pixel_count: totalPixel,
+          sum_nilai: totalSum,
+          mean_nilai: meanNilai,
+        },
+      };
+    }
+
+    // Jika hanya provinsi, aggregate data provinsi
+    if (provinsi) {
+      const provData = allData.filter((r) => r.provinsi === provinsi);
+      if (provData.length === 0) return null;
+      const totalPixel = provData.reduce((acc, r) => acc + r.dampak_genangan_longsor.pixel_count, 0);
+      const totalSum = provData.reduce((acc, r) => acc + r.dampak_genangan_longsor.sum_nilai, 0);
+      const totalLuas = provData.reduce((acc, r) => acc + r.luas_kec_km2, 0);
+      const meanNilai = totalPixel > 0 ? totalSum / totalPixel : 0;
+      const kabCount = new Set(provData.map((r) => r.nm_kabupaten)).size;
+      return {
+        provinsi,
+        nm_kabupaten: `${kabCount} Kab/Kota`,
+        nm_kecamatan: `${provData.length} Kecamatan`,
+        luas_kec_km2: totalLuas,
+        dampak_genangan_longsor: {
+          pixel_count: totalPixel,
+          sum_nilai: totalSum,
+          mean_nilai: meanNilai,
+        },
+      };
+    }
+
+    // Default: aggregate seluruh wilayah
+    const totalPixel = allData.reduce((acc, r) => acc + r.dampak_genangan_longsor.pixel_count, 0);
+    const totalSum = allData.reduce((acc, r) => acc + r.dampak_genangan_longsor.sum_nilai, 0);
+    const totalLuas = allData.reduce((acc, r) => acc + r.luas_kec_km2, 0);
+    const meanNilai = totalPixel > 0 ? totalSum / totalPixel : 0;
+    const provCount = new Set(allData.map((r) => r.provinsi)).size;
+    const kabCount = new Set(allData.map((r) => r.nm_kabupaten)).size;
+    return {
+      provinsi: `${provCount} Provinsi`,
+      nm_kabupaten: `${kabCount} Kab/Kota`,
+      nm_kecamatan: `${allData.length} Kecamatan`,
+      luas_kec_km2: totalLuas,
+      dampak_genangan_longsor: {
+        pixel_count: totalPixel,
+        sum_nilai: totalSum,
+        mean_nilai: meanNilai,
+      },
+    };
+  }, [allData, provinsi, kabupaten, kecamatan]);
+
+  // Compute display values
+  const displayProv = provinsi
+    ? provinsi.startsWith("Provinsi") ? provinsi : `Provinsi ${provinsi}`
+    : selectedData?.provinsi || "Semua Wilayah";
+  const displayKab = kabupaten
+    ? kabupaten.startsWith("Kab.") || kabupaten.startsWith("Kota") ? kabupaten : kabupaten
+    : selectedData?.nm_kabupaten || "-";
+  const displayKec = kecamatan
+    ? kecamatan.startsWith("Kecamatan") ? kecamatan : `Kecamatan ${kecamatan}`
+    : selectedData?.nm_kecamatan || "-";
+
+  const longsorData = selectedData?.dampak_genangan_longsor;
+  // Luas longsor dalam hektar (pixel_count * 0.09 ha at 30m resolution)
+  const luasLongsorHa = longsorData ? longsorData.pixel_count * 0.09 : 0;
+  // Persentase terhadap luas wilayah
+  const luasWilayahHa = selectedData ? selectedData.luas_kec_km2 * 100 : 1;
+  const persentase = luasWilayahHa > 0 ? ((luasLongsorHa / luasWilayahHa) * 100) : 0;
+  // Selisih Rata-Rata Backscatter (mean_nilai, dB)
+  const selisihBackscatter = longsorData ? longsorData.mean_nilai : 0;
+  // Kategori bahaya
+  const kategoriBahaya = getKategoriBahayaLongsor(selisihBackscatter);
+
+  if (isLoading) {
+    return (
+      <div className="w-full max-w-[580px] xl:max-w-[620px] mx-auto mt-2 xl:mt-[40px] 2xl:mt-[56px] select-none flex items-center justify-center min-h-[300px]">
+        <p
+          className="text-white text-[18px] font-[850] animate-pulse [text-shadow:0_3px_6px_rgba(0,0,0,0.5)]"
+          style={{ fontFamily: "var(--font-garet-heavy), 'Garet', sans-serif" }}
+        >
+          Memuat data...
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full max-w-[580px] xl:max-w-[620px] mx-auto mt-2 xl:mt-[40px] 2xl:mt-[56px] select-none">
@@ -151,7 +242,7 @@ export default function TanahLongsorView({ provinsi, kabupaten, kecamatan }) {
                       filter: "drop-shadow(0px 4px 4px #000000E3)",
                     }}
                   >
-                    {formatAngka(luasLongsor)}
+                    {formatAngka(luasLongsorHa)}
                   </span>
                   <span
                     className="text-[18px] sm:text-[22px] font-[850]"
@@ -185,7 +276,7 @@ export default function TanahLongsorView({ provinsi, kabupaten, kecamatan }) {
                       filter: "drop-shadow(0px 4px 4px #000000E3)",
                     }}
                   >
-                    {persentase}%
+                    {formatDesimal(persentase)}%
                   </span>
                 </div>
               </div>
@@ -217,7 +308,7 @@ export default function TanahLongsorView({ provinsi, kabupaten, kecamatan }) {
                     filter: "drop-shadow(0px 4px 4px #000000E3)",
                   }}
                 >
-                  {selisihBackscatter}
+                  {formatDesimal(selisihBackscatter)}
                 </span>
                 <span
                   className="text-[20px] sm:text-[24px] lg:text-[26px] font-[850]"
