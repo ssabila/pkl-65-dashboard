@@ -10,9 +10,8 @@ function formatAngka(num) {
 function StatCard({ item, isCarousel = false }) {
   return (
     <div
-      className={`relative overflow-hidden flex flex-col items-center justify-between p-4 sm:p-5 lg:p-6 rounded-[21px] border-[3.5px] sm:border-[4px] lg:border-[5px] border-[rgba(255,255,255,0.45)] transition-all duration-300 hover:scale-[1.02] ${
-        isCarousel ? "w-full h-full" : "w-full min-h-[201.5px] sm:min-h-[220px] lg:min-h-[230px]"
-      }`}
+      className={`relative overflow-hidden flex flex-col items-center justify-between p-4 sm:p-5 lg:p-6 rounded-[21px] border-[3.5px] sm:border-[4px] lg:border-[5px] border-[rgba(255,255,255,0.45)] transition-all duration-300 hover:scale-[1.02] ${isCarousel ? "w-full h-full" : "w-full min-h-[201.5px] sm:min-h-[220px] lg:min-h-[230px]"
+        }`}
       style={{
         background: "linear-gradient(135deg, rgba(255, 255, 255, 0.42) 0%, rgba(255, 255, 255, 0.20) 100%)",
         boxShadow: "0px 9px 11.2px rgba(0, 0, 0, 0.24), inset 0px -2px 4px rgba(0, 0, 0, 0.2), inset 0px 2px 4px rgba(255, 255, 255, 0.55)",
@@ -81,53 +80,58 @@ export default function BerandaView() {
     fetch("/data/modul3_dampak.json")
       .then((res) => res.json())
       .then((data) => {
-        // Hitung total luas area banjir (pixel_count * 0.09 ha untuk resolusi 30m)
-        const totalLuasBanjirHa = data.reduce(
-          (acc, r) => acc + r.dampak_banjir_longsor.pixel_count * 0.09,
-          0
-        );
-
-        // Hitung jumlah kabupaten/kota terdampak banjir (mean_nilai > 0)
-        const kabTerdampakBanjir = new Set(
-          data
-            .filter((r) => r.dampak_banjir_longsor.mean_nilai > 0)
-            .map((r) => r.nm_kabupaten)
-        ).size;
-
-        // Hitung jumlah kecamatan terdampak banjir
-        const kecTerdampakBanjir = data.filter(
-          (r) => r.dampak_banjir_longsor.mean_nilai > 0
-        ).length;
-
-        // Hitung total luas area longsor (pixel_count * 0.09 ha untuk resolusi 30m)
-        const totalLuasLongsorHa = data.reduce(
-          (acc, r) => acc + r.dampak_genangan_longsor.pixel_count * 0.09,
-          0
-        );
-
-        // Hitung total kab/kota dan kecamatan untuk subtitle
-        const totalKab = new Set(data.map((r) => r.nm_kabupaten)).size;
-        const totalKec = data.length;
-
-        // Hitung kab/kec terdampak longsor
-        const kabTerdampakLongsor = new Set(
-          data
-            .filter((r) => r.dampak_genangan_longsor.mean_nilai > 0)
-            .map((r) => r.nm_kabupaten)
-        ).size;
-
-        const kecTerdampakLongsor = data.filter(
-          (r) => r.dampak_genangan_longsor.mean_nilai > 0
-        ).length;
-
         // Hitung total luas wilayah (km2 -> ha)
         const totalLuasWilayahHa = data.reduce(
           (acc, r) => acc + r.luas_kec_km2 * 100,
           0
         );
 
+        // Hitung total luas area banjir hanya untuk kecamatan terdampak (mean_nilai > 0)
+        const totalLuasBanjirHa = data.reduce(
+          (acc, r) =>
+            acc +
+            (r.dampak_banjir_longsor.mean_nilai > 0
+              ? r.dampak_banjir_longsor.pixel_count * 0.09
+              : 0),
+          0
+        );
+
+        // Hitung total luas area longsor hanya untuk kecamatan terdampak (mean_nilai > 0)
+        const totalLuasLongsorHa = data.reduce(
+          (acc, r) =>
+            acc +
+            (r.dampak_genangan_longsor.mean_nilai > 0
+              ? r.dampak_genangan_longsor.pixel_count * 0.09
+              : 0),
+          0
+        );
+
+        // Hitung total kab/kota dan kecamatan untuk penyebut subtitle
+        const totalKab = new Set(data.map((r) => r.nm_kabupaten)).size;
+        const totalKec = data.length;
+
+        // Stat Card 2: Jumlah Kab/Kota Terdampak (asal memenuhi salah 1 bencana: banjir ATAU longsor)
+        const kabTerdampak = new Set(
+          data
+            .filter(
+              (r) =>
+                r.dampak_banjir_longsor.mean_nilai > 0 ||
+                r.dampak_genangan_longsor.mean_nilai > 0
+            )
+            .map((r) => r.nm_kabupaten)
+        ).size;
+
+        // Stat Card 3: Jumlah Kecamatan Terdampak (asal memenuhi salah 1 bencana: banjir ATAU longsor)
+        const kecTerdampak = data.filter(
+          (r) =>
+            r.dampak_banjir_longsor.mean_nilai > 0 ||
+            r.dampak_genangan_longsor.mean_nilai > 0
+        ).length;
+
+        // Persentase luas terdampak terhadap total wilayah
         const pctBanjir = ((totalLuasBanjirHa / totalLuasWilayahHa) * 100).toFixed(1);
-        const pctLongsor = ((totalLuasLongsorHa / totalLuasWilayahHa) * 100).toFixed(1);
+        const rawPctLongsor = (totalLuasLongsorHa / totalLuasWilayahHa) * 100;
+        const pctLongsor = rawPctLongsor < 1 ? rawPctLongsor.toFixed(2) : rawPctLongsor.toFixed(1);
 
         const cards = [
           {
@@ -150,8 +154,8 @@ export default function BerandaView() {
           {
             id: 2,
             titleLine1: "Jumlah Kab/Kota",
-            titleLine2: "Terdampak Banjir",
-            value: kabTerdampakBanjir,
+            titleLine2: "Terdampak",
+            value: kabTerdampak,
             subtitle: `dari ${totalKab} kab/kota`,
             ellipseStyle: {
               width: "220px",
@@ -167,8 +171,8 @@ export default function BerandaView() {
           {
             id: 3,
             titleLine1: "Jumlah Kecamatan",
-            titleLine2: "Terdampak Banjir",
-            value: kecTerdampakBanjir,
+            titleLine2: "Terdampak",
+            value: kecTerdampak,
             subtitle: `dari ${totalKec} kecamatan`,
             ellipseStyle: {
               width: "220px",
@@ -358,11 +362,10 @@ export default function BerandaView() {
                 key={idx}
                 type="button"
                 onClick={() => setActiveIndex(idx)}
-                className={`transition-all duration-300 rounded-full ${
-                  isActive
+                className={`transition-all duration-300 rounded-full ${isActive
                     ? "w-7 h-2.5 bg-[#F7C564] shadow-[0_2px_8px_rgba(247,197,100,0.6)]"
                     : "w-2.5 h-2.5 bg-white/40 hover:bg-white/70"
-                }`}
+                  }`}
                 aria-label={`Go to slide ${idx + 1}`}
               />
             );

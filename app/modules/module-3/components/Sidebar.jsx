@@ -16,7 +16,7 @@ export default function Sidebar({ activeMenu, onMenuChange }) {
   return (
     <>
       {/* ================= DESKTOP SIDEBAR ================= */}
-      <aside className="hidden min-[1150px]:block relative w-[90px] 2xl:w-[110.85px] h-[540px] 2xl:h-[594.57px] ml-0 mt-0 self-start z-40 flex-shrink-0">
+      <aside className="hidden lg:block relative w-[90px] 2xl:w-[110.85px] h-[540px] 2xl:h-[594.57px] ml-0 mt-0 self-start z-40 flex-shrink-0">
         <div
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
@@ -180,8 +180,8 @@ export default function Sidebar({ activeMenu, onMenuChange }) {
         </div>
       </aside>
 
-      {/* ================= MOBILE & TABLET (IPAD AIR & IPAD PRO) HAMBURGER BUTTON ================= */}
-      <div className="max-[1149px]:block min-[1150px]:hidden fixed top-3 left-3 sm:top-4 sm:left-4 z-[999]">
+      {/* ================= MOBILE & TABLET HAMBURGER BUTTON ================= */}
+      <div className="lg:hidden fixed top-3 left-3 sm:top-4 sm:left-4 z-[999]">
         <button
           type="button"
           onClick={() => setIsMobileOpen(true)}
@@ -203,7 +203,7 @@ export default function Sidebar({ activeMenu, onMenuChange }) {
 
       {/* ================= MOBILE & TABLET DRAWER OVERLAY ================= */}
       {isMobileOpen && (
-        <div className="min-[1150px]:hidden fixed inset-0 z-[9999] flex">
+        <div className="lg:hidden fixed inset-0 z-[9999] flex">
           {/* Backdrop */}
           <div
             className="fixed inset-0 bg-black/60 backdrop-blur-md transition-opacity duration-300"
@@ -252,16 +252,14 @@ export default function Sidebar({ activeMenu, onMenuChange }) {
                       onMenuChange(menu.id);
                       setIsMobileOpen(false);
                     }}
-                    className={`flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-200 text-left ${
-                      isActive
+                    className={`flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-200 text-left ${isActive
                         ? "bg-white/25 border-2 border-[#F7C564] text-white font-black shadow-[0_6px_16px_rgba(0,0,0,0.3)] scale-[1.02]"
                         : "bg-white/10 border border-white/20 text-white/85 hover:bg-white/20 hover:text-white"
-                    }`}
+                      }`}
                   >
                     <div
-                      className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 transition-transform ${
-                        isActive ? "bg-[#272525] shadow-md scale-105" : "bg-white/20"
-                      }`}
+                      className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 transition-transform ${isActive ? "bg-[#272525] shadow-md scale-105" : "bg-white/20"
+                        }`}
                     >
                       <Image
                         src={menu.icon}

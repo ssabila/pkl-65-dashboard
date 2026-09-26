@@ -8,9 +8,39 @@ const JUDUL_PETA = {
   longsor: "Peta Tanah Longsor Sumatra",
 };
 
-function normalizeName(str) {
+function normalizeKabName(str) {
   if (!str) return "";
-  return str.toLowerCase().replace(/^(kab\.|kota)\s+/i, "").trim();
+  let s = str.toLowerCase().trim();
+  // Khusus Kota Solok vs Solok agar tidak bentrok
+  if (s === "kota solok" || s === "kotasolok") return "kotasolok";
+  if (s === "solok") return "solok";
+
+  s = s.replace(/^(kab\.|kabupaten|kota)\s+/i, "").replace(/[^a-z0-9]/g, "");
+
+  if (s === "sawahlunto") return "sawahlunto";
+  if (s === "tobasamosir" || s === "toba") return "toba";
+  if (s === "padangsidimpuan" || s === "padangsidempuan") return "padangsidimpuan";
+
+  return s;
+}
+
+function normalizeKecName(str) {
+  if (!str) return "";
+  let s = str.toLowerCase().replace(/^(kec\.|kecamatan)\s+/i, "").replace(/[^a-z0-9]/g, "");
+  if (s === "alapan" || s === "alafan") return "alapan";
+  if (s === "geulumpangtiga" || s === "glumpangtiga") return "glumpangtiga";
+  if (s === "setiabhakti" || s === "setiabakti") return "setiabakti";
+  if (s === "pauahduo" || s === "pauhduo") return "pauhduo";
+  if (s === "ixkoto" || s === "sembilankoto") return "ixkoto";
+  if (s === "canduang" || s === "candung") return "canduang";
+  if (s === "2x11enamlingkung" || s === "2x11enamlingkuang") return "2x11enamlingkung";
+  if (s === "lubuktarok" || s === "lubuaktarok") return "lubuktarok";
+  return s;
+}
+
+// Alias untuk kompatibilitas
+function normalizeName(str) {
+  return normalizeKabName(str);
 }
 
 // Warna klasifikasi banjir berdasarkan mean_nilai
@@ -67,7 +97,7 @@ export default function PetaSumatra({
     const lookup = {};
     for (const r of dampakData) {
       const rawKey = r.nm_kabupaten;
-      const normKey = normalizeName(rawKey);
+      const normKey = normalizeKabName(rawKey);
       if (!lookup[normKey]) {
         lookup[normKey] = {
           banjir_pixel: 0,
@@ -77,10 +107,14 @@ export default function PetaSumatra({
           luas_km2: 0,
         };
       }
-      lookup[normKey].banjir_pixel += r.dampak_banjir_longsor.pixel_count;
-      lookup[normKey].banjir_sum += r.dampak_banjir_longsor.sum_nilai;
-      lookup[normKey].longsor_pixel += r.dampak_genangan_longsor.pixel_count;
-      lookup[normKey].longsor_sum += r.dampak_genangan_longsor.sum_nilai;
+      if (r.dampak_banjir_longsor.mean_nilai > 0) {
+        lookup[normKey].banjir_pixel += r.dampak_banjir_longsor.pixel_count;
+        lookup[normKey].banjir_sum += r.dampak_banjir_longsor.sum_nilai;
+      }
+      if (r.dampak_genangan_longsor.mean_nilai > 0) {
+        lookup[normKey].longsor_pixel += r.dampak_genangan_longsor.pixel_count;
+        lookup[normKey].longsor_sum += r.dampak_genangan_longsor.sum_nilai;
+      }
       lookup[normKey].luas_km2 += r.luas_kec_km2;
     }
     // Compute mean per kab and mirror raw names
@@ -100,12 +134,12 @@ export default function PetaSumatra({
     const lookup = {};
     for (const r of dampakData) {
       const rawKey = `${r.nm_kabupaten}|${r.nm_kecamatan}`;
-      const normKey = `${normalizeName(r.nm_kabupaten)}|${normalizeName(r.nm_kecamatan)}`;
+      const normKey = `${normalizeKabName(r.nm_kabupaten)}|${normalizeKecName(r.nm_kecamatan)}`;
       const val = {
         banjir_mean: r.dampak_banjir_longsor.mean_nilai,
         longsor_mean: r.dampak_genangan_longsor.mean_nilai,
-        banjir_ha: r.dampak_banjir_longsor.pixel_count * 0.09,
-        longsor_ha: r.dampak_genangan_longsor.pixel_count * 0.09,
+        banjir_ha: r.dampak_banjir_longsor.mean_nilai > 0 ? r.dampak_banjir_longsor.pixel_count * 0.09 : 0,
+        longsor_ha: r.dampak_genangan_longsor.mean_nilai > 0 ? r.dampak_genangan_longsor.pixel_count * 0.09 : 0,
         luas_km2: r.luas_kec_km2,
       };
       lookup[rawKey] = val;
@@ -162,7 +196,7 @@ export default function PetaSumatra({
   const nonTargetProvinces = mapData.provinces.filter((p) => !targetProvinces.includes(p.name));
 
   // Match active kecamatan item
-  const normActiveKec = normalizeName(kecamatan);
+  const normActiveKec = normalizeKecName(kecamatan);
   const isFilterActive = Boolean(provinsi || kabupaten || normActiveKec);
 
   return (
@@ -417,13 +451,13 @@ export default function PetaSumatra({
                 <path
                   key={`nontarget-${prov.name}`}
                   d={prov.path}
-                  fill={isFilterActive ? "#FFFFFF" : "#F2E4C4"}
-                  stroke={isFilterActive ? "#E2D8CC" : "#A89678"}
-                  strokeWidth={isFilterActive ? "0.6" : "1.2"}
+                  fill="#FFFFFF"
+                  stroke="#E2D8CC"
+                  strokeWidth="0.8"
                   strokeLinejoin="round"
                   strokeLinecap="round"
                   onMouseEnter={(e) => {
-                    setHoveredItem({ title: prov.name, subtitle: "Provinsi Sumatra", isRed: false });
+                    setHoveredItem({ title: prov.name, subtitle: "Provinsi Sumatra (Di Luar Wilayah Kajian)", isRed: false });
                     setTooltipPos({ x: e.clientX, y: e.clientY });
                   }}
                   onMouseMove={(e) => setTooltipPos({ x: e.clientX, y: e.clientY })}
@@ -434,9 +468,9 @@ export default function PetaSumatra({
               {/* RENDER KECAMATAN LAYER IF KECAMATAN FILTER IS ACTIVE */}
               {normActiveKec && mapData.kecamatan ? (
                 mapData.kecamatan.map((item, idx) => {
-                  const isSelectedKec = normalizeName(item.kec) === normActiveKec;
+                  const isSelectedKec = normalizeKecName(item.kec) === normActiveKec;
                   const kecKey = `${item.kab}|${item.kec}`;
-                  const normKecKey = `${normalizeName(item.kab)}|${normalizeName(item.kec)}`;
+                  const normKecKey = `${normalizeKabName(item.kab)}|${normalizeKecName(item.kec)}`;
                   const kecData = kecLookup[normKecKey] || kecLookup[kecKey];
                   const isProvTarget = targetProvinces.includes(item.prov);
 
@@ -445,7 +479,7 @@ export default function PetaSumatra({
                   if (normActiveKec) {
                     matchesFilter = isSelectedKec;
                   } else if (kabupaten) {
-                    matchesFilter = (item.kab === kabupaten || normalizeName(item.kab) === normalizeName(kabupaten));
+                    matchesFilter = (item.kab === kabupaten || normalizeKabName(item.kab) === normalizeKabName(kabupaten));
                   } else if (provinsi) {
                     matchesFilter = (item.prov === provinsi);
                   }
@@ -453,9 +487,15 @@ export default function PetaSumatra({
                   const isExcluded = isFilterActive && !matchesFilter;
                   const hasDampak = Boolean(kecData && (kecData.banjir_mean > 0 || kecData.longsor_mean > 0));
 
+                  const kecDampakHa = activeMenu === "banjir"
+                    ? (kecData?.banjir_mean > 0 ? kecData?.banjir_ha ?? 0 : 0)
+                    : activeMenu === "longsor"
+                      ? (kecData?.longsor_mean > 0 ? kecData?.longsor_ha ?? 0 : 0)
+                      : ((kecData?.banjir_mean > 0 ? kecData?.banjir_ha : 0) + (kecData?.longsor_mean > 0 ? kecData?.longsor_ha : 0));
+
                   // Tentukan warna fill dan stroke
-                  let fillColor = "#F2E4C4";
-                  let strokeColor = "#A89678";
+                  let fillColor = "#FFFFFF";
+                  let strokeColor = "#D0C4B8";
                   let strokeW = 0.4;
                   let filterAttr = undefined;
 
@@ -515,7 +555,7 @@ export default function PetaSumatra({
                           title: `Kec. ${item.kec}`,
                           subtitle: `${item.kab}, ${item.prov}`,
                           isSelected: isSelectedKec,
-                          dampakHa,
+                          dampakHa: kecDampakHa,
                           hasDampak: (kecData?.banjir_mean > 0 || kecData?.longsor_mean > 0),
                         });
                         setTooltipPos({ x: e.clientX, y: e.clientY });
@@ -535,9 +575,9 @@ export default function PetaSumatra({
                 /* RENDER KABUPATEN LAYER OTHERWISE */
                 mapData.kabupaten.map((kab) => {
                   const isProvTarget = targetProvinces.includes(kab.prov);
-                  const isKabSelected = Boolean(kabupaten && (kabupaten === kab.kab || normalizeName(kabupaten) === normalizeName(kab.kab)));
+                  const isKabSelected = Boolean(kabupaten && (kabupaten === kab.kab || normalizeKabName(kabupaten) === normalizeKabName(kab.kab)));
                   const isProvSelected = Boolean(provinsi && provinsi === kab.prov);
-                  const kabData = kabLookup[normalizeName(kab.kab)] || kabLookup[kab.kab];
+                  const kabData = kabLookup[normalizeKabName(kab.kab)] || kabLookup[kab.kab];
 
                   // Cek apakah kabupaten ini masuk dalam cakupan filter
                   let matchesFilter = true;
@@ -551,8 +591,8 @@ export default function PetaSumatra({
                   const hasDampak = Boolean(kabData && (kabData.banjir_mean > 0 || kabData.longsor_mean > 0));
 
                   // Tentukan warna fill dan stroke
-                  let fillColor = "#F2E4C4";
-                  let strokeColor = "#A89678";
+                  let fillColor = "#FFFFFF";
+                  let strokeColor = "#D0C4B8";
                   let strokeW = 0.8;
                   let filterAttr = undefined;
 
@@ -643,7 +683,7 @@ export default function PetaSumatra({
                           rawTitle: kab.kab,
                           title: kab.kab,
                           subtitle: kab.prov,
-                          isSelected: isHighlighted,
+                          isSelected: isKabSelected,
                           dampakHa,
                           hasDampak: (kabData?.banjir_mean > 0 || kabData?.longsor_mean > 0),
                         });
