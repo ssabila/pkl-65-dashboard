@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import GenericDropdown from "../components/GenericDropdown";
 import StatCard from "../components/StatCard";
@@ -25,6 +25,16 @@ const SumatraMap = dynamic(() => import("./SumatraMap"), {
  */
 export default function WilayahTab() {
   const [provinsi, setProvinsi] = useState("all");
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const p = params.get("prov");
+      if (p && ["all", "aceh", "sumut", "sumbar"].includes(p)) {
+        setProvinsi(p);
+      }
+    }
+  }, []);
 
   const filteredData = getFilteredData(provinsi);
   const stats = getStats(filteredData);
