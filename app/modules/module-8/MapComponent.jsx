@@ -324,6 +324,32 @@ export default function MapComponent({
   const [dataReady, setDataReady] = useState(false);
   const [boundaryLoaded, setBoundaryLoaded] = useState(false);
 
+  // ── RESPONSIF (mobile / tablet) ──
+  // Legenda di layar kecil disembunyikan dulu (bisa dibuka lewat tombol "Legenda")
+  // supaya tidak menutupi sebagian besar peta. Di layar >= sm (640px) legenda
+  // selalu tampil seperti versi desktop.
+  const [legendOpen, setLegendOpen] = useState(false);
+  // Perangkat tanpa hover (HP/tablet layar sentuh): tooltip hover dimatikan
+  // (cukup popup saat diketuk) dan geser satu jari dikembalikan ke scroll halaman.
+  const noHoverRef = useRef(false);
+  const [isTouch, setIsTouch] = useState(false);
+  // Petunjuk "2 jari" hanya muncul sesaat ketika pengguna mencoba menggeser
+  // peta dengan satu jari (pola yang sama dengan Google Maps di halaman web).
+  const [showTouchHint, setShowTouchHint] = useState(false);
+  const hintTimerRef = useRef(null);
+  const handleMapTouchStart = (e) => {
+    if (!noHoverRef.current) return;
+    if (e.touches && e.touches.length === 1) {
+      setShowTouchHint(true);
+      if (hintTimerRef.current) clearTimeout(hintTimerRef.current);
+      hintTimerRef.current = setTimeout(() => setShowTouchHint(false), 1500);
+    } else {
+      setShowTouchHint(false);
+    }
+  };
+  useEffect(() => () => { if (hintTimerRef.current) clearTimeout(hintTimerRef.current); }, []);
+  const legendBoxClass = `absolute bottom-12 left-3 sm:bottom-4 sm:left-4 z-[400] bg-white/95 backdrop-blur-md border border-slate-200 p-2.5 sm:p-3.5 rounded-2xl shadow-md flex-col gap-1.5 sm:gap-2 max-w-[calc(100%-1.5rem)] max-h-[calc(100%-6rem)] overflow-y-auto sm:max-h-none sm:overflow-visible ${legendOpen ? 'flex' : 'hidden sm:flex'}`;
+
   // Gaya poligon per kab/kota, disusun berurutan menaik berdasarkan nomor mode
   // (0-3: genangan, 5-10: jalan/bangunan/cahaya malam/vegetasi, 11-13: kelembaban tanah).
   const getStyleByMode = (feature, mode) => {
@@ -746,8 +772,33 @@ export default function MapComponent({
     if (!mapContainerRef.current) return;
     let isMounted = true;
 
-    const map = L.map(mapContainerRef.current, { center: [2.8, 97.8], zoom: 6.5, zoomControl: false });
+    const noHover = typeof window !== 'undefined' && window.matchMedia('(hover: none)').matches;
+    noHoverRef.current = noHover;
+    setIsTouch(noHover);
+    // Layar sempit (HP): zoom pecahan diizinkan supaya fitBounds bisa memuat
+    // ketiga provinsi utuh. Di desktop opsi peta tetap sama seperti sebelumnya.
+    const isNarrow = mapContainerRef.current.clientWidth < 640;
+
+    const map = L.map(mapContainerRef.current, {
+      center: [2.8, 97.8],
+      zoom: 6.5,
+      zoomControl: false,
+      // Di layar sentuh, geser satu jari dipakai untuk scroll halaman (scrollytelling);
+      // peta tetap bisa digeser & di-zoom dengan dua jari (pinch).
+      dragging: !noHover,
+      ...(isNarrow ? { zoomSnap: 0.25 } : {}),
+    });
     mapInstanceRef.current = map;
+
+    // Tinggi kontainer peta sekarang responsif (vh), jadi ukuran Leaflet perlu
+    // disegarkan setiap kali kontainer berubah ukuran (rotasi layar, resize jendela).
+    let resizeObserver = null;
+    if (typeof ResizeObserver !== 'undefined') {
+      resizeObserver = new ResizeObserver(() => {
+        if (mapInstanceRef.current) mapInstanceRef.current.invalidateSize();
+      });
+      resizeObserver.observe(mapContainerRef.current);
+    }
 
     L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
       attribution: 'Tiles &copy; Esri',
@@ -764,10 +815,14 @@ export default function MapComponent({
           geoJsonLayerRef.current = L.geoJSON(data, {
             style: (feature) => getStyleByMode(feature, currentMode),
             onEachFeature: (feature, lyr) => {
-              lyr.bindTooltip(getTooltipContent(feature, currentMode), { sticky: true, direction: 'top' });
+              // Tooltip hover hanya untuk perangkat ber-mouse; di layar sentuh tooltip
+              // dan popup akan muncul bersamaan saat diketuk, jadi cukup popup saja.
+              if (!noHoverRef.current) {
+                lyr.bindTooltip(getTooltipContent(feature, currentMode), { sticky: true, direction: 'top' });
+              }
               // Popup muncul saat wilayah DIKLIK (default Leaflet untuk layer dg bindPopup).
               // Isinya disinkronkan ulang tiap kali currentMode / data jalan berubah.
-              lyr.bindPopup(getPopupContent(feature, currentMode), { maxWidth: 260 });
+              lyr.bindPopup(getPopupContent(feature, currentMode), { maxWidth: 260, autoPanPadding: [12, 12] });
             },
           }).addTo(mapInstanceRef.current);
           // Poligon batas wilayah dimuat belakangan (setelah fetch), jadi secara default
@@ -776,6 +831,12 @@ export default function MapComponent({
           // jalan & marker selalu tampil di atas fill poligon (ini yang bikin peta mode
           // jalan terlihat gelap total dan jalan di Sumut/Sumbar seolah tidak ada).
           geoJsonLayerRef.current.bringToBack();
+          // Di HP, zoom default (dirancang untuk peta lebar) memotong sebagian provinsi —
+          // sesuaikan tampilan awal agar seluruh wilayah tiga provinsi terlihat.
+          if (isNarrow) {
+            const bounds = geoJsonLayerRef.current.getBounds();
+            if (bounds.isValid()) mapInstanceRef.current.fitBounds(bounds, { padding: [8, 8] });
+          }
           setBoundaryLoaded(true);
         }
       })
@@ -783,6 +844,7 @@ export default function MapComponent({
 
     return () => {
       isMounted = false;
+      if (resizeObserver) resizeObserver.disconnect();
       if (mapInstanceRef.current) {
         try { mapInstanceRef.current.remove(); } catch (e) {}
         mapInstanceRef.current = null;
@@ -878,15 +940,32 @@ export default function MapComponent({
 
   return (
     <div className="w-full h-full relative text-slate-800">
-      <div ref={mapContainerRef} className="w-full h-full z-0" />
+      <div ref={mapContainerRef} onTouchStart={handleMapTouchStart} className="w-full h-full z-0" />
 
-      <div className="absolute top-4 left-4 z-[400] bg-white/95 backdrop-blur-md border border-slate-200 px-3 py-1.5 rounded-xl shadow-sm">
-        <span className="text-[11px] uppercase tracking-wider font-semibold text-slate-700">{getTitleLabel(currentMode)}</span>
+      <div className="absolute top-3 left-3 sm:top-4 sm:left-4 z-[400] bg-white/95 backdrop-blur-md border border-slate-200 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl shadow-sm max-w-[calc(100%-4.5rem)] sm:max-w-[calc(100%-6rem)]">
+        <span className="block sm:inline text-[10px] sm:text-[11px] uppercase tracking-wider font-semibold text-slate-700 leading-snug sm:leading-normal">{getTitleLabel(currentMode)}</span>
       </div>
+
+      {/* Tombol buka/tutup legenda — hanya di layar kecil (< 640px) */}
+      <button
+        type="button"
+        onClick={() => setLegendOpen((v) => !v)}
+        aria-expanded={legendOpen}
+        className="sm:hidden absolute bottom-3 left-3 z-[401] bg-white/95 backdrop-blur-md border border-slate-200 px-3 py-1.5 rounded-full shadow-md text-[11px] font-semibold text-slate-700 flex items-center gap-1.5"
+      >
+        <span className="w-2 h-2 rounded-full bg-[#F47B2F]" />
+        {legendOpen ? 'Tutup Legenda' : 'Legenda'}
+      </button>
+
+      {isTouch && showTouchHint && !legendOpen && (
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[400] bg-[#1a2332]/80 text-white text-[11px] font-medium px-3 py-1.5 rounded-full pointer-events-none whitespace-nowrap">
+          Gunakan 2 jari untuk geser &amp; zoom peta
+        </div>
+      )}
 
       {/* Legenda, disusun berurutan menaik berdasarkan nomor mode (lihat getStyleByMode) */}
       {currentMode === 0 ? (
-        <div className="absolute bottom-4 left-4 z-[400] bg-white/95 backdrop-blur-md border border-slate-200 p-3.5 rounded-2xl shadow-md flex flex-col gap-2 min-w-[150px]">
+        <div className={`${legendBoxClass} min-w-[150px]`}>
           <div className="flex items-center gap-2.5 text-[11px] font-medium text-slate-700"><span className="w-2.5 h-2.5 rounded-full bg-[#D72E38] block" /><span>Kritis (&gt;75%)</span></div>
           <div className="flex items-center gap-2.5 text-[11px] font-medium text-slate-700"><span className="w-2.5 h-2.5 rounded-full bg-[#F47B2F] block" /><span>Parah (50-75%)</span></div>
           <div className="flex items-center gap-2.5 text-[11px] font-medium text-slate-700"><span className="w-2.5 h-2.5 rounded-full bg-[#FFD47D] block" /><span>Sedang (25-50%)</span></div>
@@ -894,7 +973,7 @@ export default function MapComponent({
           <div className="text-[10px] text-slate-400 font-medium pt-1 border-t border-slate-200">Klik kab/kota untuk rincian semua indikator</div>
         </div>
       ) : currentMode === 1 ? (
-        <div className="absolute bottom-4 left-4 z-[400] bg-white/95 backdrop-blur-md border border-slate-200 p-3.5 rounded-2xl shadow-md flex flex-col gap-2 min-w-[130px]">
+        <div className={`${legendBoxClass} min-w-[130px]`}>
           <span className="text-[9px] font-bold uppercase tracking-wider text-slate-400 mb-0.5">Luas Genangan Puncak (ha)</span>
           {PUNCAK_COLORS.map((c, i) => (
             <div key={i} className="flex items-center gap-2.5 text-[11px] font-medium text-slate-700">
@@ -903,7 +982,7 @@ export default function MapComponent({
           ))}
         </div>
       ) : currentMode === 2 ? (
-        <div className="absolute bottom-4 left-4 z-[400] bg-white/95 backdrop-blur-md border border-slate-200 p-3.5 rounded-2xl shadow-md flex flex-col gap-2 min-w-[130px]">
+        <div className={`${legendBoxClass} min-w-[130px]`}>
           <span className="text-[9px] font-bold uppercase tracking-wider text-slate-400 mb-0.5">Luas Genangan Surut (ha)</span>
           {SURUT_COLORS.map((c, i) => (
             <div key={i} className="flex items-center gap-2.5 text-[11px] font-medium text-slate-700">
@@ -912,7 +991,7 @@ export default function MapComponent({
           ))}
         </div>
       ) : currentMode === 3 ? (
-        <div className="absolute bottom-4 left-4 z-[400] bg-white/95 backdrop-blur-md border border-slate-200 p-3.5 rounded-2xl shadow-md flex flex-col gap-2 min-w-[130px]">
+        <div className={`${legendBoxClass} min-w-[130px]`}>
           <span className="text-[9px] font-bold uppercase tracking-wider text-slate-400 mb-0.5">Luas Residual (ha)</span>
           {RESIDUAL_COLORS.map((c, i) => (
             <div key={i} className="flex items-center gap-2.5 text-[11px] font-medium text-slate-700">
@@ -921,20 +1000,20 @@ export default function MapComponent({
           ))}
         </div>
       ) : currentMode === 5 || currentMode === 6 ? (
-        <div className="absolute bottom-4 left-4 z-[400] bg-white/95 backdrop-blur-md border border-slate-200 p-3.5 rounded-2xl shadow-md flex flex-col gap-2 min-w-[150px]">
+        <div className={`${legendBoxClass} min-w-[150px]`}>
           <div className="flex items-center gap-2.5 text-[11px] font-medium text-slate-700">
             <span className="w-2.5 h-2.5 rounded-full bg-[#D72E38] border border-white block" />
             <span>Risiko Longsor Tinggi</span>
           </div>
         </div>
       ) : currentMode === 7 ? (
-        <div className="absolute bottom-4 left-4 z-[400] bg-white/95 backdrop-blur-md border border-slate-200 p-3.5 rounded-2xl shadow-md flex flex-col gap-2 min-w-[150px]">
+        <div className={`${legendBoxClass} min-w-[150px]`}>
           <div className="flex items-center gap-2.5 text-[11px] font-medium text-slate-700"><span className="w-3 h-1 bg-[#168573] block rounded-full" /><span>Pulih</span></div>
           <div className="flex items-center gap-2.5 text-[11px] font-medium text-slate-700"><span className="w-3 h-1 bg-[#D72E38] block rounded-full" /><span>Masih Terputus / Tergenang</span></div>
           <div className="text-[10px] text-slate-400 font-medium pt-1 border-t border-slate-200">Klik kab/kota untuk rincian panjang jalan</div>
         </div>
       ) : currentMode === 8 ? (
-        <div className="absolute bottom-4 left-4 z-[400] bg-white/95 backdrop-blur-md border border-slate-200 p-3.5 rounded-2xl shadow-md flex flex-col gap-2 min-w-[150px]">
+        <div className={`${legendBoxClass} min-w-[150px]`}>
           <span className="text-[9px] font-bold uppercase tracking-wider text-slate-400 mb-0.5">% Pemulihan Bangunan</span>
           <div className="flex items-center gap-2.5 text-[11px] font-medium text-slate-700"><span className="w-2.5 h-2.5 rounded-full bg-[#168573] block" /><span>Pulih (&ge;75%)</span></div>
           <div className="flex items-center gap-2.5 text-[11px] font-medium text-slate-700"><span className="w-2.5 h-2.5 rounded-full bg-[#FFD47D] block" /><span>Sedang (50-75%)</span></div>
@@ -945,7 +1024,7 @@ export default function MapComponent({
           </div>
         </div>
       ) : currentMode === 9 ? (
-        <div className="absolute bottom-4 left-4 z-[400] bg-white/95 backdrop-blur-md border border-slate-200 p-3.5 rounded-2xl shadow-md flex flex-col gap-2 min-w-[190px]">
+        <div className={`${legendBoxClass} min-w-[190px]`}>
           <span className="text-[9px] font-bold uppercase tracking-wider text-slate-400 mb-0.5">% Pemulihan Cahaya Malam</span>
           <div className="w-full h-2.5 rounded-full" style={{ background: `linear-gradient(90deg, ${NTL_STOPS.join(', ')})` }} />
           <div className="flex justify-between text-[10px] font-medium text-slate-500">
@@ -957,7 +1036,7 @@ export default function MapComponent({
           <div className="text-[10px] text-slate-400 font-medium">Klik kab/kota untuk nilai recovery</div>
         </div>
       ) : currentMode === 10 ? (
-        <div className="absolute bottom-4 left-4 z-[400] bg-white/95 backdrop-blur-md border border-slate-200 p-3.5 rounded-2xl shadow-md flex flex-col gap-2 min-w-[160px]">
+        <div className={`${legendBoxClass} min-w-[160px]`}>
           <span className="text-[9px] font-bold uppercase tracking-wider text-slate-400 mb-0.5">Status NDVI Recovery</span>
           <div className="flex items-center gap-2.5 text-[11px] font-medium text-slate-700"><span className="w-2.5 h-2.5 rounded-full bg-[#D72E38] block" /><span>Kritis (&lt;25%)</span></div>
           <div className="flex items-center gap-2.5 text-[11px] font-medium text-slate-700"><span className="w-2.5 h-2.5 rounded-full bg-[#F47B2F] block" /><span>Parah (25-50%)</span></div>
@@ -969,7 +1048,7 @@ export default function MapComponent({
           <div className="text-[10px] text-slate-400 font-medium">Klik kab/kota untuk rincian & jumlah sampel</div>
         </div>
       ) : currentMode === 11 || currentMode === 12 ? (
-        <div className="absolute bottom-4 left-4 z-[400] bg-white/95 backdrop-blur-md border border-slate-200 p-3.5 rounded-2xl shadow-md flex flex-col gap-2 min-w-[150px]">
+        <div className={`${legendBoxClass} min-w-[150px]`}>
           <span className="text-[9px] font-bold uppercase tracking-wider text-slate-400 mb-0.5">Kelembaban Tanah</span>
           <div className="flex items-center gap-2.5 text-[11px] font-medium text-slate-700">
             <span className="w-2.5 h-2.5 rounded-full block bg-[#f1f5f9] border border-slate-300" /><span>Normal</span>
@@ -982,7 +1061,7 @@ export default function MapComponent({
           </div>
         </div>
       ) : currentMode === 13 ? (
-        <div className="absolute bottom-4 left-4 z-[400] bg-white/95 backdrop-blur-md border border-slate-200 p-3.5 rounded-2xl shadow-md flex flex-col gap-2 min-w-[150px]">
+        <div className={`${legendBoxClass} min-w-[150px]`}>
           <span className="text-[9px] font-bold uppercase tracking-wider text-slate-400 mb-0.5">Zona Kritis Kelembaban</span>
           <div className="flex items-center gap-2.5 text-[11px] font-medium text-slate-700">
             <span className="w-2.5 h-2.5 rounded-full block bg-[#5b8fbf]" /><span>Kelembaban Tinggi (Z-Score &gt; 1.5)</span>
@@ -996,7 +1075,7 @@ export default function MapComponent({
         </div>
       ) : null}
 
-      <div className="absolute top-4 right-4 z-[400] bg-white/95 backdrop-blur-md border border-slate-200 w-10 h-10 rounded-full shadow-md flex flex-col items-center justify-center font-bold text-slate-800">
+      <div className="absolute top-3 right-3 sm:top-4 sm:right-4 z-[400] bg-white/95 backdrop-blur-md border border-slate-200 w-8 h-8 sm:w-10 sm:h-10 rounded-full shadow-md flex flex-col items-center justify-center font-bold text-slate-800">
         <span className="text-[10px] leading-none mb-[-2px] text-[#F47B2F] font-mono">^</span>
         <span className="text-xs leading-none">U</span>
       </div>
