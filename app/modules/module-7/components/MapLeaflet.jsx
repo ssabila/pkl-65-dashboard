@@ -2,7 +2,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { MapContainer, GeoJSON, ZoomControl  } from "react-leaflet";
+import { MapContainer, TileLayer, GeoJSON, ZoomControl } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { normalizeToFeatureCollection } from "../lib/geojson";
 import FitBounds from "./FitBounds";
@@ -66,9 +66,12 @@ export default function MapLeaflet({ geojsonFiles, fileKeys, outlineFiles, cente
   boxZoom={false}
   keyboard={false}
   zoomControl={false}
-  attributionControl={false}
   className="w-full h-full map-canvas"
 >
+  <TileLayer
+    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+  />
   <ZoomControl position="topright" />
   {(outlineData || geoData) && <FitBounds data={outlineData || geoData} />}
   {geoData?.map((item, index) => (

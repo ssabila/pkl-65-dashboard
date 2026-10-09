@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { MapContainer, GeoJSON, ImageOverlay, ZoomControl } from "react-leaflet";
+import { MapContainer, TileLayer, GeoJSON, ImageOverlay, ZoomControl } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { normalizeToFeatureCollection } from "../lib/geojson";
 import { FLOOD_RASTER_BOUNDS, getFloodRasterUrl } from "../lib/floodRasterBounds";
@@ -56,9 +56,12 @@ export default function FloodExtentLeaflet({ boundaryFiles, outlineFiles, center
       boxZoom={false}
       keyboard={false}
       zoomControl={false}
-      attributionControl={false}
       className="w-full h-full map-canvas"
     >
+      <TileLayer
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+      />
       <ZoomControl position="topright" />
       {(outlines || boundaries) && <FitBounds data={outlines || boundaries} />}
 

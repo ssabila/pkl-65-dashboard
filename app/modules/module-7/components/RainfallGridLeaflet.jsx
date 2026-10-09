@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { MapContainer, GeoJSON, ZoomControl } from "react-leaflet";
+import { MapContainer, TileLayer, GeoJSON, ZoomControl } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { rainfallColorByValue } from "../lib/rainfallColor";
 import { normalizeToFeatureCollection } from "../lib/geojson";
@@ -75,9 +75,12 @@ export default function RainfallGridLeaflet({ url, boundaryFiles, outlineFiles, 
   boxZoom={false}
   keyboard={false}
   zoomControl={false}
-  attributionControl={false}
   className="w-full h-full map-canvas"
 >
+  <TileLayer
+    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+  />
   <ZoomControl position="topright" />
   {(outlines || boundaries) && <FitBounds data={outlines || boundaries} />}
   {gridData && <GeoJSON key={periode} data={gridData} style={gridStyle} filter={filterByPeriode} />}
