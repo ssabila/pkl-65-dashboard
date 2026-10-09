@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import WilayahTab from "./wilayah/WilayahTab";
 import KomponenTab from "./komponen/KomponenTab";
@@ -14,6 +14,16 @@ import "./styles/module6.css";
  */
 export default function Module6Dashboard() {
   const [activeTab, setActiveTab] = useState("wilayah");
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const t = params.get("tab");
+      if (t && ["wilayah", "komponen", "metadata"].includes(t)) {
+        setActiveTab(t);
+      }
+    }
+  }, []);
 
   const tabs = [
     { key: "wilayah", label: "Wilayah" },

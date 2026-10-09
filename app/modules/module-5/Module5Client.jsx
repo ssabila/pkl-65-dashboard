@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useIntersectionObserver } from "./hooks/useIntersectionObserver";
 import { C } from "./data/constants";
@@ -10,7 +11,6 @@ import SectionStory from "./components/SectionStory";
 import SectionFlood from "./components/SectionFlood";
 import SectionDamage from "./components/SectionDamage";
 import SectionRoads from "./components/SectionRoads";
-import SectionBridges from "./components/SectionBridges";
 import SectionIsolation from "./components/SectionIsolation";
 import SectionIKG from "./components/SectionIKG";
 import SectionNightLights from "./components/SectionNightLights";
@@ -19,11 +19,18 @@ import MapLibreMap from "./components/MapLibreMap";
 
 export default function Module5Client() {
   const [activeSection, setRef] = useIntersectionObserver({ threshold: 0.5 });
+  const [isMapLoaded, setIsMapLoaded] = useState(false);
+  const [dashboardFilter, setDashboardFilter] = useState("Semua");
+
+  // Pastikan zoom selalu normal 100%
+  useEffect(() => {
+    document.body.style.zoom = "100%";
+  }, []);
 
   return (
     <>
       {/* Peta MapLibre statis di background (tanpa data berat) yang akan diatur oleh activeSection */}
-      <MapLibreMap activeSection={activeSection} />
+      <MapLibreMap activeSection={activeSection} isMapLoaded={isMapLoaded} setIsMapLoaded={setIsMapLoaded} dashboardFilter={dashboardFilter} />
 
       <style dangerouslySetInnerHTML={{
         __html: `
@@ -56,13 +63,6 @@ export default function Module5Client() {
             border: 1px solid rgba(255, 255, 255, 0.15);
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.25);
           }
-          .scan-line {
-            position: absolute;
-            width: 100%;
-            height: 4px;
-            background: linear-gradient(to bottom, transparent, rgba(217,56,58,0.8), transparent);
-            animation: scan 4s linear infinite;
-            box-shadow: 0 0 10px rgba(217,56,58,0.5);
           }
           .particle-el {
             position: absolute;
@@ -79,9 +79,6 @@ export default function Module5Client() {
             40% { transform: translateY(-10px); }
             60% { transform: translateY(-5px); }
           }
-          @keyframes scan {
-            0% { top: -10%; }
-            100% { top: 110%; }
           }
           @keyframes pulse {
             0% { opacity: 1; transform: scale(1); }
@@ -114,6 +111,55 @@ export default function Module5Client() {
           @keyframes fadeInLeft { from { opacity: 0; transform: translateX(-30px); } to { opacity: 1; transform: translateX(0); } }
           @keyframes fadeInRight { from { opacity: 0; transform: translateX(30px); } to { opacity: 1; transform: translateX(0); } }
           @keyframes slideInRight { from { transform: translateX(100%); } to { transform: translateX(0); } }
+
+          /* ISOLATION MARKERS (HALAMAN 6) */
+          .isolated-marker {
+            position: relative;
+            width: 20px;
+            height: 20px;
+            pointer-events: none;
+          }
+          .sos-circle {
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 10px; height: 10px;
+            background: rgba(244, 124, 54, 0.6);
+            border-radius: 50%;
+            animation: sos-pulse 2s infinite cubic-bezier(0, 0, 0.2, 1);
+          }
+          .sos-circle::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            border-radius: 50%;
+            border: 1px solid rgba(244, 124, 54, 0.8);
+            animation: sos-pulse-ring 2s infinite cubic-bezier(0, 0, 0.2, 1);
+            animation-delay: 0.5s;
+          }
+          .airdrop-line {
+            position: absolute;
+            bottom: 50%; left: 50%;
+            width: 1px;
+            height: 100vh;
+            border-left: 1px dashed rgba(255,255,255,0.4);
+            transform: translateX(-50%);
+            transform-origin: bottom;
+            animation: airdrop-drop 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+          }
+
+          @keyframes sos-pulse {
+            0% { transform: translate(-50%, -50%) scale(0); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(3); opacity: 0; }
+          }
+          @keyframes sos-pulse-ring {
+            0% { transform: scale(0.5); opacity: 1; }
+            100% { transform: scale(2); opacity: 0; }
+          }
+          @keyframes airdrop-drop {
+            0% { transform: translateX(-50%) scaleY(0); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateX(-50%) scaleY(1); opacity: 1; }
+          }
         `
       }} />
 
@@ -124,15 +170,14 @@ export default function Module5Client() {
         <SectionFlood active={activeSection >= 2} setRef={setRef(2)} />
         <SectionDamage active={activeSection >= 3} setRef={setRef(3)} />
         <SectionRoads active={activeSection >= 4} setRef={setRef(4)} />
-        <SectionBridges active={activeSection >= 5} setRef={setRef(5)} />
-        <SectionIsolation active={activeSection >= 6} setRef={setRef(6)} />
-        <SectionIKG active={activeSection >= 7} setRef={setRef(7)} />
-        <SectionNightLights active={activeSection >= 8} setRef={setRef(8)} />
-        <SectionDashboard active={activeSection >= 9} setRef={setRef(9)} />
+        <SectionIsolation active={activeSection >= 5} setRef={setRef(5)} />
+        <SectionIKG active={activeSection >= 6} setRef={setRef(6)} />
+        <SectionNightLights active={activeSection >= 7} setRef={setRef(7)} />
+        <SectionDashboard active={activeSection >= 8} setRef={setRef(8)} filterActive={dashboardFilter} setFilterActive={setDashboardFilter} />
       </div>
 
       {/* Footer */}
-      <footer className="py-8 text-center" style={{ background: C.navy }}>
+      <footer ref={setRef(9)} className="relative z-10 py-8 text-center" style={{ background: C.navy }}>
         <p style={{ fontFamily: "var(--font-dm-sans)", color: "rgba(232,235,239,0.4)", fontSize: "0.82rem" }}>
           Modul 5: Dampak &amp; Logistik &nbsp;·&nbsp; Politeknik Statistika STIS &nbsp;·&nbsp; PKL 65
         </p>

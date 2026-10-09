@@ -127,12 +127,57 @@
   }
 }
 
-/* Floating Basemap Selector */
-.m6-map-basemap-toggle {
+/* Floating Controls Top Bar */
+.m6-map-top-bar {
   position: absolute;
   top: 12px;
   right: 12px;
   z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+/* Layer Mode Toggle (Poligon vs Titik) */
+.m6-map-mode-toggle {
+  display: flex;
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(8px);
+  padding: 3px;
+  border-radius: 10px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  gap: 3px;
+}
+
+.m6-mode-btn {
+  background: transparent;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 7px;
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.m6-mode-btn:hover {
+  background: rgba(241, 245, 249, 0.9);
+  color: #0f172a;
+}
+
+.m6-mode-btn.active {
+  background: #0f766e;
+  color: #ffffff;
+  box-shadow: 0 2px 6px rgba(15, 118, 110, 0.35);
+}
+
+/* Floating Basemap Selector */
+.m6-map-basemap-toggle {
   display: flex;
   background: rgba(255, 255, 255, 0.92);
   backdrop-filter: blur(8px);
@@ -627,17 +672,24 @@
   }
 
   /* Compact Leaflet controls on mobile */
-  .m6-map-basemap-toggle {
+  .m6-map-top-bar {
     top: 8px;
     right: 8px;
-    padding: 2px;
-    gap: 2px;
-    border-radius: 8px;
+    gap: 4px;
+    max-width: calc(100% - 110px);
   }
 
+  .m6-map-mode-toggle,
+  .m6-map-basemap-toggle {
+    padding: 2px;
+    gap: 2px;
+    border-radius: 7px;
+  }
+
+  .m6-mode-btn,
   .m6-basemap-btn {
-    padding: 4px 6px;
-    font-size: 0.68rem;
+    padding: 3px 6px;
+    font-size: 0.65rem;
     border-radius: 5px;
   }
 

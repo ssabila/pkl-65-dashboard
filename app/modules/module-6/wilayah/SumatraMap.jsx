@@ -4,30 +4,11 @@ import { useEffect, useRef, useState } from "react";
 import "leaflet/dist/leaflet.css";
 import { PROVINSI_BOUNDS } from "../data";
 
-// Basemap layer options
-const BASEMAPS = {
-  voyager: {
-    name: "Terang (CartoDB)",
-    url: "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
-    attribution:
-      '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy; <a href="https://carto.com/">CARTO</a>',
-    subdomains: "abcd",
-    maxZoom: 19,
-  },
-  osm: {
-    name: "OpenStreetMap",
-    url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-    attribution:
-      '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> kontributor',
-    maxZoom: 19,
-  },
-  satellite: {
-    name: "Citra Satelit",
-    url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
-    attribution:
-      '&copy; Esri &mdash; Citra Satelit ArcGIS World Imagery',
-    maxZoom: 18,
-  },
+const OPENSTREETMAP_TILES = {
+  url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+  attribution:
+    '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> kontributor',
+  maxZoom: 19,
 };
 
 // Risk color mapping
@@ -53,7 +34,6 @@ export default function SumatraMap({ data = [], provinsiKey = "all" }) {
   const geoLayerRef = useRef(null);
   const markersLayerRef = useRef(null);
 
-  const [activeBasemap, setActiveBasemap] = useState("osm");
   const [viewMode, setViewMode] = useState("polygon"); // "polygon" | "marker" | "both"
   const [geoData, setGeoData] = useState(null);
   const [selectedKab, setSelectedKab] = useState(null);
@@ -112,11 +92,9 @@ export default function SumatraMap({ data = [], provinsiKey = "all" }) {
         .addTo(map);
 
       // Add default tile layer
-      const cfg = BASEMAPS[activeBasemap] || BASEMAPS.voyager;
-      const tileLayer = L.tileLayer(cfg.url, {
-        attribution: cfg.attribution,
-        subdomains: cfg.subdomains || "abc",
-        maxZoom: cfg.maxZoom || 19,
+      const tileLayer = L.tileLayer(OPENSTREETMAP_TILES.url, {
+        attribution: OPENSTREETMAP_TILES.attribution,
+        maxZoom: OPENSTREETMAP_TILES.maxZoom,
       }).addTo(map);
 
       // Group layer for markers & GeoJSON
@@ -151,32 +129,6 @@ export default function SumatraMap({ data = [], provinsiKey = "all" }) {
       }
     };
   }, []);
-
-  // Update Tile Layer when basemap changes
-  useEffect(() => {
-    async function updateTile() {
-      if (!mapInstanceRef.current) return;
-      const L = (await import("leaflet")).default;
-      const cfg = BASEMAPS[activeBasemap];
-      if (!cfg) return;
-
-      if (tileLayerRef.current) {
-        mapInstanceRef.current.removeLayer(tileLayerRef.current);
-      }
-
-      tileLayerRef.current = L.tileLayer(cfg.url, {
-        attribution: cfg.attribution,
-        subdomains: cfg.subdomains || "abc",
-        maxZoom: cfg.maxZoom || 19,
-      }).addTo(mapInstanceRef.current);
-
-      tileLayerRef.current.bringToBack();
-    }
-
-    if (mapInstanceRef.current) {
-      updateTile();
-    }
-  }, [activeBasemap]);
 
   // Render Polygons and/or Markers
   useEffect(() => {
@@ -267,12 +219,11 @@ export default function SumatraMap({ data = [], provinsiKey = "all" }) {
 
             if (item) {
               const color = getRiskColor(item.status_crs);
-              const isSat = activeBasemap === "satellite";
               return {
                 fillColor: color.fill,
-                fillOpacity: isSat ? 0.85 : 0.76,
-                color: isSat ? "#ffffff" : "#ffffff",
-                weight: isSat ? 1.5 : 1.2,
+                fillOpacity: 0.76,
+                color: "#ffffff",
+                weight: 1.2,
                 opacity: 0.95,
               };
             }
@@ -391,7 +342,7 @@ export default function SumatraMap({ data = [], provinsiKey = "all" }) {
     }
 
     renderLayers();
-  }, [data, geoData, viewMode, activeBasemap, isLoaded]);
+  }, [data, geoData, viewMode, isLoaded]);
 
   // Handle Province Filter Pan/Zoom
   useEffect(() => {
@@ -470,20 +421,6 @@ export default function SumatraMap({ data = [], provinsiKey = "all" }) {
           </button>
         </div>
 
-        {/* Floating Basemap Selector */}
-        <div className="m6-map-basemap-toggle">
-          {Object.entries(BASEMAPS).map(([key, config]) => (
-            <button
-              key={key}
-              type="button"
-              className={`m6-basemap-btn ${activeBasemap === key ? "active" : ""}`}
-              onClick={() => setActiveBasemap(key)}
-              title={`Ganti tampilan ke ${config.name}`}
-            >
-              {key === "voyager" ? "Terang" : key === "osm" ? "OSM" : "Satelit"}
-            </button>
-          ))}
-        </div>
       </div>
 
       {/* Floating Reset View Button */}
