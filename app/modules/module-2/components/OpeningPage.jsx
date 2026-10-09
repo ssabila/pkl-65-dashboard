@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import Link from "next/link";
 
 export default function OpeningPage({ onNavigate }) {
   const [hoveredNav, setHoveredNav] = useState(null);
@@ -42,6 +43,17 @@ export default function OpeningPage({ onNavigate }) {
 
       {/* Navbar */}
       <nav className="relative z-10 flex flex-wrap items-center justify-center px-4 py-4 gap-2 sm:gap-4 sm:px-8">
+        <Link
+          href="/"
+          className="text-xs font-medium transition-all duration-200 px-2.5 py-1.5 rounded-lg z-10 sm:text-sm sm:px-3"
+          style={{
+            fontFamily: "var(--font-dm-sans)",
+            color: "#fff",
+            background: "rgba(255,255,255,0.14)",
+          }}
+        >
+          Kembali ke Landing Page
+        </Link>
         {navItems.map((item) => (
           <button
             key={item.page}
