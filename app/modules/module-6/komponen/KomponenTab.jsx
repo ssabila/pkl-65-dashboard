@@ -20,11 +20,31 @@ export default function KomponenTab() {
 
   const kabupatenList = getKabupatenList(kompProvinsi);
 
-  // Auto-select first kabupaten when province changes
+  // Read URL query parameter for kab
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const k = params.get("kab");
+      if (k) {
+        const item = getWilayahByKDPKAB(k);
+        if (item) {
+          setKompProvinsi(item.provinsi_key);
+          setKompKabupaten(k);
+          return;
+        }
+      }
+    }
+  }, []);
+
+  // Auto-select first kabupaten when province changes if not set
   useEffect(() => {
     const list = getKabupatenList(kompProvinsi);
     if (list.length > 0) {
-      setKompKabupaten(list[0].value);
+      // Keep existing selection if it belongs to the current province
+      setKompKabupaten((prev) => {
+        if (prev && list.some((item) => item.value === prev)) return prev;
+        return list[0].value;
+      });
     } else {
       setKompKabupaten("");
     }
