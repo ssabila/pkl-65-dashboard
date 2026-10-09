@@ -1072,7 +1072,7 @@ export default function Module8Page() {
         <section className="min-h-dvh lg:min-h-0 lg:h-screen w-full snap-start flex flex-col justify-center pt-24 pb-16 px-4 sm:px-6 lg:pt-20 lg:pb-0 lg:px-8 relative">
           <div className="w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center">
             <div className="lg:col-span-5 space-y-5 flex flex-col justify-center">
-              <span className="text-slate-500 tracking-widest text-xs font-bold uppercase block font-mod8-body">Statistik Genangan (Data Real CSV GEE)</span>
+              <span className="text-slate-500 tracking-widest text-xs font-bold uppercase block font-mod8-body">Statistik Genangan</span>
               <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#1a2332] tracking-tight font-mod8-heading leading-tight">
                 <span className="text-[#f47b2f]">{genanganStats.persenResidual}%</span> <br />Rata-rata Genangan Residual.
               </h2>
