@@ -49,16 +49,16 @@ export default function BanjirView({ provinsi, kabupaten, kecamatan }) {
   const [allData, setAllData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Fetch data modul3_dampak.json
+  // Fetch data modul3_dampak_baru.json
   useEffect(() => {
-    fetch("/data/modul3_dampak.json")
+    fetch("/data/modul3_dampak_baru.json")
       .then((res) => res.json())
       .then((data) => {
         setAllData(data);
         setIsLoading(false);
       })
       .catch((err) => {
-        console.error("Gagal memuat data modul3_dampak.json:", err);
+        console.error("Gagal memuat data modul3_dampak_baru.json:", err);
         setIsLoading(false);
       });
   }, []);
@@ -78,12 +78,16 @@ export default function BanjirView({ provinsi, kabupaten, kecamatan }) {
           (r.nm_kecamatan === kecamatan || normalizeKecName(r.nm_kecamatan) === normKec)
       );
       if (!kecItem) return null;
-      const isTerdampak = kecItem.dampak_banjir_longsor?.mean_nilai > 0;
+      const b = kecItem.dampak_bencana?.banjir;
+      const luasHa = b?.estimasi_luas_ha || 0;
+      const kedalaman = b?.proxy_kedalaman_m || 0;
       return {
         ...kecItem,
-        dampak_banjir_longsor: {
-          ...kecItem.dampak_banjir_longsor,
-          pixel_count: isTerdampak ? kecItem.dampak_banjir_longsor.pixel_count : 0,
+        dampak_banjir: {
+          luas_ha: luasHa,
+          sum_nilai: luasHa * kedalaman,
+          mean_nilai: kedalaman,
+          max_nilai: kedalaman,
         },
       };
     }
@@ -95,20 +99,22 @@ export default function BanjirView({ provinsi, kabupaten, kecamatan }) {
         (r) => r.provinsi === provinsi && (r.nm_kabupaten === kabupaten || normalizeKabName(r.nm_kabupaten) === normKab)
       );
       if (kabData.length === 0) return null;
-      const terdampak = kabData.filter((r) => r.dampak_banjir_longsor?.mean_nilai > 0);
-      const totalPixel = terdampak.reduce((acc, r) => acc + r.dampak_banjir_longsor.pixel_count, 0);
-      const totalSum = terdampak.reduce((acc, r) => acc + r.dampak_banjir_longsor.sum_nilai, 0);
+      const terdampak = kabData.filter((r) => (r.dampak_bencana?.banjir?.estimasi_luas_ha || 0) > 0);
+      const totalLuasBanjirHa = terdampak.reduce((acc, r) => acc + (r.dampak_bencana?.banjir?.estimasi_luas_ha || 0), 0);
+      const totalSum = terdampak.reduce((acc, r) => acc + (r.dampak_bencana?.banjir?.estimasi_luas_ha || 0) * (r.dampak_bencana?.banjir?.proxy_kedalaman_m || 0), 0);
       const totalLuas = kabData.reduce((acc, r) => acc + r.luas_kec_km2, 0);
-      const meanNilai = totalPixel > 0 ? totalSum / totalPixel : 0;
+      const meanNilai = totalLuasBanjirHa > 0 ? totalSum / totalLuasBanjirHa : 0;
+      const maxNilai = terdampak.reduce((max, r) => Math.max(max, r.dampak_bencana?.banjir?.proxy_kedalaman_m || 0), 0);
       return {
         provinsi,
         nm_kabupaten: kabupaten,
         nm_kecamatan: `${kabData.length} Kecamatan`,
         luas_kec_km2: totalLuas,
-        dampak_banjir_longsor: {
-          pixel_count: totalPixel,
+        dampak_banjir: {
+          luas_ha: totalLuasBanjirHa,
           sum_nilai: totalSum,
           mean_nilai: meanNilai,
+          max_nilai: maxNilai,
         },
       };
     }
@@ -117,31 +123,34 @@ export default function BanjirView({ provinsi, kabupaten, kecamatan }) {
     if (provinsi) {
       const provData = allData.filter((r) => r.provinsi === provinsi);
       if (provData.length === 0) return null;
-      const terdampak = provData.filter((r) => r.dampak_banjir_longsor?.mean_nilai > 0);
-      const totalPixel = terdampak.reduce((acc, r) => acc + r.dampak_banjir_longsor.pixel_count, 0);
-      const totalSum = terdampak.reduce((acc, r) => acc + r.dampak_banjir_longsor.sum_nilai, 0);
+      const terdampak = provData.filter((r) => (r.dampak_bencana?.banjir?.estimasi_luas_ha || 0) > 0);
+      const totalLuasBanjirHa = terdampak.reduce((acc, r) => acc + (r.dampak_bencana?.banjir?.estimasi_luas_ha || 0), 0);
+      const totalSum = terdampak.reduce((acc, r) => acc + (r.dampak_bencana?.banjir?.estimasi_luas_ha || 0) * (r.dampak_bencana?.banjir?.proxy_kedalaman_m || 0), 0);
       const totalLuas = provData.reduce((acc, r) => acc + r.luas_kec_km2, 0);
-      const meanNilai = totalPixel > 0 ? totalSum / totalPixel : 0;
+      const meanNilai = totalLuasBanjirHa > 0 ? totalSum / totalLuasBanjirHa : 0;
+      const maxNilai = terdampak.reduce((max, r) => Math.max(max, r.dampak_bencana?.banjir?.proxy_kedalaman_m || 0), 0);
       const kabCount = new Set(provData.map((r) => r.nm_kabupaten)).size;
       return {
         provinsi,
         nm_kabupaten: `${kabCount} Kab/Kota`,
         nm_kecamatan: `${provData.length} Kecamatan`,
         luas_kec_km2: totalLuas,
-        dampak_banjir_longsor: {
-          pixel_count: totalPixel,
+        dampak_banjir: {
+          luas_ha: totalLuasBanjirHa,
           sum_nilai: totalSum,
           mean_nilai: meanNilai,
+          max_nilai: maxNilai,
         },
       };
     }
 
     // Default: aggregate seluruh wilayah
-    const terdampak = allData.filter((r) => r.dampak_banjir_longsor?.mean_nilai > 0);
-    const totalPixel = terdampak.reduce((acc, r) => acc + r.dampak_banjir_longsor.pixel_count, 0);
-    const totalSum = terdampak.reduce((acc, r) => acc + r.dampak_banjir_longsor.sum_nilai, 0);
+    const terdampak = allData.filter((r) => (r.dampak_bencana?.banjir?.estimasi_luas_ha || 0) > 0);
+    const totalLuasBanjirHa = terdampak.reduce((acc, r) => acc + (r.dampak_bencana?.banjir?.estimasi_luas_ha || 0), 0);
+    const totalSum = terdampak.reduce((acc, r) => acc + (r.dampak_bencana?.banjir?.estimasi_luas_ha || 0) * (r.dampak_bencana?.banjir?.proxy_kedalaman_m || 0), 0);
     const totalLuas = allData.reduce((acc, r) => acc + r.luas_kec_km2, 0);
-    const meanNilai = totalPixel > 0 ? totalSum / totalPixel : 0;
+    const meanNilai = totalLuasBanjirHa > 0 ? totalSum / totalLuasBanjirHa : 0;
+    const maxNilai = terdampak.reduce((max, r) => Math.max(max, r.dampak_bencana?.banjir?.proxy_kedalaman_m || 0), 0);
     const provCount = new Set(allData.map((r) => r.provinsi)).size;
     const kabCount = new Set(allData.map((r) => r.nm_kabupaten)).size;
     return {
@@ -149,10 +158,11 @@ export default function BanjirView({ provinsi, kabupaten, kecamatan }) {
       nm_kabupaten: `${kabCount} Kab/Kota`,
       nm_kecamatan: `${allData.length} Kecamatan`,
       luas_kec_km2: totalLuas,
-      dampak_banjir_longsor: {
-        pixel_count: totalPixel,
+      dampak_banjir: {
+        luas_ha: totalLuasBanjirHa,
         sum_nilai: totalSum,
         mean_nilai: meanNilai,
+        max_nilai: maxNilai,
       },
     };
   }, [allData, provinsi, kabupaten, kecamatan]);
@@ -168,15 +178,17 @@ export default function BanjirView({ provinsi, kabupaten, kecamatan }) {
     ? kecamatan.startsWith("Kecamatan") ? kecamatan : `Kecamatan ${kecamatan}`
     : selectedData?.nm_kecamatan || "-";
 
-  const banjirData = selectedData?.dampak_banjir_longsor;
-  // Luas banjir dalam hektar (pixel_count * 0.09 ha at 30m resolution)
-  const luasBanjirHa = banjirData ? banjirData.pixel_count * 0.09 : 0;
+  const banjirData = selectedData?.dampak_banjir;
+  // Luas banjir dalam hektar
+  const luasBanjirHa = banjirData ? banjirData.luas_ha : 0;
   // Persentase terhadap luas wilayah
   const luasWilayahHa = selectedData ? selectedData.luas_kec_km2 * 100 : 1;
   const persentase = luasWilayahHa > 0 ? ((luasBanjirHa / luasWilayahHa) * 100) : 0;
-  // Mean nilai sebagai kedalaman rata-rata (dB)
+  // Mean nilai sebagai proxy kedalaman rata-rata (m)
   const meanNilai = banjirData ? banjirData.mean_nilai : 0;
-  // Sum nilai / pixel count adjusted 
+  // Max kedalaman banjir (m)
+  const maxNilai = banjirData ? banjirData.max_nilai : 0;
+  // Sum nilai indikatif
   const sumNilai = banjirData ? banjirData.sum_nilai : 0;
   // Kategori bahaya
   const kategoriBahaya = getKategoriBahayaBanjir(meanNilai);
@@ -339,7 +351,7 @@ export default function BanjirView({ provinsi, kabupaten, kecamatan }) {
                   className="font-[850] text-[#0F5257] text-[13px] sm:text-[14px] [-webkit-text-stroke:0.4px_rgba(15,82,87,0.3)] [text-shadow:0_1.5px_3px_rgba(0,0,0,0.25)]"
                   style={{ fontFamily: "var(--font-garet-heavy), 'Garet', sans-serif" }}
                 >
-                  Rata-rata Dampak
+                  Kedalaman Rata-Rata
                 </p>
                 <span
                   className="text-[26px] sm:text-[30px] lg:text-[34px] font-[850] leading-none block mt-0.5"
@@ -351,7 +363,7 @@ export default function BanjirView({ provinsi, kabupaten, kecamatan }) {
                     filter: "drop-shadow(0px 4px 4px #000000E3)",
                   }}
                 >
-                  {formatDesimal(meanNilai)}
+                  {formatDesimal(meanNilai)} m
                 </span>
               </div>
               <div>
@@ -359,7 +371,7 @@ export default function BanjirView({ provinsi, kabupaten, kecamatan }) {
                   className="font-[850] text-[#0F5257] text-[13px] sm:text-[14px] [-webkit-text-stroke:0.4px_rgba(15,82,87,0.3)] [text-shadow:0_1.5px_3px_rgba(0,0,0,0.25)]"
                   style={{ fontFamily: "var(--font-garet-heavy), 'Garet', sans-serif" }}
                 >
-                  Total Dampak
+                  Kedalaman Maks.
                 </p>
                 <span
                   className="text-[26px] sm:text-[30px] lg:text-[34px] font-[850] leading-none block mt-0.5"
@@ -371,7 +383,7 @@ export default function BanjirView({ provinsi, kabupaten, kecamatan }) {
                     filter: "drop-shadow(0px 4px 4px #000000E3)",
                   }}
                 >
-                  {formatAngka(sumNilai)}
+                  {formatDesimal(maxNilai)} m
                 </span>
               </div>
             </div>

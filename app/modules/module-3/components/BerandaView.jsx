@@ -75,9 +75,9 @@ export default function BerandaView() {
 
   const minSwipeDistance = 50;
 
-  // Fetch data modul3_dampak.json dan hitung statistik
+  // Fetch data modul3_dampak_baru.json dan hitung statistik
   useEffect(() => {
-    fetch("/data/modul3_dampak.json")
+    fetch("/data/modul3_dampak_baru.json")
       .then((res) => res.json())
       .then((data) => {
         // Hitung total luas wilayah (km2 -> ha)
@@ -86,23 +86,15 @@ export default function BerandaView() {
           0
         );
 
-        // Hitung total luas area banjir hanya untuk kecamatan terdampak (mean_nilai > 0)
+        // Hitung total luas area banjir (ha) dari estimasi_luas_ha
         const totalLuasBanjirHa = data.reduce(
-          (acc, r) =>
-            acc +
-            (r.dampak_banjir_longsor.mean_nilai > 0
-              ? r.dampak_banjir_longsor.pixel_count * 0.09
-              : 0),
+          (acc, r) => acc + (r.dampak_bencana?.banjir?.estimasi_luas_ha || 0),
           0
         );
 
-        // Hitung total luas area longsor hanya untuk kecamatan terdampak (mean_nilai > 0)
+        // Hitung total luas area longsor (ha) dari estimasi_luas_ha
         const totalLuasLongsorHa = data.reduce(
-          (acc, r) =>
-            acc +
-            (r.dampak_genangan_longsor.mean_nilai > 0
-              ? r.dampak_genangan_longsor.pixel_count * 0.09
-              : 0),
+          (acc, r) => acc + (r.dampak_bencana?.longsor?.estimasi_luas_ha || 0),
           0
         );
 
@@ -115,8 +107,8 @@ export default function BerandaView() {
           data
             .filter(
               (r) =>
-                r.dampak_banjir_longsor.mean_nilai > 0 ||
-                r.dampak_genangan_longsor.mean_nilai > 0
+                (r.dampak_bencana?.banjir?.estimasi_luas_ha > 0) ||
+                (r.dampak_bencana?.longsor?.estimasi_luas_ha > 0)
             )
             .map((r) => r.nm_kabupaten)
         ).size;
@@ -124,8 +116,8 @@ export default function BerandaView() {
         // Stat Card 3: Jumlah Kecamatan Terdampak (asal memenuhi salah 1 bencana: banjir ATAU longsor)
         const kecTerdampak = data.filter(
           (r) =>
-            r.dampak_banjir_longsor.mean_nilai > 0 ||
-            r.dampak_genangan_longsor.mean_nilai > 0
+            (r.dampak_bencana?.banjir?.estimasi_luas_ha > 0) ||
+            (r.dampak_bencana?.longsor?.estimasi_luas_ha > 0)
         ).length;
 
         // Persentase luas terdampak terhadap total wilayah
@@ -208,7 +200,7 @@ export default function BerandaView() {
         setIsLoading(false);
       })
       .catch((err) => {
-        console.error("Gagal memuat data modul3_dampak.json:", err);
+        console.error("Gagal memuat data modul3_dampak_baru.json:", err);
         setIsLoading(false);
       });
   }, []);

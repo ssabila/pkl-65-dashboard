@@ -62,8 +62,8 @@ function getLongsorColor(meanNilai) {
 // Warna beranda: merah jika terdampak, null jika tidak
 function getBerandaColor(kabData) {
   if (!kabData) return null;
-  const hasBanjir = kabData.banjir_mean > 0;
-  const hasLongsor = kabData.longsor_mean > 0;
+  const hasBanjir = (kabData.banjir_ha || 0) > 0 || (kabData.banjir_mean || 0) > 0;
+  const hasLongsor = (kabData.longsor_ha || 0) > 0 || (kabData.longsor_mean || 0) > 0;
   if (!hasBanjir && !hasLongsor) return null;
   return "#E33434"; // Terdampak
 }
@@ -71,6 +71,14 @@ function getBerandaColor(kabData) {
 function formatAngka(num) {
   if (num === null || num === undefined || isNaN(num)) return "-";
   return Math.round(num).toLocaleString("id-ID");
+}
+
+function formatDesimal(num, maxDigits = 2) {
+  if (num === null || num === undefined || isNaN(num)) return "0";
+  return Number(num).toLocaleString("id-ID", {
+    minimumFractionDigits: 1,
+    maximumFractionDigits: maxDigits,
+  });
 }
 
 export default function PetaSumatra({
@@ -81,11 +89,11 @@ export default function PetaSumatra({
 }) {
   const targetProvinces = ["Aceh", "Sumatera Utara", "Sumatera Barat"];
 
-  // Data dampak dari modul3_dampak.json
+  // Data dampak dari modul3_dampak_baru.json
   const [dampakData, setDampakData] = useState([]);
 
   useEffect(() => {
-    fetch("/data/modul3_dampak.json")
+    fetch("/data/modul3_dampak_baru.json")
       .then((res) => res.json())
       .then((data) => setDampakData(data))
       .catch((err) => console.error("Gagal memuat data dampak:", err));
@@ -100,30 +108,36 @@ export default function PetaSumatra({
       const normKey = normalizeKabName(rawKey);
       if (!lookup[normKey]) {
         lookup[normKey] = {
-          banjir_pixel: 0,
-          banjir_sum: 0,
-          longsor_pixel: 0,
-          longsor_sum: 0,
+          banjir_ha: 0,
+          banjir_sum_kedalaman: 0,
+          longsor_ha: 0,
+          longsor_sum_db: 0,
           luas_km2: 0,
         };
       }
-      if (r.dampak_banjir_longsor.mean_nilai > 0) {
-        lookup[normKey].banjir_pixel += r.dampak_banjir_longsor.pixel_count;
-        lookup[normKey].banjir_sum += r.dampak_banjir_longsor.sum_nilai;
+      const b = r.dampak_bencana?.banjir;
+      const l = r.dampak_bencana?.longsor;
+      if (b?.estimasi_luas_ha > 0) {
+        lookup[normKey].banjir_ha += b.estimasi_luas_ha;
+        lookup[normKey].banjir_sum_kedalaman += b.estimasi_luas_ha * (b.proxy_kedalaman_m || 0);
       }
-      if (r.dampak_genangan_longsor.mean_nilai > 0) {
-        lookup[normKey].longsor_pixel += r.dampak_genangan_longsor.pixel_count;
-        lookup[normKey].longsor_sum += r.dampak_genangan_longsor.sum_nilai;
+      if (l?.estimasi_luas_ha > 0) {
+        lookup[normKey].longsor_ha += l.estimasi_luas_ha;
+        lookup[normKey].longsor_sum_db += l.estimasi_luas_ha * (l.tingkat_keparahan_db || 0);
       }
       lookup[normKey].luas_km2 += r.luas_kec_km2;
     }
     // Compute mean per kab and mirror raw names
     for (const normKey of Object.keys(lookup)) {
       const d = lookup[normKey];
-      d.banjir_mean = d.banjir_pixel > 0 ? d.banjir_sum / d.banjir_pixel : 0;
-      d.longsor_mean = d.longsor_pixel > 0 ? d.longsor_sum / d.longsor_pixel : 0;
-      d.banjir_ha = d.banjir_pixel * 0.09;
-      d.longsor_ha = d.longsor_pixel * 0.09;
+      d.banjir_mean = d.banjir_ha > 0 ? d.banjir_sum_kedalaman / d.banjir_ha : 0;
+      d.longsor_mean = d.longsor_ha > 0 ? d.longsor_sum_db / d.longsor_ha : 0;
+    }
+    for (const r of dampakData) {
+      const normKey = normalizeKabName(r.nm_kabupaten);
+      if (lookup[normKey]) {
+        lookup[r.nm_kabupaten] = lookup[normKey];
+      }
     }
     return lookup;
   }, [dampakData]);
@@ -133,13 +147,15 @@ export default function PetaSumatra({
     if (!dampakData.length) return {};
     const lookup = {};
     for (const r of dampakData) {
+      const b = r.dampak_bencana?.banjir;
+      const l = r.dampak_bencana?.longsor;
       const rawKey = `${r.nm_kabupaten}|${r.nm_kecamatan}`;
       const normKey = `${normalizeKabName(r.nm_kabupaten)}|${normalizeKecName(r.nm_kecamatan)}`;
       const val = {
-        banjir_mean: r.dampak_banjir_longsor.mean_nilai,
-        longsor_mean: r.dampak_genangan_longsor.mean_nilai,
-        banjir_ha: r.dampak_banjir_longsor.mean_nilai > 0 ? r.dampak_banjir_longsor.pixel_count * 0.09 : 0,
-        longsor_ha: r.dampak_genangan_longsor.mean_nilai > 0 ? r.dampak_genangan_longsor.pixel_count * 0.09 : 0,
+        banjir_mean: b?.proxy_kedalaman_m || 0,
+        longsor_mean: l?.tingkat_keparahan_db || 0,
+        banjir_ha: b?.estimasi_luas_ha || 0,
+        longsor_ha: l?.estimasi_luas_ha || 0,
         luas_km2: r.luas_kec_km2,
       };
       lookup[rawKey] = val;
@@ -233,35 +249,77 @@ export default function PetaSumatra({
           <button
             type="button"
             onClick={handleZoomIn}
-            title="Zoom In"
-            className="w-10 h-10 rounded-full bg-white/40 hover:bg-white/70 backdrop-blur-md border border-white/60 text-gray-900 font-bold text-xl flex items-center justify-center shadow-lg transition-all active:scale-95"
+            title="Perbesar (Zoom In)"
+            className="w-10 h-10 rounded-full bg-white/45 hover:bg-white/80 active:scale-95 backdrop-blur-md border border-white/60 flex items-center justify-center shadow-[0_4px_12px_rgba(0,0,0,0.15)] transition-all duration-200 group"
           >
-            +
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#272525"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="w-4 h-4 transition-transform group-hover:scale-110"
+            >
+              <line x1="12" y1="5" x2="12" y2="19" />
+              <line x1="5" y1="12" x2="19" y2="12" />
+            </svg>
           </button>
+
           <button
             type="button"
             onClick={handleZoomOut}
-            title="Zoom Out"
-            className="w-10 h-10 rounded-full bg-white/40 hover:bg-white/70 backdrop-blur-md border border-white/60 text-gray-900 font-bold text-xl flex items-center justify-center shadow-lg transition-all active:scale-95"
+            title="Perkecil (Zoom Out)"
+            className="w-10 h-10 rounded-full bg-white/45 hover:bg-white/80 active:scale-95 backdrop-blur-md border border-white/60 flex items-center justify-center shadow-[0_4px_12px_rgba(0,0,0,0.15)] transition-all duration-200 group"
           >
-            −
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#272525"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="w-4 h-4 transition-transform group-hover:scale-110"
+            >
+              <line x1="5" y1="12" x2="19" y2="12" />
+            </svg>
           </button>
+
           <button
             type="button"
             onClick={handleResetView}
-            title="Reset View"
-            className="w-10 h-10 rounded-full bg-white/40 hover:bg-white/70 backdrop-blur-md border border-white/60 text-gray-900 font-bold text-sm flex items-center justify-center shadow-lg transition-all active:scale-95"
+            title="Reset Posisi Peta"
+            className="w-10 h-10 rounded-full bg-white/45 hover:bg-white/80 active:scale-95 backdrop-blur-md border border-white/60 flex items-center justify-center shadow-[0_4px_12px_rgba(0,0,0,0.15)] transition-all duration-200 group"
           >
-            🔄
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#272525"
+              strokeWidth="2.2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="w-[18px] h-[18px] transition-transform duration-300 group-hover:rotate-180"
+            >
+              <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.85.83 6.72 2.24L21 8" />
+              <path d="M21 3v5h-5" />
+            </svg>
           </button>
+
           <button
             type="button"
             onClick={() => setIs3D(!is3D)}
-            title="Toggle 3D View"
-            className="px-3 py-1.5 rounded-full bg-white/40 hover:bg-white/70 backdrop-blur-md border border-white/60 text-gray-900 font-extrabold text-xs flex items-center justify-center shadow-lg transition-all active:scale-95 mt-1"
-            style={{ fontFamily: "var(--font-garet-heavy), sans-serif" }}
+            title="Beralih Tampilan 3D / 2D"
+            className="w-10 h-10 rounded-full bg-white/45 hover:bg-white/80 active:scale-95 backdrop-blur-md border border-white/60 flex items-center justify-center shadow-[0_4px_12px_rgba(0,0,0,0.15)] transition-all duration-200 mt-0.5"
           >
-            {is3D ? "3D" : "2D"}
+            <span
+              className="text-[13px] font-[850] text-[#272525] tracking-tight"
+              style={{ fontFamily: "var(--font-garet-heavy), sans-serif" }}
+            >
+              {is3D ? "3D" : "2D"}
+            </span>
           </button>
         </div>
 
@@ -286,7 +344,7 @@ export default function PetaSumatra({
                   <span className="w-4 h-4 rounded-full bg-[#00D2FF] shadow-sm flex-shrink-0" />
                   <span className="font-serif text-[14px]">Ringan</span>
                 </div>
-                <span className="font-serif text-[13px] text-gray-800">&lt; 3</span>
+                <span className="font-serif text-[13px] text-gray-800">&lt; 3 m</span>
               </div>
 
               {/* Sedang */}
@@ -295,7 +353,7 @@ export default function PetaSumatra({
                   <span className="w-4 h-4 rounded-full bg-[#0084FF] shadow-sm flex-shrink-0" />
                   <span className="font-serif text-[14px]">Sedang</span>
                 </div>
-                <span className="font-serif text-[13px] text-gray-800">3 - 5</span>
+                <span className="font-serif text-[13px] text-gray-800">3 - 5 m</span>
               </div>
 
               {/* Berat */}
@@ -304,7 +362,7 @@ export default function PetaSumatra({
                   <span className="w-4 h-4 rounded-full bg-[#0044FF] shadow-sm flex-shrink-0" />
                   <span className="font-serif text-[14px]">Berat</span>
                 </div>
-                <span className="font-serif text-[13px] text-gray-800">&gt; 5</span>
+                <span className="font-serif text-[13px] text-gray-800">&gt; 5 m</span>
               </div>
 
               {/* Tidak Terdampak */}
@@ -370,45 +428,168 @@ export default function PetaSumatra({
 
 
         {/* Hover Tooltip */}
-        {hoveredItem && (
-          <div
-            className="fixed z-50 pointer-events-none flex items-center gap-1.5 transition-opacity duration-150"
-            style={{
-              left: `${tooltipPos.x - 12}px`,
-              top: `${tooltipPos.y - 45}px`,
-            }}
-          >
-            <svg className="w-10 h-10 overflow-visible">
-              <defs>
-                <marker id="calloutArrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-                  <path d="M 0 0 L 10 5 L 0 10 z" fill="#FFFFFF" />
-                </marker>
-              </defs>
-              <circle cx="6" cy="30" r="4.5" fill="#FFFFFF" stroke={hoveredItem.isSelected ? "#0F5257" : "#EE3B3B"} strokeWidth="2.5" />
-              <line x1="8" y1="28" x2="34" y2="12" stroke="#FFFFFF" strokeWidth="2" markerEnd="url(#calloutArrow)" />
-            </svg>
+        {hoveredItem && (() => {
+          const isFlippedX = typeof window !== "undefined" && tooltipPos.x > window.innerWidth - 240;
+          const isFlippedY = typeof window !== "undefined" && tooltipPos.y < 130;
+          const pointerColor = hoveredItem.isSelected
+            ? "#0F5257"
+            : activeMenu === "banjir"
+              ? "#0066CC"
+              : "#EE3B3B";
 
-            <div className="bg-white/95 backdrop-blur-md px-4 py-2 rounded-[20px] shadow-[0_10px_25px_rgba(0,0,0,0.25)] border border-gray-200/90 flex flex-col ml-1">
-              <span className="font-black text-[#0F5257] text-[14px] leading-snug" style={{ fontFamily: "var(--font-garet-heavy), sans-serif" }}>
+          const targetX = isFlippedX ? -42 : 42;
+          const targetY = isFlippedY ? 24 : -24;
+          const startX = isFlippedX ? -4.5 : 4.5;
+          const startY = isFlippedY ? 2.5 : -2.5;
+
+          return (
+            <div
+              className="fixed z-50 pointer-events-none transition-opacity duration-75"
+              style={{
+                left: `${tooltipPos.x}px`,
+                top: `${tooltipPos.y}px`,
+              }}
+            >
+              {/* Leader Line & Noktah SVG */}
+              <svg className="absolute overflow-visible pointer-events-none" style={{ left: 0, top: 0 }}>
+                <defs>
+                  <filter id="calloutGlow" x="-50%" y="-50%" width="200%" height="200%">
+                    <feDropShadow dx="0" dy="1.5" stdDeviation="2" floodColor="#000000" floodOpacity="0.45" />
+                  </filter>
+                  <marker
+                    id="calloutArrow"
+                    viewBox="0 0 10 10"
+                    refX="7"
+                    refY="5"
+                    markerWidth="6"
+                    markerHeight="6"
+                    orient="auto"
+                  >
+                    <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#FFFFFF" />
+                  </marker>
+                </defs>
+
+                {/* Garis Penunjuk ke Kartu */}
+                <line
+                  x1={startX}
+                  y1={startY}
+                  x2={targetX}
+                  y2={targetY}
+                  stroke="#FFFFFF"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  markerEnd="url(#calloutArrow)"
+                  filter="url(#calloutGlow)"
+                />
+
+                {/* Noktah (Target Dot) - tepat di titik koordinat kursor (0,0) */}
+                <circle
+                  cx="0"
+                  cy="0"
+                  r="5"
+                  fill="#FFFFFF"
+                  stroke={pointerColor}
+                  strokeWidth="2.5"
+                  filter="url(#calloutGlow)"
+                />
+                <circle cx="0" cy="0" r="1.8" fill={pointerColor} />
+              </svg>
+
+              {/* Tooltip Card */}
+              <div
+                className="absolute bg-white/95 backdrop-blur-md px-3.5 py-2.5 rounded-[18px] shadow-[0_10px_25px_rgba(0,0,0,0.25)] border border-gray-200/90 flex flex-col min-w-[160px]"
+                style={{
+                  left: isFlippedX ? "auto" : "42px",
+                  right: isFlippedX ? "42px" : "auto",
+                  top: isFlippedY ? "10px" : "-46px",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                <span className="font-black text-[#0F5257] text-[13.5px] leading-snug" style={{ fontFamily: "var(--font-garet-heavy), sans-serif" }}>
                 {hoveredItem.rawTitle || hoveredItem.title}
               </span>
-              <span className="text-gray-500 text-[11px] font-medium">{hoveredItem.subtitle}</span>
-              {hoveredItem.dampakHa != null && (
-                <div className="flex items-baseline gap-1 mt-0.5">
-                  <span className="font-black text-[#EE3B3B] text-[14px]" style={{ fontFamily: "var(--font-garet-heavy), sans-serif" }}>
-                    {formatAngka(hoveredItem.dampakHa)} ha
-                  </span>
-                  <span className="font-semibold text-gray-500 text-[11px]">
-                    terdampak
-                  </span>
-                </div>
+              <span className="text-gray-500 text-[10.5px] font-medium leading-none mt-0.5 mb-2">{hoveredItem.subtitle}</span>
+
+              {/* Detail Angka Bencana */}
+              {hoveredItem.subtitle?.includes("Di Luar") ? null : activeMenu === "banjir" ? (
+                hoveredItem.dampakHa > 0 ? (
+                  <div className="flex flex-col gap-1 pt-1.5 border-t border-gray-100">
+                    <div className="flex items-center justify-between gap-3">
+                      <span className="text-gray-500 text-[11px] font-medium">Luas Genangan:</span>
+                      <span className="font-black text-[#0066CC] text-[13px]" style={{ fontFamily: "var(--font-garet-heavy), sans-serif" }}>
+                        {formatAngka(hoveredItem.dampakHa)} ha
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between gap-3">
+                      <span className="text-gray-500 text-[11px] font-medium">Kedalaman:</span>
+                      <span className="font-black text-[#004080] text-[13px]" style={{ fontFamily: "var(--font-garet-heavy), sans-serif" }}>
+                        {formatDesimal(hoveredItem.kedalamanM)} m
+                      </span>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="pt-1.5 border-t border-gray-100">
+                    <span className="text-gray-400 text-[11px] font-medium italic">Tidak Terdampak Banjir</span>
+                  </div>
+                )
+              ) : activeMenu === "longsor" ? (
+                hoveredItem.dampakHa > 0 ? (
+                  <div className="flex flex-col gap-1 pt-1.5 border-t border-gray-100">
+                    <div className="flex items-center justify-between gap-3">
+                      <span className="text-gray-500 text-[11px] font-medium">Luas Longsor:</span>
+                      <span className="font-black text-[#E33434] text-[13px]" style={{ fontFamily: "var(--font-garet-heavy), sans-serif" }}>
+                        {formatAngka(hoveredItem.dampakHa)} ha
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between gap-3">
+                      <span className="text-gray-500 text-[11px] font-medium">Keparahan:</span>
+                      <span className="font-black text-[#900C0C] text-[13px]" style={{ fontFamily: "var(--font-garet-heavy), sans-serif" }}>
+                        {formatDesimal(hoveredItem.keparahanDb)} dB
+                      </span>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="pt-1.5 border-t border-gray-100">
+                    <span className="text-gray-400 text-[11px] font-medium italic">Tidak Terdampak Longsor</span>
+                  </div>
+                )
+              ) : (
+                /* activeMenu === "beranda" */
+                hoveredItem.hasDampak ? (
+                  <div className="flex flex-col gap-1 pt-1.5 border-t border-gray-100">
+                    <div className="flex items-center justify-between gap-3">
+                      <span className="text-gray-500 text-[11px] font-medium">Total Luas:</span>
+                      <span className="font-black text-[#EE3B3B] text-[13px]" style={{ fontFamily: "var(--font-garet-heavy), sans-serif" }}>
+                        {formatAngka(hoveredItem.dampakHa)} ha
+                      </span>
+                    </div>
+                    {hoveredItem.banjirHa > 0 && (
+                      <div className="flex items-center justify-between gap-3 text-[11px]">
+                        <span className="text-gray-500">Banjir:</span>
+                        <span className="font-bold text-[#0066CC]">
+                          {formatAngka(hoveredItem.banjirHa)} ha {hoveredItem.kedalamanM > 0 && `(${formatDesimal(hoveredItem.kedalamanM)} m)`}
+                        </span>
+                      </div>
+                    )}
+                    {hoveredItem.longsorHa > 0 && (
+                      <div className="flex items-center justify-between gap-3 text-[11px]">
+                        <span className="text-gray-500">Longsor:</span>
+                        <span className="font-bold text-[#E33434]">
+                          {formatAngka(hoveredItem.longsorHa)} ha {hoveredItem.keparahanDb > 0 && `(${formatDesimal(hoveredItem.keparahanDb)} dB)`}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <div className="pt-1.5 border-t border-gray-100">
+                    <span className="text-gray-400 text-[11px] font-medium italic">Tidak Terdampak Bencana</span>
+                  </div>
+                )
               )}
-              {hoveredItem.hasDampak && (
-                <span className="text-orange-500 font-semibold text-[11px] mt-0.5">⚠️ Wilayah Terdampak</span>
-              )}
+              </div>
             </div>
-          </div>
-        )}
+          );
+        })()}
 
         {/* 3D / 2D Transform Wrapper */}
         <div
@@ -485,13 +666,13 @@ export default function PetaSumatra({
                   }
 
                   const isExcluded = isFilterActive && !matchesFilter;
-                  const hasDampak = Boolean(kecData && (kecData.banjir_mean > 0 || kecData.longsor_mean > 0));
+                  const hasDampak = Boolean(kecData && (kecData.banjir_ha > 0 || kecData.longsor_ha > 0));
 
                   const kecDampakHa = activeMenu === "banjir"
-                    ? (kecData?.banjir_mean > 0 ? kecData?.banjir_ha ?? 0 : 0)
+                    ? (kecData?.banjir_ha ?? 0)
                     : activeMenu === "longsor"
-                      ? (kecData?.longsor_mean > 0 ? kecData?.longsor_ha ?? 0 : 0)
-                      : ((kecData?.banjir_mean > 0 ? kecData?.banjir_ha : 0) + (kecData?.longsor_mean > 0 ? kecData?.longsor_ha : 0));
+                      ? (kecData?.longsor_ha ?? 0)
+                      : ((kecData?.banjir_ha ?? 0) + (kecData?.longsor_ha ?? 0));
 
                   // Tentukan warna fill dan stroke
                   let fillColor = "#FFFFFF";
@@ -556,7 +737,11 @@ export default function PetaSumatra({
                           subtitle: `${item.kab}, ${item.prov}`,
                           isSelected: isSelectedKec,
                           dampakHa: kecDampakHa,
-                          hasDampak: (kecData?.banjir_mean > 0 || kecData?.longsor_mean > 0),
+                          banjirHa: kecData?.banjir_ha ?? 0,
+                          kedalamanM: kecData?.banjir_mean ?? 0,
+                          longsorHa: kecData?.longsor_ha ?? 0,
+                          keparahanDb: kecData?.longsor_mean ?? 0,
+                          hasDampak: Boolean(kecData && (kecData.banjir_ha > 0 || kecData.longsor_ha > 0)),
                         });
                         setTooltipPos({ x: e.clientX, y: e.clientY });
                       }}
@@ -588,7 +773,7 @@ export default function PetaSumatra({
                   }
 
                   const isExcluded = isFilterActive && !matchesFilter;
-                  const hasDampak = Boolean(kabData && (kabData.banjir_mean > 0 || kabData.longsor_mean > 0));
+                  const hasDampak = Boolean(kabData && (kabData.banjir_ha > 0 || kabData.longsor_ha > 0));
 
                   // Tentukan warna fill dan stroke
                   let fillColor = "#FFFFFF";
@@ -685,7 +870,11 @@ export default function PetaSumatra({
                           subtitle: kab.prov,
                           isSelected: isKabSelected,
                           dampakHa,
-                          hasDampak: (kabData?.banjir_mean > 0 || kabData?.longsor_mean > 0),
+                          banjirHa: kabData?.banjir_ha ?? 0,
+                          kedalamanM: kabData?.banjir_mean ?? 0,
+                          longsorHa: kabData?.longsor_ha ?? 0,
+                          keparahanDb: kabData?.longsor_mean ?? 0,
+                          hasDampak: Boolean(kabData && (kabData.banjir_ha > 0 || kabData.longsor_ha > 0)),
                         });
                         setTooltipPos({ x: e.clientX, y: e.clientY });
                       }}

@@ -49,16 +49,16 @@ export default function TanahLongsorView({ provinsi, kabupaten, kecamatan }) {
   const [allData, setAllData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Fetch data modul3_dampak.json
+  // Fetch data modul3_dampak_baru.json
   useEffect(() => {
-    fetch("/data/modul3_dampak.json")
+    fetch("/data/modul3_dampak_baru.json")
       .then((res) => res.json())
       .then((data) => {
         setAllData(data);
         setIsLoading(false);
       })
       .catch((err) => {
-        console.error("Gagal memuat data modul3_dampak.json:", err);
+        console.error("Gagal memuat data modul3_dampak_baru.json:", err);
         setIsLoading(false);
       });
   }, []);
@@ -78,12 +78,15 @@ export default function TanahLongsorView({ provinsi, kabupaten, kecamatan }) {
           (r.nm_kecamatan === kecamatan || normalizeKecName(r.nm_kecamatan) === normKec)
       );
       if (!kecItem) return null;
-      const isTerdampak = kecItem.dampak_genangan_longsor?.mean_nilai > 0;
+      const l = kecItem.dampak_bencana?.longsor;
+      const luasHa = l?.estimasi_luas_ha || 0;
+      const keparahanDb = l?.tingkat_keparahan_db || 0;
       return {
         ...kecItem,
-        dampak_genangan_longsor: {
-          ...kecItem.dampak_genangan_longsor,
-          pixel_count: isTerdampak ? kecItem.dampak_genangan_longsor.pixel_count : 0,
+        dampak_longsor: {
+          luas_ha: luasHa,
+          sum_nilai: luasHa * keparahanDb,
+          mean_nilai: keparahanDb,
         },
       };
     }
@@ -95,18 +98,18 @@ export default function TanahLongsorView({ provinsi, kabupaten, kecamatan }) {
         (r) => r.provinsi === provinsi && (r.nm_kabupaten === kabupaten || normalizeKabName(r.nm_kabupaten) === normKab)
       );
       if (kabData.length === 0) return null;
-      const terdampak = kabData.filter((r) => r.dampak_genangan_longsor?.mean_nilai > 0);
-      const totalPixel = terdampak.reduce((acc, r) => acc + r.dampak_genangan_longsor.pixel_count, 0);
-      const totalSum = terdampak.reduce((acc, r) => acc + r.dampak_genangan_longsor.sum_nilai, 0);
+      const terdampak = kabData.filter((r) => (r.dampak_bencana?.longsor?.estimasi_luas_ha || 0) > 0);
+      const totalLuasLongsorHa = terdampak.reduce((acc, r) => acc + (r.dampak_bencana?.longsor?.estimasi_luas_ha || 0), 0);
+      const totalSum = terdampak.reduce((acc, r) => acc + (r.dampak_bencana?.longsor?.estimasi_luas_ha || 0) * (r.dampak_bencana?.longsor?.tingkat_keparahan_db || 0), 0);
       const totalLuas = kabData.reduce((acc, r) => acc + r.luas_kec_km2, 0);
-      const meanNilai = totalPixel > 0 ? totalSum / totalPixel : 0;
+      const meanNilai = totalLuasLongsorHa > 0 ? totalSum / totalLuasLongsorHa : 0;
       return {
         provinsi,
         nm_kabupaten: kabupaten,
         nm_kecamatan: `${kabData.length} Kecamatan`,
         luas_kec_km2: totalLuas,
-        dampak_genangan_longsor: {
-          pixel_count: totalPixel,
+        dampak_longsor: {
+          luas_ha: totalLuasLongsorHa,
           sum_nilai: totalSum,
           mean_nilai: meanNilai,
         },
@@ -117,19 +120,19 @@ export default function TanahLongsorView({ provinsi, kabupaten, kecamatan }) {
     if (provinsi) {
       const provData = allData.filter((r) => r.provinsi === provinsi);
       if (provData.length === 0) return null;
-      const terdampak = provData.filter((r) => r.dampak_genangan_longsor?.mean_nilai > 0);
-      const totalPixel = terdampak.reduce((acc, r) => acc + r.dampak_genangan_longsor.pixel_count, 0);
-      const totalSum = terdampak.reduce((acc, r) => acc + r.dampak_genangan_longsor.sum_nilai, 0);
+      const terdampak = provData.filter((r) => (r.dampak_bencana?.longsor?.estimasi_luas_ha || 0) > 0);
+      const totalLuasLongsorHa = terdampak.reduce((acc, r) => acc + (r.dampak_bencana?.longsor?.estimasi_luas_ha || 0), 0);
+      const totalSum = terdampak.reduce((acc, r) => acc + (r.dampak_bencana?.longsor?.estimasi_luas_ha || 0) * (r.dampak_bencana?.longsor?.tingkat_keparahan_db || 0), 0);
       const totalLuas = provData.reduce((acc, r) => acc + r.luas_kec_km2, 0);
-      const meanNilai = totalPixel > 0 ? totalSum / totalPixel : 0;
+      const meanNilai = totalLuasLongsorHa > 0 ? totalSum / totalLuasLongsorHa : 0;
       const kabCount = new Set(provData.map((r) => r.nm_kabupaten)).size;
       return {
         provinsi,
         nm_kabupaten: `${kabCount} Kab/Kota`,
         nm_kecamatan: `${provData.length} Kecamatan`,
         luas_kec_km2: totalLuas,
-        dampak_genangan_longsor: {
-          pixel_count: totalPixel,
+        dampak_longsor: {
+          luas_ha: totalLuasLongsorHa,
           sum_nilai: totalSum,
           mean_nilai: meanNilai,
         },
@@ -137,11 +140,11 @@ export default function TanahLongsorView({ provinsi, kabupaten, kecamatan }) {
     }
 
     // Default: aggregate seluruh wilayah
-    const terdampak = allData.filter((r) => r.dampak_genangan_longsor?.mean_nilai > 0);
-    const totalPixel = terdampak.reduce((acc, r) => acc + r.dampak_genangan_longsor.pixel_count, 0);
-    const totalSum = terdampak.reduce((acc, r) => acc + r.dampak_genangan_longsor.sum_nilai, 0);
+    const terdampak = allData.filter((r) => (r.dampak_bencana?.longsor?.estimasi_luas_ha || 0) > 0);
+    const totalLuasLongsorHa = terdampak.reduce((acc, r) => acc + (r.dampak_bencana?.longsor?.estimasi_luas_ha || 0), 0);
+    const totalSum = terdampak.reduce((acc, r) => acc + (r.dampak_bencana?.longsor?.estimasi_luas_ha || 0) * (r.dampak_bencana?.longsor?.tingkat_keparahan_db || 0), 0);
     const totalLuas = allData.reduce((acc, r) => acc + r.luas_kec_km2, 0);
-    const meanNilai = totalPixel > 0 ? totalSum / totalPixel : 0;
+    const meanNilai = totalLuasLongsorHa > 0 ? totalSum / totalLuasLongsorHa : 0;
     const provCount = new Set(allData.map((r) => r.provinsi)).size;
     const kabCount = new Set(allData.map((r) => r.nm_kabupaten)).size;
     return {
@@ -149,8 +152,8 @@ export default function TanahLongsorView({ provinsi, kabupaten, kecamatan }) {
       nm_kabupaten: `${kabCount} Kab/Kota`,
       nm_kecamatan: `${allData.length} Kecamatan`,
       luas_kec_km2: totalLuas,
-      dampak_genangan_longsor: {
-        pixel_count: totalPixel,
+      dampak_longsor: {
+        luas_ha: totalLuasLongsorHa,
         sum_nilai: totalSum,
         mean_nilai: meanNilai,
       },
@@ -168,13 +171,13 @@ export default function TanahLongsorView({ provinsi, kabupaten, kecamatan }) {
     ? kecamatan.startsWith("Kecamatan") ? kecamatan : `Kecamatan ${kecamatan}`
     : selectedData?.nm_kecamatan || "-";
 
-  const longsorData = selectedData?.dampak_genangan_longsor;
-  // Luas longsor dalam hektar (pixel_count * 0.09 ha at 30m resolution)
-  const luasLongsorHa = longsorData ? longsorData.pixel_count * 0.09 : 0;
+  const longsorData = selectedData?.dampak_longsor;
+  // Luas longsor dalam hektar
+  const luasLongsorHa = longsorData ? longsorData.luas_ha : 0;
   // Persentase terhadap luas wilayah
   const luasWilayahHa = selectedData ? selectedData.luas_kec_km2 * 100 : 1;
   const persentase = luasWilayahHa > 0 ? ((luasLongsorHa / luasWilayahHa) * 100) : 0;
-  // Selisih Rata-Rata Backscatter (mean_nilai, dB)
+  // Selisih Rata-Rata Backscatter / Tingkat Keparahan (dB)
   const selisihBackscatter = longsorData ? longsorData.mean_nilai : 0;
   // Kategori bahaya
   const kategoriBahaya = getKategoriBahayaLongsor(selisihBackscatter);
