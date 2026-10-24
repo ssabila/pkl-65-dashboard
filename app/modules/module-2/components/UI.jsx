@@ -7,6 +7,7 @@ export function DropdownPill({ value, options, onChange, disabled = false, toolt
   const [showTip, setShowTip] = useState(false);
   const [pos, setPos] = useState({ top: 0, left: 0, width: 0 });
   const btnRef = useRef(null);
+  const menuRef = useRef(null);
 
   const updatePos = () => {
     if (!btnRef.current) return;
@@ -28,7 +29,7 @@ export function DropdownPill({ value, options, onChange, disabled = false, toolt
   useEffect(() => {
     if (!open) return;
     const handler = (e) => {
-      if (!btnRef.current?.contains(e.target)) setOpen(false);
+      if (!btnRef.current?.contains(e.target) && !menuRef.current?.contains(e.target)) setOpen(false);
     };
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
@@ -68,7 +69,7 @@ export function DropdownPill({ value, options, onChange, disabled = false, toolt
 
       {/* Dropdown via Portal: menembus semua stacking context */}
       {open && !disabled && typeof document !== "undefined" && createPortal(
-        <div
+        <div ref={menuRef}
           style={{
             position: "absolute",
             top: pos.top,
@@ -110,12 +111,12 @@ export function GlassCard({ children, className = "", style = {} }) {
     <div
       className={className}
       style={{
-        background: "rgba(255,255,255,0.58)",
-        backdropFilter: "blur(18px) saturate(1.5)",
-        WebkitBackdropFilter: "blur(18px) saturate(1.5)",
-        border: "1px solid rgba(255,255,255,0.68)",
+        background: "rgba(255,255,255,0.42)",
+        backdropFilter: "blur(18px) saturate(1.35)",
+        WebkitBackdropFilter: "blur(18px) saturate(1.35)",
+        border: "1px solid rgba(255,255,255,0.72)",
         borderRadius: "16px",
-        boxShadow: "0 4px 20px rgba(44,62,80,0.09)",
+        boxShadow: "0 8px 24px rgba(44,62,80,0.08), inset 0 1px 0 rgba(255,255,255,0.35)",
         ...style,
       }}
     >
@@ -128,16 +129,16 @@ export function GlassCard({ children, className = "", style = {} }) {
 export function KpiCard({ label, value, change, suffix }) {
   return (
     <GlassCard className="p-4 flex flex-col gap-1">
-      <p className="text-[11px] leading-tight" style={{ color: "rgba(44,62,80,0.55)", fontFamily: "var(--font-dm-sans)" }}>
+      <p className="text-[11px] leading-tight" style={{ color: "rgba(44,62,80,0.62)", fontFamily: "var(--font-dm-sans)", fontWeight: 400 }}>
         {label}
       </p>
       <div className="flex items-end gap-2 mt-1 flex-wrap">
-        <span className="font-bold leading-none" style={{ fontFamily: "var(--font-garet-heavy)", fontSize: "1.55rem", color: "#2C3E50" }}>
+        <span className="leading-none" style={{ fontFamily: "var(--font-dm-sans)", fontWeight: 400, fontSize: "1.55rem", color: "#2C3E50" }}>
           {value}
         </span>
         {suffix && <span className="text-[11px] mb-0.5" style={{ color: "rgba(44,62,80,0.5)" }}>{suffix}</span>}
         {change && (
-          <span className="text-[11px] font-semibold mb-0.5 flex items-center gap-0.5" style={{ color: "#208774" }}>
+          <span className="text-[11px] mb-0.5 flex items-center gap-0.5" style={{ color: "#208774", fontWeight: 400 }}>
             {change}
           </span>
         )}
@@ -195,17 +196,16 @@ export function FaktorPemicuRow({ faktor, level }) {
   const maxLevel = 4;
   const dashStyles = Array.from({ length: maxLevel }, (_, i) => {
     const filled = i < level;
-    const isLast = i === maxLevel - 1;
     const widths = [16, 24, 32, 40];
     return { width: widths[i], filled };
   });
 
   return (
-    <div className="flex items-center gap-3">
-      <span className="text-[11px] w-32 flex-shrink-0" style={{ color: "rgba(44,62,80,0.65)", fontFamily: "var(--font-dm-sans)" }}>
+    <div className="flex items-center gap-3 min-w-0">
+      <span className="text-[11px] flex-1 min-w-0 truncate" style={{ color: "rgba(44,62,80,0.65)", fontFamily: "var(--font-dm-sans)" }}>
         {faktor}
       </span>
-      <div className="flex items-center gap-1">
+      <div className="flex items-center gap-1 flex-shrink-0">
         {dashStyles.map((d, i) => (
           <div key={i} className="h-[3px] rounded-full"
             style={{
@@ -241,13 +241,14 @@ export function MapDetailPanel({ wilayah, onClose, type = "banjir" }) {
   return (
     <div className="rounded-2xl p-4 min-w-[180px]"
       style={{
-        background: "rgba(255,255,255,0.82)",
-        backdropFilter: "blur(20px)",
-        border: "1px solid rgba(255,255,255,0.75)",
-        boxShadow: "0 4px 20px rgba(44,62,80,0.1)",
+        background: "rgba(255,255,255,0.48)",
+        backdropFilter: "blur(20px) saturate(1.35)",
+        WebkitBackdropFilter: "blur(20px) saturate(1.35)",
+        border: "1px solid rgba(255,255,255,0.72)",
+        boxShadow: "0 8px 24px rgba(44,62,80,0.08), inset 0 1px 0 rgba(255,255,255,0.35)",
       }}>
       <div className="flex items-center justify-between mb-3">
-        <span className="text-[13px] font-bold" style={{ color: "#2C3E50", fontFamily: "var(--font-garet-heavy)" }}>
+        <span className="text-[13px]" style={{ color: "#2C3E50", fontFamily: "var(--font-dm-sans)", fontWeight: 400 }}>
           {wilayah.nama}
         </span>
         <button onClick={onClose}
@@ -261,7 +262,7 @@ export function MapDetailPanel({ wilayah, onClose, type = "banjir" }) {
           <div key={item.label} className="flex items-start gap-2">
             <div>
               <p className="text-[10px]" style={{ color: "rgba(44,62,80,0.45)" }}>{item.label}</p>
-              <p className="text-[11px] font-semibold" style={{ color: "#2C3E50" }}>{item.value}</p>
+              <p className="text-[11px]" style={{ color: "#2C3E50", fontFamily: "var(--font-dm-sans)", fontWeight: 400 }}>{item.value}</p>
             </div>
           </div>
         ))}

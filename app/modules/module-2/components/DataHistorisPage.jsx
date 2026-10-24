@@ -89,9 +89,9 @@ export default function DataHistorisPage({ provinsi }) {
         </GlassCard>
 
         {/* Faktor Pemicu */}
-        <GlassCard className="p-4">
+        <GlassCard className="py-4 pl-4 pr-6">
           <p className="text-[12px] font-semibold mb-4" style={{ color: "#2C3E50" }}>Faktor Pemicu</p>
-          <div className="space-y-3.5">
+          <div className="space-y-3.5 pr-1">
             {faktor.map(f => (
               <FaktorPemicuRow key={f.faktor} faktor={f.faktor} level={f.level} />
             ))}
