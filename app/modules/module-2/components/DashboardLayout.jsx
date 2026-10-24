@@ -56,9 +56,9 @@ export default function DashboardLayout({ activePage, onNavigate, provinsi, onPr
 
   // Design tokens
   const T = {
-    sidebarBg:    dark ? "rgba(14,22,36,0.80)"          : "rgba(232,235,239,0.50)",
+    sidebarBg:    dark ? "rgba(14,22,36,0.80)"          : "#d6e5f1",
     sidebarBdr:   dark ? "rgba(255,255,255,0.07)"       : "rgba(255,255,255,0.6)",
-    headerBg:     dark ? "rgba(14,22,36,0.78)"          : "rgba(255,255,255,0.60)",
+    headerBg:     dark ? "rgba(14,22,36,0.78)"          : "#eef2f5",
     headerBdr:    dark ? "rgba(255,255,255,0.07)"       : "rgba(255,255,255,0.65)",
     textPri:      dark ? "#e8ecf2"                      : "#2C3E50",
     textSec:      dark ? "rgba(232,236,242,0.55)"       : "rgba(44,62,80,0.55)",
@@ -74,16 +74,15 @@ export default function DashboardLayout({ activePage, onNavigate, provinsi, onPr
     popupBdr:     dark ? "rgba(255,255,255,0.10)"       : "rgba(255,255,255,0.75)",
     popupShadow:  dark ? "0 12px 40px rgba(0,0,0,0.55)": "0 8px 32px rgba(44,62,80,0.14)",
     divBdr:       dark ? "rgba(255,255,255,0.07)"       : "rgba(255,255,255,0.5)",
-    rightBg:      dark ? "rgba(14,22,36,0.75)"          : "rgba(232,235,239,0.45)",
+    rightBg:      dark ? "rgba(14,22,36,0.75)"          : "#eef2f5",
   };
 
   return (
     <div
-      className="flex h-screen overflow-hidden bg-cover bg-center"
+      className="flex h-screen overflow-hidden"
       style={{
         fontFamily: "var(--font-dm-sans)",
-        backgroundImage: "url('/module-2/bg.webp')",
-        backgroundColor: dark ? "#111827" : "#dce8f5",
+        background: dark ? "#111827" : "linear-gradient(135deg, #6D9DC5 0%, #E8EBEF 100%)",
       }}
     >
       {/* LEFT SIDEBAR */}
@@ -157,12 +156,12 @@ export default function DashboardLayout({ activePage, onNavigate, provinsi, onPr
             </button>
 
             <nav className="module2-breadcrumb flex items-center gap-0.5" aria-label="Breadcrumb">
-              <button onClick={() => onNavigate("opening")} title="Kembali ke halaman utama"
+              <Link href="/" title="Kembali ke landing page dashboard utama"
                 className="p-1.5 rounded-lg transition-colors"
                 onMouseEnter={e => e.currentTarget.style.background = T.hoverBg}
                 onMouseLeave={e => e.currentTarget.style.background = "transparent"}>
                 <Home size={13} style={{ color: T.textSec }} />
-              </button>
+              </Link>
               <ChevronRight size={11} style={{ color: T.textMut, flexShrink: 0 }} />
               <Link href="/modules/module-2"
                 className="flex items-center gap-1 text-[11px] px-1.5 py-1 rounded-md transition-colors"
@@ -221,7 +220,7 @@ export default function DashboardLayout({ activePage, onNavigate, provinsi, onPr
             <HistoryPopup T={T} dark={dark} />
 
             {/* Notifikasi */}
-            <NotifPopup T={T} dark={dark} />
+            <NotifPopup T={T} dark={dark} alerts={alertFeedData} />
 
             {/* Toggle right sidebar */}
             <button onClick={() => setRightOpen(!rightOpen)}
@@ -300,11 +299,16 @@ export default function DashboardLayout({ activePage, onNavigate, provinsi, onPr
 function ProvinsiDropdown({ provinsi, onProvinsiChange, T, dark }) {
   const [open, setOpen] = useState(false);
   const btnRef = useRef(null);
+  const menuRef = useRef(null);
   const pos    = useAnchorPos(btnRef, open);
 
   useEffect(() => {
     if (!open) return;
-    const h = (e) => { if (!btnRef.current?.contains(e.target)) setOpen(false); };
+    const h = (e) => {
+      if (!btnRef.current?.contains(e.target) && !menuRef.current?.contains(e.target)) {
+        setOpen(false);
+      }
+    };
     const t = setTimeout(() => document.addEventListener("mousedown", h), 100);
     return () => { clearTimeout(t); document.removeEventListener("mousedown", h); };
   }, [open]);
@@ -320,7 +324,7 @@ function ProvinsiDropdown({ provinsi, onProvinsiChange, T, dark }) {
 
       {open && (
         <Portal>
-          <div style={{
+          <div ref={menuRef} style={{
             position: "fixed", top: pos.top,
             left: pos.left - 24, // center-ish under button
             zIndex: 9999, width: 192,
@@ -418,14 +422,20 @@ function HistoryPopup({ T, dark }) {
 }
 
 // Notifikasi Popup
-function NotifPopup({ T, dark }) {
+function NotifPopup({ T, dark, alerts }) {
   const [open, setOpen] = useState(false);
+  const [read, setRead] = useState(false);
   const btnRef = useRef(null);
+  const menuRef = useRef(null);
   const pos    = useAnchorPos(btnRef, open);
 
   useEffect(() => {
     if (!open) return;
-    const h = (e) => { if (!btnRef.current?.contains(e.target)) setOpen(false); };
+    const h = (e) => {
+      if (!btnRef.current?.contains(e.target) && !menuRef.current?.contains(e.target)) {
+        setOpen(false);
+      }
+    };
     const t = setTimeout(() => document.addEventListener("mousedown", h), 100);
     return () => { clearTimeout(t); document.removeEventListener("mousedown", h); };
   }, [open]);
@@ -445,7 +455,7 @@ function NotifPopup({ T, dark }) {
 
       {open && (
         <Portal>
-          <div style={{
+          <div ref={menuRef} style={{
             position: "fixed", top: pos.top, right: pos.right - 10,
             zIndex: 9999, width: 300,
             background: T.popupBg, backdropFilter: "blur(24px)",
@@ -458,11 +468,11 @@ function NotifPopup({ T, dark }) {
             <div style={{ padding: "12px 16px 8px", borderBottom: `1px solid ${T.divBdr}`, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
               <p style={{ fontSize: 11, fontWeight: 700, color: T.textPri, fontFamily: "var(--font-dm-sans)" }}>Alert Feed</p>
               <span style={{ fontSize: 10, padding: "2px 8px", borderRadius: 20, background: "#D9383A", color: "#fff", fontWeight: 600 }}>
-                {alertFeedData.length} baru
+                {read ? 0 : alerts.length} baru
               </span>
             </div>
             {/* Items */}
-            {alertFeedData.map(a => (
+            {alerts.map(a => (
               <div key={a.id}
                 className="flex items-start gap-3 px-4 py-3 transition-colors cursor-pointer"
                 style={{ borderBottom: `1px solid ${T.divBdr}` }}
@@ -480,7 +490,10 @@ function NotifPopup({ T, dark }) {
             ))}
             {/* Footer */}
             <div style={{ padding: "8px 16px" }}>
-              <button style={{ fontSize: 10, color: "#6D9DC5", fontWeight: 600, background: "none", border: "none", cursor: "pointer", fontFamily: "var(--font-dm-sans)" }}>
+              <button
+                onClick={() => setRead(true)}
+                style={{ fontSize: 10, color: "#6D9DC5", fontWeight: 600, background: "none", border: "none", cursor: "pointer", fontFamily: "var(--font-dm-sans)" }}
+              >
                 Tandai semua sudah dibaca
               </button>
             </div>

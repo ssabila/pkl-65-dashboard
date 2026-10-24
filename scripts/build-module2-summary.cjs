@@ -16,6 +16,11 @@ const provinceCenters = {
   "Sumatera Utara": [2.2, 99.0],
   "Sumatera Barat": [-0.7, 100.4],
 };
+const provinceMapFiles = {
+  Aceh: "aceh.json",
+  "Sumatera Utara": "sumut.json",
+  "Sumatera Barat": "sumbar.json",
+};
 const knownCoordinates = {
   "Bener Meriah": [4.72, 96.82],
   "Aceh Tengah": [4.5, 96.5],
@@ -25,6 +30,36 @@ const knownCoordinates = {
   "Aceh Besar": [5.4, 95.45],
   "Banda Aceh": [5.55, 95.32],
   Sabang: [5.88, 95.32],
+};
+const centroid = coordinates => {
+  const points = [];
+  const collect = value => {
+    if (Array.isArray(value) && value.length >= 2 && value.every(Number.isFinite)) {
+      points.push(value);
+      return;
+    }
+    if (Array.isArray(value)) value.forEach(collect);
+  };
+  collect(coordinates);
+  if (!points.length) return null;
+  return [
+    points.reduce((sum, point) => sum + point[1], 0) / points.length,
+    points.reduce((sum, point) => sum + point[0], 0) / points.length,
+  ];
+};
+const normalizeDistrictName = name => String(name)
+  .toLowerCase()
+  .replace(/^kota\s*/, "")
+  .replace(/[^a-z0-9]/g, "");
+const loadMapCoordinates = province => {
+  const file = provinceMapFiles[province];
+  if (!file) return {};
+  const mapPath = path.resolve("public/map", file);
+  if (!fs.existsSync(mapPath)) return {};
+  const map = JSON.parse(fs.readFileSync(mapPath, "utf8"));
+  return Object.fromEntries(map.features
+    .map(feature => [normalizeDistrictName(feature.properties?.WADMKK), centroid(feature.geometry?.coordinates)])
+    .filter(([name, point]) => name && point));
 };
 
 const sum = (target, key, value) => {
@@ -39,7 +74,27 @@ const riskLevel = status => {
   return "Sedang";
 };
 const monthName = month => ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"][month - 1];
-const makeBucket = () => ({ count: 0, flood: 0, landslide: 0, rain: 0, rain3: 0, rain7: 0, anomaly: 0, moisture: 0, slope: 0, elevation: 0, ndvi: 0, ndbi: 0, ndwi: 0, floodArea: 0, floodScore: 0, landslideScore: 0, floodRisk: {}, landslideRisk: {} });
+const soilFields = [
+  ["Aluvial", "soil_aluvial"],
+  ["Andosol", "soil_andosol"],
+  ["Gleisol", "soil_gleisol"],
+  ["Grumosol", "soil_grumosol"],
+  ["Kambisol", "soil_kambisol"],
+  ["Latosol", "soil_latosol"],
+  ["Litosol", "soil_litosol"],
+  ["Mediteran", "soil_mediteran"],
+  ["Organosol", "soil_organosol"],
+  ["Pasir", "soil_pasir"],
+  ["PMK", "soil_pmk"],
+  ["Podsolik", "soil_podsolik"],
+  ["Podsolik Coklat", "soil_podsolik_coklat"],
+  ["Regosol", "soil_regosol"],
+  ["Renzina", "soil_renzina"],
+  ["Tanah Kapur", "soil_tanah_kapur"],
+  ["Tanah Liat", "soil_tanah_liat"],
+  ["Tanah Vulkanis", "soil_tanah_vulkanis"],
+];
+const makeBucket = () => ({ count: 0, flood: 0, landslide: 0, rain: 0, rain3: 0, rain7: 0, anomaly: 0, moisture: 0, slope: 0, elevation: 0, ndvi: 0, ndbi: 0, ndwi: 0, floodArea: 0, floodScore: 0, landslideScore: 0, soils: {}, floodRisk: {}, landslideRisk: {} });
 
 const provinces = {};
 const getProvince = name => {
@@ -54,7 +109,14 @@ const addRow = (bucket, row) => {
   const landslideRisk = riskLevel(row.Status_Longsor);
   bucket.floodRisk[floodRisk] = (bucket.floodRisk[floodRisk] || 0) + 1;
   bucket.landslideRisk[landslideRisk] = (bucket.landslideRisk[landslideRisk] || 0) + 1;
+  for (const [name, field] of soilFields) sum(bucket.soils, name, Number(row[field]));
 };
+const dominantSoils = bucket => Object.entries(bucket.soils)
+  .map(([name, value]) => ({ name, value: value / Math.max(bucket.count, 1) }))
+  .filter(soil => soil.value > 0)
+  .sort((a, b) => b.value - a.value)
+  .slice(0, 4)
+  .map(soil => soil.name);
 
 const stream = fs.createReadStream(source).pipe(parser.asStream()).pipe(pick.asStream({ filter: "Sheet1" })).pipe(streamArray.asStream());
 stream.on("data", ({ value: row }) => {
@@ -79,6 +141,7 @@ stream.on("data", ({ value: row }) => {
 stream.on("end", () => {
   const result = { generatedAt: new Date().toISOString(), source: "modul2_skor-resiko.json", provinces: {} };
   for (const [name, data] of Object.entries(provinces)) {
+    const mapCoordinates = loadMapCoordinates(name);
     const years = Object.keys(data.years).sort();
     const latestYear = years[years.length - 1];
     const previousYear = years[years.length - 2];
@@ -90,7 +153,26 @@ stream.on("end", () => {
     const toTrend = bucket => ({ solid: Math.round(bucket.floodScore / Math.max(bucket.count, 1)), dashed: Math.round(bucket.landslideScore / Math.max(bucket.count, 1)) });
     const trend = Object.fromEntries(years.map(year => [year, Object.entries(data.months[year]).sort((a, b) => a[0] - b[0]).map(([month, bucket]) => ({ bulan: monthName(Number(month)), ...toTrend(bucket) }))]));
     const districts = Object.entries(data.districts).sort((a, b) => b[1].count - a[1].count);
-    const districtData = (riskKey, scoreKey) => districts.slice(0, 4).map(([district, bucket]) => ({ name: district, value: Number((average(bucket, scoreKey) / Math.max(average(data.years[latestYear], scoreKey), 1) * 100).toFixed(1)) }));
+    const districtData = scoreKey => {
+      const scoredDistricts = districts.map(([district, bucket]) => [district, Math.max(bucket[scoreKey] || 0, 0)]);
+      const totalScore = scoredDistricts.reduce((total, [, score]) => total + score, 0);
+      if (!totalScore) return [];
+
+      const topDistricts = scoredDistricts.slice(0, 4);
+      const topScore = topDistricts.reduce((total, [, score]) => total + score, 0);
+      const result = topDistricts.map(([district, score]) => ({
+        name: district,
+        value: Number((score / totalScore * 100).toFixed(1)),
+      }));
+      const remainder = Number(((totalScore - topScore) / totalScore * 100).toFixed(1));
+      if (remainder > 0) result.push({ name: "Lainnya", value: remainder });
+
+      const roundedTotal = result.reduce((total, item) => total + item.value, 0);
+      if (roundedTotal !== 100 && result.length) {
+        result[result.length - 1].value = Number((result[result.length - 1].value + 100 - roundedTotal).toFixed(1));
+      }
+      return result;
+    };
     const factorValues = [
       ["Curah Hujan", average(latest, "rain3")],
       ["Luas Genangan", average(latest, "floodArea")],
@@ -103,14 +185,14 @@ stream.on("end", () => {
     const faktor = factorValues.map(([faktor, value]) => ({ faktor, level: Math.max(1, Math.min(4, Math.ceil(value / maxFactor * 4))) }));
     const wilayah = districts.map(([nama, bucket]) => ({
       nama,
-      lat: knownCoordinates[nama]?.[0] ?? null,
-      lng: knownCoordinates[nama]?.[1] ?? null,
+      lat: knownCoordinates[nama]?.[0] ?? mapCoordinates[normalizeDistrictName(nama)]?.[0] ?? null,
+      lng: knownCoordinates[nama]?.[1] ?? mapCoordinates[normalizeDistrictName(nama)]?.[1] ?? null,
       risikoB: Object.entries(bucket.floodRisk).sort((a, b) => b[1] - a[1])[0]?.[0] || "Sedang",
       risikoL: Object.entries(bucket.landslideRisk).sort((a, b) => b[1] - a[1])[0]?.[0] || "Sedang",
       curahHujan: `${average(bucket, "rain").toFixed(1)} mm`,
       luasGenangan: `${average(bucket, "floodArea").toFixed(1)} km2`,
       skorRisiko: `${average(bucket, "floodScore").toFixed(2)}`,
-      jenisTanah: "Data tanah tersedia",
+      jenisTanah: dominantSoils(bucket).join(", ") || "Data tanah tidak tersedia",
       kemiringan: `${average(bucket, "slope").toFixed(2)} derajat`,
       tutupanLahan: `NDVI ${average(bucket, "ndvi").toFixed(2)}, NDBI ${average(bucket, "ndbi").toFixed(2)}`,
       soilMoisture: `${average(bucket, "moisture").toFixed(2)}`,
@@ -136,13 +218,16 @@ stream.on("end", () => {
         ndvi: average(latest, "ndvi"),
         ndbi: average(latest, "ndbi"),
       },
+      soilTypes: dominantSoils(latest),
       trend,
       faktor,
-      donutBanjir: districtData("floodRisk", "floodScore"),
-      donutLongsor: districtData("landslideRisk", "landslideScore"),
+      donutBanjir: districtData("floodScore"),
+      donutLongsor: districtData("landslideScore"),
       frekuensi: Object.entries(latest.floodRisk).map(([jenis, frekuensi]) => ({ jenis, frekuensi, highlight: jenis === "Kritis" })),
       curahHujanBulanan: Object.fromEntries(Object.entries(data.months[latestYear] || {}).map(([month, bucket]) => [monthName(Number(month)), { label: monthName(Number(month)), solid: Math.round(average(bucket, "rain")), dashed: Math.round(average(bucket, "rain7")) }])),
       curahHujanHarian: Object.fromEntries(Object.entries(data.days[latestYear] || {}).map(([month, days]) => [monthName(Number(month)), Object.entries(days).map(([day, bucket]) => ({ label: day, solid: Number(average(bucket, "rain").toFixed(2)), dashed: Number(average(bucket, "rain7").toFixed(2)) }))])),
+      curahHujanBulananByYear: Object.fromEntries(Object.entries(data.months).map(([year, months]) => [year, Object.fromEntries(Object.entries(months).map(([month, bucket]) => [monthName(Number(month)), { label: monthName(Number(month)), solid: Math.round(average(bucket, "rain")), dashed: Math.round(average(bucket, "rain7")) }]))])),
+      curahHujanHarianByYear: Object.fromEntries(Object.entries(data.days).map(([year, months]) => [year, Object.fromEntries(Object.entries(months).map(([month, days]) => [monthName(Number(month)), Object.entries(days).map(([day, bucket]) => ({ label: day, solid: Number(average(bucket, "rain").toFixed(2)), dashed: Number(average(bucket, "rain7").toFixed(2)) }))]))])),
       wilayah,
       center: provinceCenters[name],
     };

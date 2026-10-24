@@ -1,7 +1,9 @@
 import summary from "../../../../public/data/modul2_skor-resiko-summary.json";
 
 export const provinsiOptions = Object.keys(summary.provinces);
-export const tahunOptions = Object.keys(summary.provinces[provinsiOptions[0]].trend).sort();
+export const tahunOptions = Array.from(new Set(
+  provinsiOptions.flatMap(provinsi => Object.keys(summary.provinces[provinsi].trend))
+)).sort();
 export const bulanOptions = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
 
 const getProvince = provinsi => summary.provinces[provinsi] || summary.provinces[provinsiOptions[0]];
@@ -44,12 +46,20 @@ export const curahHujanBulananByProvinsi = Object.fromEntries(
 
 export const longsorBulananByProvinsi = curahHujanBulananByProvinsi;
 
-export const getCurahHujanHarian = (provinsi, bulan) => {
-  const data = getProvince(provinsi).curahHujanHarian[bulan];
+export const getCurahHujanBulanan = (provinsi, tahun) =>
+  getProvince(provinsi).curahHujanBulananByYear?.[tahun]
+  || getProvince(provinsi).curahHujanBulanan;
+
+export const getCurahHujanHarian = (provinsi, bulan, tahun) => {
+  const data = getProvince(provinsi).curahHujanHarianByYear?.[tahun]?.[bulan]
+    || getProvince(provinsi).curahHujanHarian[bulan];
   return data?.length ? data : getProvince(provinsi).curahHujanBulanan[bulan] ? [getProvince(provinsi).curahHujanBulanan[bulan]] : [];
 };
 
-export const getLatestMetrics = provinsi => getProvince(provinsi).latestMetrics;
+export const getLatestMetrics = provinsi => ({
+  ...getProvince(provinsi).latestMetrics,
+  soilTypes: getProvince(provinsi).soilTypes || [],
+});
 export const getTrend = (provinsi, tahun) => getProvince(provinsi).trend[tahun] || [];
 export const getCenter = provinsi => getProvince(provinsi).center;
 export const getAlertFeed = provinsi => {

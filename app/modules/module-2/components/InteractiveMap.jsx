@@ -18,6 +18,9 @@ const PROVINSI_CENTER = {
 export default function InteractiveMap({
   provinsi,
   type,        // 'banjir' | 'longsor'
+  mapMode,
+  mapMonth,
+  mapDate,
   onSelect,
   selectedWilayah,
 }) {
@@ -47,10 +50,9 @@ export default function InteractiveMap({
         scrollWheelZoom: true,
       });
 
-      // Tile layer: CartoDB Positron (clean, light)
-      L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", {
-        attribution: "OpenStreetMap, CartoDB",
-        subdomains: "abcd",
+      // OpenStreetMap tiles do not require an application API key.
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
         maxZoom: 19,
       }).addTo(map);
 
@@ -79,7 +81,10 @@ export default function InteractiveMap({
     markersRef.current = [];
 
     const wilayah = wilayahByProvinsi[provinsi] || [];
-    wilayah.forEach(w => {
+    wilayah
+      .filter(w => mapMode !== "kota" || /^Kota\s/i.test(w.nama))
+      .filter(w => mapMode !== "kabupaten" || !/^Kota\s/i.test(w.nama))
+      .forEach(w => {
       if (!Number.isFinite(w.lat) || !Number.isFinite(w.lng)) return;
       const riskKey = type === "banjir" ? w.risikoB : w.risikoL;
       const color   = RISK_COLOR[riskKey] || "#6D9DC5";
@@ -101,22 +106,21 @@ export default function InteractiveMap({
       const marker = L.marker([w.lat, w.lng], { icon });
 
       // Hover tooltip (glass style via CSS)
-      marker.bindTooltip(w.nama, {
-        permanent: false,
-        direction: "top",
-        offset: [0, -12],
-        className: "aceh-map-tooltip",
-      });
-
       marker.on("click", () => {
         onSelect(w);
         mapInstance.current.flyTo([w.lat, w.lng], 10, { duration: 0.8 });
       });
 
+      marker.bindTooltip(`${w.nama} - ${mapMonth} ${mapDate ? `, tanggal ${mapDate}` : ""}`, {
+        permanent: false,
+        direction: "top",
+        offset: [0, -12],
+        className: "aceh-map-tooltip",
+      });
       marker.addTo(mapInstance.current);
       markersRef.current.push(marker);
     });
-  }, [loaded, type, selectedWilayah, provinsi]);
+  }, [loaded, type, selectedWilayah, provinsi, mapMode, mapMonth, mapDate, onSelect]);
 
   return (
     <>
