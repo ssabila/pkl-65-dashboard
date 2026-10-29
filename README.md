@@ -1,160 +1,152 @@
-# 📊 Dashboard Big Data PKL 65
+# Dashboard Big Data PKL 65
 
-Platform terintegrasi untuk manajemen dan analisis big data dengan 8 modul yang scalable dan modular.
+Dashboard web untuk eksplorasi dan analisis data kebencanaan di wilayah Aceh,
+Sumatera Utara, dan Sumatera Barat. Aplikasi ini terdiri dari delapan modul
+analisis yang diakses melalui halaman beranda dashboard.
 
-![Status](https://img.shields.io/badge/status-active-brightgreen)
-![Version](https://img.shields.io/badge/version-1.0-blue)
-![License](https://img.shields.io/badge/license-MIT-green)
+## Teknologi
 
----
+- Next.js 16 dengan App Router
+- React 19
+- JavaScript (`.js` dan `.jsx`)
+- Tailwind CSS 4 dan CSS modular
+- Chart.js, Recharts, Leaflet, MapLibre GL, dan Framer Motion
+- Data statis JSON, GeoJSON, Excel, shapefile, dan aset gambar di `public/`
 
-## 🚀 Quick Start
+## Persyaratan
 
-### Prerequisites
-- Node.js v18+ (LTS recommended)
-- npm, yarn, atau pnpm
+- Node.js 18 atau versi LTS yang lebih baru
+- npm
 
-### Installation
+Versi dependency yang digunakan dikunci di `package-lock.json`. Untuk hasil
+instalasi yang konsisten, gunakan `npm ci`.
+
+## Menjalankan Secara Lokal
+
+Clone repository dan masuk ke folder proyek:
 
 ```bash
-# Clone repository
 git clone https://github.com/ssabila/pkl-65-dashboard.git
 cd pkl-65-dashboard
-
-# Install dependencies
-pnpm install
-# atau
-npm install
-
-# Setup environment
-cp .env.example .env.local
-
-# Start development server
-pnpm dev
 ```
 
-Buka [http://localhost:3000](http://localhost:3000) di browser Anda.
+Instal dependency:
 
----
-
-##  Struktur Folder Dashboard Big Data PKL 65
-
-### **app/** - Next.js App Directory
-Menggunakan Next.js 14+ App Router untuk routing berbasis file.
-
+```bash
+npm ci
 ```
+
+Jalankan server development:
+
+```bash
+npm run dev
+```
+
+Buka [http://localhost:3000](http://localhost:3000) di browser.
+
+## Perintah NPM
+
+| Perintah | Kegunaan |
+|---|---|
+| `npm run dev` | Menjalankan server development |
+| `npm run lint` | Menjalankan ESLint |
+| `npm run build` | Membuat build production |
+| `npm start` | Menjalankan build production |
+| `npm run data:module2` | Membuat ulang ringkasan data Modul 2 |
+
+## Menjalankan Build Production
+
+```bash
+npm ci
+npm run lint
+npm run build
+npm start
+```
+
+Server production secara default berjalan di
+[http://localhost:3000](http://localhost:3000).
+
+## Struktur Proyek
+
+```text
 app/
-├── layout.js                    # Root layout - metadata, fonts, providers
-├── page.js                      # Landing page (/route root)
-├── globals.css                  # Global styles & design tokens
-└── modules/                     # Routing untuk setiap modul
-    ├── module-1/
-    │   ├── layout.js           # Layout spesifik module-1 (opsional)
-    │   └── page.js             # Halaman utama module-1
-    └── module-8/
-        └── page.js             # Halaman utama module-8
-```
+├── layout.js                 # Root layout, metadata, dan font
+├── page.js                   # Beranda dan daftar delapan modul
+├── globals.css               # Style global
+└── modules/
+    ├── module-1/page.jsx
+    ├── module-2/page.jsx
+    ├── module-3/page.jsx
+    ├── module-4/page.jsx
+    ├── module-5/page.jsx
+    ├── module-6/page.jsx
+    ├── module-7/page.jsx
+    └── module-8/page.jsx
 
-**Key files:**
-- `layout.js` - Import fonts, setup providers, metadata
-- `globals.css` - Design tokens, color palette, typography
-- `page.js` - Landing page dengan grid 8 modul
-
----
-
-
-### **public/** - Static Files
-Semua assets yang tidak berubah.
-
-```
 public/
-├── fonts/
-│   ├── Garet-Bold.woff2       # Font Heading
-├── module-1/                  # Asset yang diperlukan oleh module 1
-└── module-2/                  # Asset yang diperlukan oleh module 2
+├── data/                     # Data sumber dan data hasil preprocessing
+├── fonts/                    # Font lokal
+├── map/                      # Data peta dan batas wilayah
+└── module-1 ... module-8/    # Aset visual tiap modul
 ```
 
-**Catatan:**
-- Font harus di-upload ke `public/fonts/`
-- Import fonts di `app/layout.js` menggunakan `next/font/local`
+## Modul Dashboard
 
----
+| Modul | Fokus |
+|---|---|
+| 1 | Kondisi fisik wilayah |
+| 2 | Skor risiko bencana |
+| 3 | Sebaran dampak banjir dan tanah longsor |
+| 4 | Kerentanan sosial ekonomi |
+| 5 | Dampak dan logistik |
+| 6 | Prioritas penanganan |
+| 7 | Cerita data bencana |
+| 8 | Monitoring pemulihan |
 
+Setiap modul memiliki route berbasis App Router:
 
-## Path Aliases
-
-Untuk import yang lebih clean, gunakan path aliases di `jsconfig.json`:
-
-```json
-{
-  "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["./*"],
-      "@components/*": ["./components/*"],
-      "@lib/*": ["./lib/*"],
-      "@public/*": ["./public/*"]
-    }
-  }
-}
+```text
+/modules/module-1
+/modules/module-2
+/modules/module-3
+/modules/module-4
+/modules/module-5
+/modules/module-6
+/modules/module-7
+/modules/module-8
 ```
----
-## Tech Stack
 
-- **Frontend Framework:** Next.js 14+
-- **Styling:** Tailwind CSS + Custom CSS
-- **Typography:** 
-  - Heading: Garet Bold (700)
-  - Sub-heading: Lora Italic (400)
-  - Body: DM Sans (400, 500)
-- **Routing:** Next.js App Router (file-based)
-- **Language:** JavaScript (ES2020+)
+## Data dan Preprocessing
 
----
+Data yang digunakan aplikasi disimpan sebagai aset statis di `public/data/`,
+`public/map/`, dan folder aset modul. Data tersebut dibaca oleh aplikasi pada
+saat halaman dijalankan.
 
-## Workflow
+## Konfigurasi
 
-### 1. Setup Environment
+Beberapa file konfigurasi root digunakan oleh tooling proyek:
+
+- `next.config.mjs` untuk konfigurasi Next.js dan React Compiler
+- `postcss.config.mjs` untuk pemrosesan Tailwind/PostCSS
+- `eslint.config.mjs` untuk linting
+- `tsconfig.json` untuk integrasi tooling Next.js dan generated types
+- `package.json` dan `package-lock.json` untuk dependency serta script NPM
+
+
+Saat ini aplikasi tidak memerlukan file environment untuk dapat dijalankan
+secara lokal. Jika deployment menambahkan environment variable, simpan
+nilainya di `.env.local`.
+
+## Pemeriksaan Sebelum Deploy
+
+Sebelum deployment, jalankan:
+
 ```bash
-# Install dependencies
-pnpm install
-
-# Create .env.local
-cp .env.example .env.local
+npm ci
+npm run lint
+npm run build
 ```
 
-### 2. Start Development
-```bash
-# Start dev server on http://localhost:3000
-pnpm dev
-```
-
-### 3. Create Feature Branch
-```bash
-# Create branch untuk feature baru
-git checkout -b feature/modul-1/data-table
-
-# Atau untuk bug fix
-git checkout -b fix/modul-2/styling-issue
-```
-
-### 4. Develop & Test
-```bash
-# Develop your feature
-# Test di http://localhost:3000
-
-# Commit changes
-git add .
-git commit -m "feat(modul-1): add data table with sorting"
-
-# Push to remote
-git push origin feature/modul-1/data-table
-```
-
-### 5. Create Pull Request
-- Go to GitHub repository
-- Create Pull Request
-- Wait for review
-- Merge to main
-
----
+Folder `node_modules/`, `.next/`, `out/`, file environment, dan file hasil
+build lokal tidak perlu disimpan atau di-commit ke repository. Aturan tersebut
+sudah tercantum di `.gitignore`.
