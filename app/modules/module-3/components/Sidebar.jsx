@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 
 const menus = [
   { id: "beranda", icon: "/module-3/beranda.webp", label: "Beranda" },
@@ -177,6 +178,41 @@ export default function Sidebar({ activeMenu, onMenuChange }) {
               );
             })}
           </div>
+
+          <Link
+            href="/"
+            className="mt-4 flex items-center w-full transition-all duration-200 group"
+            style={{
+              gap: isHovered ? "14px" : "0px",
+              borderRadius: "50px",
+              justifyContent: isHovered ? "flex-start" : "center",
+            }}
+          >
+            <div
+              className="flex items-center justify-center flex-shrink-0 transition-transform duration-200 group-hover:scale-105"
+              style={{
+                width: "60px",
+                height: "60px",
+                borderRadius: "50%",
+                background: isHovered ? "#FFFFFF" : "rgba(255,255,255,0.85)",
+                boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
+              }}
+            >
+              <span className="text-[28px] text-[#272525]" aria-hidden="true">←</span>
+            </div>
+            <span
+              className="whitespace-nowrap transition-all duration-300 overflow-hidden font-bold text-center"
+              style={{
+                maxWidth: isHovered ? "210px" : "0px",
+                opacity: isHovered ? 1 : 0,
+                fontFamily: "var(--font-garet-heavy), sans-serif",
+                fontSize: "16px",
+                color: "#5C5555",
+              }}
+            >
+              Beranda Dashboard
+            </span>
+          </Link>
         </div>
       </aside>
 
@@ -279,6 +315,15 @@ export default function Sidebar({ activeMenu, onMenuChange }) {
                 );
               })}
             </div>
+
+            <Link
+              href="/"
+              className="mt-auto flex items-center gap-4 px-4 py-3.5 rounded-2xl bg-white/10 border border-white/20 text-white/85 hover:bg-white/20 hover:text-white transition-all duration-200"
+              style={{ fontFamily: "var(--font-garet-heavy), sans-serif" }}
+            >
+              <span className="w-10 h-10 rounded-full flex items-center justify-center bg-white/20 text-2xl" aria-hidden="true">←</span>
+              <span className="text-[15px] sm:text-[16px] tracking-wide">Kembali ke Beranda Dashboard</span>
+            </Link>
           </div>
         </div>
       )}

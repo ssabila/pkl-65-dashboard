@@ -66,7 +66,7 @@ function StatCard({ item, isCarousel = false }) {
   );
 }
 
-export default function BerandaView() {
+export default function BerandaView({ provinsi, kabupaten, kecamatan }) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [touchStart, setTouchStart] = useState(null);
   const [touchEnd, setTouchEnd] = useState(null);
@@ -80,31 +80,38 @@ export default function BerandaView() {
     fetch("/data/modul3_dampak_baru.json")
       .then((res) => res.json())
       .then((data) => {
+        const filteredData = data.filter((r) => {
+          if (provinsi && r.provinsi !== provinsi) return false;
+          if (kabupaten && r.nm_kabupaten !== kabupaten) return false;
+          if (kecamatan && r.nm_kecamatan !== kecamatan) return false;
+          return true;
+        });
+
         // Hitung total luas wilayah (km2 -> ha)
-        const totalLuasWilayahHa = data.reduce(
+        const totalLuasWilayahHa = filteredData.reduce(
           (acc, r) => acc + r.luas_kec_km2 * 100,
           0
         );
 
         // Hitung total luas area banjir (ha) dari estimasi_luas_ha
-        const totalLuasBanjirHa = data.reduce(
+        const totalLuasBanjirHa = filteredData.reduce(
           (acc, r) => acc + (r.dampak_bencana?.banjir?.estimasi_luas_ha || 0),
           0
         );
 
         // Hitung total luas area longsor (ha) dari estimasi_luas_ha
-        const totalLuasLongsorHa = data.reduce(
+        const totalLuasLongsorHa = filteredData.reduce(
           (acc, r) => acc + (r.dampak_bencana?.longsor?.estimasi_luas_ha || 0),
           0
         );
 
         // Hitung total kab/kota dan kecamatan untuk penyebut subtitle
-        const totalKab = new Set(data.map((r) => r.nm_kabupaten)).size;
-        const totalKec = data.length;
+        const totalKab = new Set(filteredData.map((r) => r.nm_kabupaten)).size;
+        const totalKec = filteredData.length;
 
         // Stat Card 2: Jumlah Kab/Kota Terdampak (asal memenuhi salah 1 bencana: banjir ATAU longsor)
         const kabTerdampak = new Set(
-          data
+          filteredData
             .filter(
               (r) =>
                 (r.dampak_bencana?.banjir?.estimasi_luas_ha > 0) ||
@@ -114,7 +121,7 @@ export default function BerandaView() {
         ).size;
 
         // Stat Card 3: Jumlah Kecamatan Terdampak (asal memenuhi salah 1 bencana: banjir ATAU longsor)
-        const kecTerdampak = data.filter(
+        const kecTerdampak = filteredData.filter(
           (r) =>
             (r.dampak_bencana?.banjir?.estimasi_luas_ha > 0) ||
             (r.dampak_bencana?.longsor?.estimasi_luas_ha > 0)
@@ -203,7 +210,7 @@ export default function BerandaView() {
         console.error("Gagal memuat data modul3_dampak_baru.json:", err);
         setIsLoading(false);
       });
-  }, []);
+  }, [provinsi, kabupaten, kecamatan]);
 
   const nextCard = () => {
     setActiveIndex((prev) => (prev + 1) % cardsData.length);

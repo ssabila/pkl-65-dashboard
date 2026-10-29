@@ -98,7 +98,13 @@ export default function Modul3Page() {
             <div className="flex-1 w-full flex flex-col lg:flex-row items-center lg:items-start justify-center gap-4 lg:gap-5 2xl:gap-8">
               {/* Cards / View details */}
               <div className="w-full lg:w-[460px] 2xl:w-[540px] 3xl:w-[620px] flex-shrink-0 flex flex-col justify-start">
-                {activeMenu === "beranda" && <BerandaView />}
+                {activeMenu === "beranda" && (
+                  <BerandaView
+                    provinsi={filterProvinsi}
+                    kabupaten={filterKabupaten}
+                    kecamatan={filterKecamatan}
+                  />
+                )}
                 {activeMenu === "banjir" && <BanjirView provinsi={filterProvinsi} kabupaten={filterKabupaten} kecamatan={filterKecamatan} />}
                 {activeMenu === "longsor" && <TanahLongsorView provinsi={filterProvinsi} kabupaten={filterKabupaten} kecamatan={filterKecamatan} />}
               </div>

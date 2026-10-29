@@ -6,8 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint",
-    "data:module2": "node scripts/build-module2-summary.cjs"
+    "lint": "eslint"
   },
   "dependencies": {
     "chart.js": "^4.5.1",
