@@ -64,7 +64,7 @@
   pointer-events: none;
 }
 
-@media (min-width: 1150px) {
+@media (min-width: 1024px) {
   .mod3-header {
     flex-direction: row;
     align-items: flex-start;
@@ -121,51 +121,47 @@
 }
 
 .mod3-header-filters {
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: stretch !important;
-  justify-content: center !important;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
   gap: 12px;
   margin-top: 16px;
-  width: 100% !important;
-  max-width: 100% !important;
+  width: 100%;
+  max-width: 100%;
   pointer-events: auto;
 }
 
-@media (min-width: 1150px) {
+@media (min-width: 1024px) {
   .mod3-header-filters {
-    flex-direction: row !important;
-    align-items: center !important;
-    justify-content: flex-start !important;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
     gap: clamp(8px, 1.2vw, 20px);
     margin-top: 20px;
-    width: 100% !important;
-    max-width: 880px !important;
+    width: auto;
   }
 }
 
 .mod3-dropdown-wrapper {
   position: relative;
-  width: 100% !important;
-  max-width: 100% !important;
+  width: 100%;
 }
 
-@media (min-width: 1150px) {
+@media (min-width: 1024px) {
   .mod3-dropdown-wrapper {
-    width: auto !important;
-    max-width: none !important;
+    width: auto;
   }
 }
 
 .mod3-dropdown-trigger {
-  display: flex !important;
-  flex-direction: row !important;
-  justify-content: space-between !important;
-  align-items: center !important;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
   padding: 12px 24px;
   gap: 10px;
-  width: 100% !important;
-  max-width: 100% !important;
+  width: 100%;
   height: 54px;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.38) 0%, rgba(255, 255, 255, 0.15) 100%);
   border: 5px solid rgba(255, 255, 255, 0.45);
@@ -177,11 +173,10 @@
   cursor: pointer;
 }
 
-@media (min-width: 1150px) {
+@media (min-width: 1024px) {
   .mod3-dropdown-trigger {
-    width: clamp(175px, 14vw, 270px) !important;
-    min-width: 0 !important;
-    max-width: none !important;
+    width: clamp(175px, 14vw, 270px);
+    min-width: 0;
   }
 }
 

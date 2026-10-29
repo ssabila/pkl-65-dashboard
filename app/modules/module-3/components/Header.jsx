@@ -41,7 +41,7 @@ function CustomDropdown({ label, value, options, onChange, disabled = false }) {
   const displayText = value ? value : `${label} ...`;
 
   return (
-    <div ref={ref} className="relative mod3-dropdown-wrapper w-full min-[1150px]:w-auto">
+    <div ref={ref} className="relative mod3-dropdown-wrapper w-full sm:w-auto">
       {/* Trigger button */}
       <button
         type="button"
@@ -52,7 +52,7 @@ function CustomDropdown({ label, value, options, onChange, disabled = false }) {
           }
         }}
         disabled={disabled}
-        className="mod3-dropdown-trigger flex flex-row justify-between items-center px-3.5 py-2.5 sm:px-5 sm:py-3 w-full min-[1150px]:w-[185px] xl:w-[200px] 2xl:w-[240px] 3xl:w-[270px] rounded-[35px] border-[3.5px] sm:border-[4px] min-[1150px]:border-[5px] border-[rgba(255,255,255,0.45)] transition-all duration-200 hover:opacity-95 active:scale-98"
+        className="mod3-dropdown-trigger flex flex-row justify-between items-center px-3.5 py-2.5 sm:px-5 sm:py-3 w-full sm:w-[185px] lg:w-[195px] xl:w-[210px] 2xl:w-[240px] 3xl:w-[270px] rounded-[35px] border-[3.5px] sm:border-[4px] lg:border-[5px] border-[rgba(255,255,255,0.45)] transition-all duration-200 hover:opacity-95 active:scale-98"
         style={{
           background: "linear-gradient(180deg, rgba(255,255,255,0.40) 0%, rgba(255,255,255,0.12) 100%)",
           boxShadow: "inset 0px 2px 4px rgba(255,255,255,0.6), inset 0px -2px 4px rgba(0,0,0,0.25), 0 8px 24px rgba(0,0,0,0.12)",
@@ -227,19 +227,19 @@ export default function Header({
   };
 
   return (
-    <header className="mod3-header flex flex-col min-[1150px]:flex-row items-stretch min-[1150px]:items-start justify-between px-4 sm:px-6 min-[1150px]:px-8 2xl:px-14 pt-10 sm:pt-10 min-[1150px]:pt-12 pb-4 z-50 w-full gap-4 min-[1150px]:gap-6">
+    <header className="mod3-header flex flex-col lg:flex-row items-stretch lg:items-start justify-between px-4 sm:px-6 lg:px-8 2xl:px-14 pt-10 sm:pt-10 lg:pt-12 pb-4 z-50 w-full gap-4 lg:gap-6">
       {/* Judul Dashboard */}
-      <div className="flex flex-col items-center min-[1150px]:items-start text-center min-[1150px]:text-left mod3-header-title max-w-full">
+      <div className="flex flex-col items-center lg:items-start text-center lg:text-left mod3-header-title max-w-full">
         <h1
-          className="font-black text-[#F7C564] leading-tight text-[22px] sm:text-[30px] min-[1150px]:text-[34px] 2xl:text-[40px] 3xl:text-[44px] drop-shadow-[0_4px_6px_rgba(0,0,0,0.85)] tracking-tight"
+          className="font-black text-[#F7C564] leading-tight text-[22px] sm:text-[30px] lg:text-[34px] 2xl:text-[40px] 3xl:text-[44px] drop-shadow-[0_4px_6px_rgba(0,0,0,0.85)] tracking-tight"
           style={{ fontFamily: "var(--font-garet-heavy), 'Garet-Heavy', sans-serif" }}
         >
           Dashboard Pemantauan
         </h1>
 
-        <div className="flex items-baseline justify-center min-[1150px]:justify-start gap-1.5 sm:gap-2 mt-0 sm:-mt-1 max-w-full">
+        <div className="flex items-baseline justify-center lg:justify-start gap-1.5 sm:gap-2 mt-0 sm:-mt-1 max-w-full">
           <p
-            className="font-black text-[24px] sm:text-[36px] min-[1150px]:text-[42px] 2xl:text-[48px] 3xl:text-[54px] leading-tight drop-shadow-[0_4px_6px_rgba(0,0,0,0.85)] tracking-tight"
+            className="font-black text-[24px] sm:text-[36px] lg:text-[42px] 2xl:text-[48px] 3xl:text-[54px] leading-tight drop-shadow-[0_4px_6px_rgba(0,0,0,0.85)] tracking-tight"
             style={{ fontFamily: "var(--font-garet-heavy), 'Garet-Heavy', sans-serif" }}
           >
             <span className="text-[#EE5C5C] italic">Banjir</span>{" "}
@@ -250,7 +250,7 @@ export default function Header({
 
         {/* Underline Bar */}
         <div
-          className="w-full max-w-[260px] sm:max-w-[460px] min-[1150px]:max-w-[560px] 2xl:max-w-[696px] h-[4px] sm:h-[5px] rounded-full -mt-1 sm:-mt-2 min-[1150px]:-mt-2.5 mb-2 sm:mb-2.5"
+          className="w-full max-w-[260px] sm:max-w-[460px] lg:max-w-[560px] 2xl:max-w-[696px] h-[4px] sm:h-[5px] rounded-full -mt-1 sm:-mt-2 lg:-mt-2.5 mb-2 sm:mb-2.5"
           style={{
             background: "linear-gradient(90deg, #FFFAFA 0%, #F6954F 100%)",
             boxShadow: "0px 3px 3.8px rgba(0, 0, 0, 0.26)",
@@ -258,7 +258,7 @@ export default function Header({
         />
 
         <p
-          className="font-black text-white leading-none text-[14px] sm:text-[18px] min-[1150px]:text-[20px] 2xl:text-[22px] 3xl:text-[25px] drop-shadow-[0_3px_6px_rgba(0,0,0,0.85)] tracking-normal"
+          className="font-black text-white leading-none text-[14px] sm:text-[18px] lg:text-[20px] 2xl:text-[22px] 3xl:text-[25px] drop-shadow-[0_3px_6px_rgba(0,0,0,0.85)] tracking-normal"
           style={{ fontFamily: "var(--font-garet-heavy), 'Garet-Heavy', sans-serif" }}
         >
           Aceh | Sumut | Sumbar
@@ -266,7 +266,7 @@ export default function Header({
       </div>
 
       {/* Custom Dropdowns */}
-      <div className="flex flex-col min-[1150px]:flex-row items-stretch min-[1150px]:items-center justify-center min-[1150px]:justify-end gap-3 min-[1150px]:gap-3 2xl:gap-6 w-full min-[1150px]:w-auto mt-3 min-[1150px]:mt-6 mod3-header-filters pointer-events-auto">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center lg:justify-end gap-3 2xl:gap-6 w-full lg:w-auto mt-3 lg:mt-6 mod3-header-filters pointer-events-auto">
         <CustomDropdown
           label="Provinsi"
           value={filterProvinsi}
